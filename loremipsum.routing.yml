@@ -1,0 +1,14 @@
+loremipsum_generate:
+  path: 'loremipsum/generate/{paragraphs}/{phrases}'
+  defaults:
+    _controller: '\Drupal\loremipsum\Controller\LoremIpsumController::generate'
+  requirements:
+    _access: 'TRUE'
+
+loremipsum.form:
+  path: '/admin/config/loremipsum'
+  defaults:
+    _form: '\Drupal\loremipsum\Form\LoremIpsumForm'
+    _title: 'Lorem ipsum settings'
+  requirements:
+    _permission: 'administer settings'
