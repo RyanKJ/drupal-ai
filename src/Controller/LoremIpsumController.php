@@ -8,6 +8,7 @@
 namespace Drupal\loremipsum\Controller;
 
 use Drupal\Core\Url;
+use Drupal\Component\Utility\String;
 // TODO: permissions.
 // use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
@@ -29,8 +30,8 @@ class LoremIpsumController {
   public function generate($paragraphs, $phrases) {
     // Source text.
     // TODO: variable source from settings.
-    // $source = 'Lorem ipsum dolor sit amet, consectetur adipisci elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
-    $source = \Drupal::config('loremipsum.settings')->get('loremipsum.settings.source_text');
+    $source_text = \Drupal::config('loremipsum.settings')->get('loremipsum.settings.source_text');
+    $page_title = \Drupal::config('loremipsum.settings')->get('loremipsum.settings.page_title');
 
     /* Repertory strategy.
      * TODO: different strategies:
@@ -39,7 +40,7 @@ class LoremIpsumController {
      * - standard lorem ipsum with custom words thrown in
      * - begin with "Lorem Ipsum" etc.
      */
-    $repertory = explode(PHP_EOL, $source);
+    $repertory = explode(PHP_EOL, $source_text);
 
     $element['#markup'] = '';
 
@@ -52,10 +53,11 @@ class LoremIpsumController {
       for ($j = 0; $j <= $random_phrases; $j++) {
         $this_paragraph .= $repertory[floor(rand(0, count($repertory)-1))] . ' ';
       }
-      $element['#markup'] .= "<p>$this_paragraph</p>";
+      $element['#markup'] .= '<p>' . String::checkPlain($this_paragraph) . '</p>';
     }
+    $element['#title'] = String::checkPlain($page_title);
 
-    return str_replace('  ', ' ', $element);
+    return $element;
   }
 
 }
