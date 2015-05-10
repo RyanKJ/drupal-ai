@@ -28,10 +28,11 @@ class LoremIpsumController {
    *   Second part of your text block.
    */
   public function generate($paragraphs, $phrases) {
-    // Source text.
-    // TODO: variable source from settings.
-    $source_text = \Drupal::config('loremipsum.settings')->get('loremipsum.settings.source_text');
-    $page_title = \Drupal::config('loremipsum.settings')->get('loremipsum.settings.page_title');
+    // Default settings
+    $config = \Drupal::config('loremipsum.settings');
+    // Page title and source text.
+    $page_title = $config->get('loremipsum.page_title');
+    $source_text = $config->get('loremipsum.source_text');
 
     /* Repertory strategy.
      * TODO: different strategies:
