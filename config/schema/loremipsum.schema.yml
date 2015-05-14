@@ -11,3 +11,8 @@ loremipsum.settings:
         source_text:
           type: text
           label: 'Source text for lorem ipsum generation:'
+block.settings.loremipsum_block:
+  type: block_settings
+  label: 'Lorem ipsum block'
+  mapping:
+    loremipsum_block_settings:

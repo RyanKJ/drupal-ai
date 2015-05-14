@@ -6,9 +6,9 @@ loremipsum_generate:
     _access: 'TRUE'
 
 loremipsum.form:
-  path: 'admin/config/loremipsum'
+  path: '/admin/config/development/loremipsum'
   defaults:
-    _form: '\Drupal\loremipsum\Form\LoremIpsumForm'
+    _form: 'Drupal\loremipsum\Form\LoremIpsumForm'
     _title: 'Lorem ipsum settings'
   requirements:
-    _permission: 'administer settings'
+    _permission: 'administer site configuration'
