@@ -50,7 +50,7 @@ class LoremIpsumController {
       $this_paragraph = '';
       // When we say "up to Y phrases each", we can't mean "from 1 to Y".
       // So we go from halfway up.
-      $random_phrases = rand(round($phrases/2), $phrases);
+      $random_phrases = mt_rand(round($phrases/2), $phrases);
       for ($j = 0; $j <= $random_phrases; $j++) {
         $this_paragraph .= $repertory[floor(rand(0, count($repertory)-1))] . ' ';
       }

@@ -22,12 +22,8 @@ class LoremIpsumBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function build() {
-
-    $config = $this->getConfiguration();
-
-    return array(
-      '#markup' => $this->t('dropdowns for number of paragraphs and phrases go here.'),
-    );
+    // Return the form @ Form/BlockFormController.php
+    return \Drupal::formBuilder()->getForm('Drupal\loremipsum\Form\LoremIpsumBlockForm');
   }
 
   /**

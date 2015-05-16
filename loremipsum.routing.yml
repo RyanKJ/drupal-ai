@@ -1,4 +1,4 @@
-loremipsum_generate:
+loremipsum.generate:
   path: 'loremipsum/generate/{paragraphs}/{phrases}'
   defaults:
     _controller: '\Drupal\loremipsum\Controller\LoremIpsumController::generate'
