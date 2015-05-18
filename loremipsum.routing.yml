@@ -3,7 +3,8 @@ loremipsum.generate:
   defaults:
     _controller: '\Drupal\loremipsum\Controller\LoremIpsumController::generate'
   requirements:
-    _access: 'TRUE'
+    # _access: 'TRUE' for unrestricted access
+    _permission: 'generate lorem ipsum'
 
 loremipsum.form:
   path: '/admin/config/development/loremipsum'

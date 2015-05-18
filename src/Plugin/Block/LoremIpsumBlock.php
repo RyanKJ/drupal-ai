@@ -22,7 +22,7 @@ class LoremIpsumBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function build() {
-    // Return the form @ Form/BlockFormController.php
+    // Return the form @ Form/LoremIpsumBlockForm.php
     return \Drupal::formBuilder()->getForm('Drupal\loremipsum\Form\LoremIpsumBlockForm');
   }
 
@@ -30,7 +30,7 @@ class LoremIpsumBlock extends BlockBase {
    * {@inheritdoc}
    */
   protected function blockAccess(AccountInterface $account) {
-    return AccessResult::allowedIfHasPermission($account, 'access content');
+    return AccessResult::allowedIfHasPermission($account, 'generate lorem ipsum');
   }
 
   /**

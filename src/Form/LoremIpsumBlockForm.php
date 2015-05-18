@@ -34,6 +34,7 @@ class LoremIpsumBlockForm extends FormBase {
       '#type' => 'select',
       '#title' => $this->t('Paragraphs'),
       '#options' => $options,
+      '#default_value' => 4,
       '#description' => $this->t('How many?'),
     );
 
