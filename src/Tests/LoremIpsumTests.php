@@ -1,18 +1,14 @@
 <?php
 
-/**
- * @file
- * Tests for the Lorem Ipsum module.
- */
-
 namespace Drupal\loremipsum\Tests;
 
 use Drupal\simpletest\WebTestBase;
 
 /**
+ * Tests for the Lorem Ipsum module.
  * @group loremipsum
  */
-class LoremIpsumTest extends WebTestBase {
+class LoremIpsumTests extends WebTestBase {
 
   /**
    * Modules to install
@@ -25,30 +21,71 @@ class LoremIpsumTest extends WebTestBase {
   private $user;
 
   // Perform initial setup tasks that run before every test method.
-  // TODO: custom permissions
   public function setUp() {
     parent::setUp();
-    $this->user = $this->DrupalCreateUser(array('access content'));
+    $this->user = $this->DrupalCreateUser(array(
+      'administer site configuration',
+      'generate lorem ipsum',
+    ));
   }
 
   /**
-   * Tests that the settings pages can be reached.
-   * TODO: generator test
+   * Tests that the Lorem ipsum page can be reached.
    * TODO: block test
    */
-  public function testCustomPageExists() {
+  public function testLoremIpsumPageExists() {
     // Login
     $this->drupalLogin($this->user);
+
+    // Generator test:
+    $this->drupalGet('loremipsum/generate/4/20');
+    $this->assertResponse(200);
+  }
+
+  /**
+   * Tests the config form.
+   */
+  public function testConfigForm() {
+    // Login
+    $this->drupalLogin($this->user);
+
     // Access config page
     $this->drupalGet('admin/config/development/loremipsum');
     $this->assertResponse(200);
     // Test the form elements exist and have defaults
-    $config = $this.config('loremipsum.settings');
-    $this->assertFieldByName('page_title', $config->get('loremipsum.settings.page_title'), 'Page title field was found with the correct value');
-    $this->assertFieldByName('source_text', $config->get('loremipsum.settings.source_text'), 'Source text field was found and not empty');
+    $config = $this->config('loremipsum.settings');
+    $this->assertFieldByName(
+      'page_title',
+      $config->get('loremipsum.settings.page_title'),
+      'Page title field has the default value'
+    );
+    $this->assertFieldByName(
+      'source_text',
+      $config->get('loremipsum.settings.source_text'),
+      'Source text field has the default value'
+    );
     // Test form submission
-
-    // Generator test:
-    // $this->drupalGet('loremipsum/generate/4/20');
+    $this->drupalPostForm(NULL, array(
+      'page_title' => 'Test lorem ipsum',
+      'source_text' => 'Test phrase 1 \nTest phrase 2 \nTest phrase 3 \n',
+    ), t('Save configuration'));
+    $this->assertText(
+      'The configuration options have been saved.',
+      'The form was saved correctly.'
+    );
+    // Test the new values are there.
+    $this->drupalGet('admin/config/development/loremipsum');
+    $this->assertResponse(200);
+    $this->assertFieldByName(
+      'page_title',
+      'Test lorem ipsum',
+      'Page title is OK.'
+    );
+    $this->assertFieldByName(
+      'source_text',
+      'Test phrase 1 \nTest phrase 2 \nTest phrase 3 \n',
+      'Source text is OK.'
+    );
   }
+
 }
