@@ -8,9 +8,8 @@
 namespace Drupal\loremipsum\Controller;
 
 use Drupal\Core\Url;
-use Drupal\Component\Utility\String;
-// TODO: permissions.
-// use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+// Change following https://www.drupal.org/node/2457593
+use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Controller routines for Lorem ipsum pages.
@@ -43,20 +42,30 @@ class LoremIpsumController {
      */
     $repertory = explode(PHP_EOL, $source_text);
 
-    $element['#markup'] = '';
+    $element['#source_text'] = array();
 
     // Generate X paragraphs with up to Y phrases each
-    for ($i = 0; $i < $paragraphs; $i++) {
+    for ($i = 1; $i <= $paragraphs; $i++) {
       $this_paragraph = '';
       // When we say "up to Y phrases each", we can't mean "from 1 to Y".
       // So we go from halfway up.
       $random_phrases = mt_rand(round($phrases/2), $phrases);
-      for ($j = 0; $j <= $random_phrases; $j++) {
-        $this_paragraph .= $repertory[floor(rand(0, count($repertory)-1))] . ' ';
+      // Also don't repeat the last phrase.
+      $last_number = 0;
+      $next_number = 0;
+      for ($j = 1; $j <= $random_phrases; $j++) {
+        do {
+          $next_number = floor(mt_rand(0, count($repertory)-1));
+        } while ($next_number === $last_number);
+        $this_paragraph .= $repertory[$next_number] . ' ';
+        $last_number = $next_number;
       }
-      $element['#markup'] .= '<p>' . String::checkPlain($this_paragraph) . '</p>';
+      $element['#source_text'][] = SafeMarkup::checkPlain($this_paragraph);
     }
-    $element['#title'] = String::checkPlain($page_title);
+    $element['#title'] = SafeMarkup::checkPlain($page_title);
+
+    // Theme function
+    $element['#theme'] = 'loremipsum';
 
     return $element;
   }
