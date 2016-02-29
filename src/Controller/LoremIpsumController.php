@@ -40,7 +40,7 @@ class LoremIpsumController {
      * - standard lorem ipsum with custom words thrown in
      * - begin with "Lorem Ipsum" etc.
      */
-    $repertory = explode(PHP_EOL, $source_text);
+    $repertory = explode(PHP_EOL, str_replace(array("\r\n", "\n\r", "\r", "\n"), PHP_EOL, $source_text));
 
     $element['#source_text'] = array();
 
