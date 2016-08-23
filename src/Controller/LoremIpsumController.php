@@ -56,7 +56,7 @@ class LoremIpsumController {
       for ($j = 1; $j <= $random_phrases; $j++) {
         do {
           $next_number = floor(mt_rand(0, count($repertory)-1));
-        } while ($next_number === $last_number);
+        } while ($next_number === $last_number && count($repertory) > 1);
         $this_paragraph .= $repertory[$next_number] . ' ';
         $last_number = $next_number;
       }
