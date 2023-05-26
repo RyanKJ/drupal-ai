@@ -20,7 +20,7 @@ class LoremIpsumController {
    * Constructs Lorem ipsum text with arguments.
    * This callback is mapped to the path
    * 'loremipsum/generate/{lorem}/{ipsum}'.
-   * 
+   *
    * @param string $lorem
    *   First part of your text block.
    * @param string $ipsum
@@ -60,9 +60,9 @@ class LoremIpsumController {
         $this_paragraph .= $repertory[$next_number] . ' ';
         $last_number = $next_number;
       }
-      $element['#source_text'][] = SafeMarkup::checkPlain($this_paragraph);
+      $element['#source_text'][] = $this_paragraph;
     }
-    $element['#title'] = SafeMarkup::checkPlain($page_title);
+    $element['#title'] = $page_title;
 
     // Theme function
     $element['#theme'] = 'loremipsum';
