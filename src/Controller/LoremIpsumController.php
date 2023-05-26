@@ -7,9 +7,7 @@
 
 namespace Drupal\loremipsum\Controller;
 
-use Drupal\Core\Url;
-// Change following https://www.drupal.org/node/2457593
-use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Html;
 
 /**
  * Controller routines for Lorem ipsum pages.
@@ -60,9 +58,9 @@ class LoremIpsumController {
         $this_paragraph .= $repertory[$next_number] . ' ';
         $last_number = $next_number;
       }
-      $element['#source_text'][] = $this_paragraph;
+      $element['#source_text'][] = Html::escape($this_paragraph);
     }
-    $element['#title'] = $page_title;
+    $element['#title'] = Html::escape($page_title);
 
     // Theme function
     $element['#theme'] = 'loremipsum';
