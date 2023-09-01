@@ -25,7 +25,11 @@ function loremipsum_theme($existing, $type, $theme, $path) {
  *   - source_text
  */
 function template_preprocess_loremipsum(&$variables) {
+  // Defines a list of acceptable punctuation.
   $punctuation = array('. ', '! ', '? ', '... ', ': ', '; ');
+
+  // Loops over text, one paragraph at a time, taking it apart
+  // and gluing it back together with random punctuation.
   for ($i = 0; $i < count($variables['source_text']); $i++) {
     $big_text = explode('. ', $variables['source_text'][$i]);
     for ($j = 0; $j < count($big_text)-1; $j++) {
@@ -41,22 +45,21 @@ function template_preprocess_loremipsum(&$variables) {
 function loremipsum_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.loremipsum':
-      return t('
-        <h2>Lorem ipsum generator for Drupal.</h2>
-        <h3>Instructions</h3>
-        <p>Lorem ipsum dolor sit amet... <strong>Just kidding!</strong></p>
-        <p>Unpack in the <em>modules</em> folder (currently in the root of your Drupal 8 installation) and enable in <strong>/admin/modules</strong>.</p>
-        <p>Then, visit <strong>/admin/config/development/loremipsum</strong> and enter your own set of phrases to build random-generated text (or go with the default Lorem ipsum).</p>
-        <p>Last, visit <strong>www.example.com/loremipsum/generate/P/S</strong> where:</p>
-        <ul>
-          <li><em>P</em> is the number of <em>paragraphs</em></li>
-          <li><em>S</em> is the maximum number of <em>sentences</em></li>
-        </ul>
-        <p>There is also a generator block in which you can choose how many paragraphs and
-phrases and it\'ll do the rest.</p>
-        <p>If you need, there\'s also a specific <em>generate lorem ipsum</em> permission.</p>
-        <h3>Attention</h3>
-        <p>Most bugs have been ironed out, holes covered, features added. But this module is a work in progress. Please report bugs and suggestions, ok?</p>
-      ');
+      $output = '';
+      $output .= '<h2>' . t('Lorem ipsum generator for Drupal.') . '</h2>';
+      $output .= '<h3>' . t('Instructions') . '</h3>';
+      $output .= '<p>' . t('Lorem ipsum dolor sit amet... <em>Just kidding!</em>') . '</p>';
+      $output .= '<p>' . t('If you\'re reading this, you\'ve already installed the module either via <code>composer require drupal/loremipsum</code> or directly downloading it (which <em>should</em> be safe) and have already enabled it in <strong>/admin/modules</strong>.') . '</p>';
+      $output .= '<p>' . t('Then, visit <strong>/admin/config/development/loremipsum</strong> and enter your own set of phrases to build random-generated text (or go with the default Lorem ipsum).') . '</p>';
+      $output .= '<p>' . t('Lastly, visit <strong>/loremipsum/generate/P/S</strong> where:') . '</p>';
+      $output .= '<ul>';
+      $output .= '<li>' . t('<strong>P</strong> is the number of <em>paragraphs</em>.') . '</li>';
+      $output .= '<li>' . t('<strong>S</strong> is the maximum number of <em>sentences</em>.') . '</li>';
+      $output .= '</ul>';
+      $output .= '<p>' . t('There is also a generator block in which you can choose how many paragraphs and phrases you want and it\'ll do the rest.') . '</p>';
+      $output .= '<p>' . t('If you need, there\'s also a specific <em>generate lorem ipsum</em> permission.') . '</p>';
+      $output .= '<h3>' . t('Attention') . '</h3>';
+      $output .= '<p>' . t('Most bugs have been ironed out, holes covered, features added. But this module is a work in progress. Please report bugs and suggestions, ok?') . '</p>';
+      return $output;
   }
 }

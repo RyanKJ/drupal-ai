@@ -30,16 +30,16 @@ class LoremIpsumForm extends ConfigFormBase {
     // Page title field
     $form['page_title'] = array(
       '#type' => 'textfield',
-      '#title' => $this->t('Lorem ipsum generator page title:'),
+      '#title' => t('Lorem ipsum generator page title:'),
       '#default_value' => $config->get('loremipsum.page_title'),
-      '#description' => $this->t('Give your lorem ipsum generator page a title.'),
+      '#description' => t('Give your lorem ipsum generator page a title.'),
     );
     // Source text field
     $form['source_text'] = array(
       '#type' => 'textarea',
-      '#title' => $this->t('Source text for lorem ipsum generation:'),
+      '#title' => t('Source text for lorem ipsum generation:'),
       '#default_value' => $config->get('loremipsum.source_text'),
-      '#description' => $this->t('Write one sentence per line. Those sentences will be used to generate random text.'),
+      '#description' => t('Write one sentence per line. Those sentences will be used to generate random text.'),
     );
 
     return $form;
@@ -49,7 +49,12 @@ class LoremIpsumForm extends ConfigFormBase {
    * {@inheritdoc}.
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-
+    if ($form_state->getValue('page_title') == NULL) {
+      $form_state->setErrorByName('page_title', t('Please enter a valid Page title.'));
+    }
+    if ($form_state->getValue('source_text') == NULL) {
+      $form_state->setErrorByName('source_text', t('Please enter at least one line of text for your generator.'));
+    }
   }
 
   /**
