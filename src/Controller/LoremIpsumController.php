@@ -8,6 +8,7 @@
 namespace Drupal\loremipsum\Controller;
 
 use Drupal\Component\Utility\Html;
+use Drupal\loremipsum\Service\LoremIpsumService;
 
 /**
  * Controller routines for Lorem ipsum pages.
@@ -19,51 +20,24 @@ class LoremIpsumController {
    * This callback is mapped to the path
    * 'loremipsum/generate/{lorem}/{ipsum}'.
    *
-   * @param string $lorem
-   *   First part of your text block.
-   * @param string $ipsum
-   *   Second part of your text block.
+   * @param Drupal\loremipsum\Service\LoremIpsumService $loremipsum_service
+   *   How many paragraphs of Lorem ipsum text.
+   * @param string $paragraphs
+   *   How many paragraphs of Lorem ipsum text.
+   * @param string $phrases
+   *   Average number of phrases per paragraph.
    */
+
+  /**
+   * The themeable element.
+   *
+   * @var \Drupal\loremipsum\Service\LoremIpsumService $loremipsum_service
+   */
+  protected $element = [];
+
   public function generate($paragraphs, $phrases) {
-    // Default settings
-    $config = \Drupal::config('loremipsum.settings');
-    // Page title and source text.
-    $page_title = $config->get('loremipsum.page_title');
-    $source_text = $config->get('loremipsum.source_text');
-
-    /* Repertory strategy.
-     * TODO: different strategies:
-     * - break on periods (like below)
-     * - random words
-     * - standard lorem ipsum with custom words thrown in
-     * - begin with "Lorem Ipsum" etc.
-     */
-    $repertory = explode(PHP_EOL, str_replace(array("\r\n", "\n\r", "\r", "\n"), PHP_EOL, $source_text));
-
-    $element['#source_text'] = array();
-
-    // Generate X paragraphs with up to Y phrases each
-    for ($i = 1; $i <= $paragraphs; $i++) {
-      $this_paragraph = '';
-      // When we say "up to Y phrases each", we can't mean "from 1 to Y".
-      // So we go from halfway up.
-      $random_phrases = mt_rand(round($phrases/2), $phrases);
-      // Also don't repeat the last phrase.
-      $last_number = 0;
-      $next_number = 0;
-      for ($j = 1; $j <= $random_phrases; $j++) {
-        do {
-          $next_number = floor(mt_rand(0, count($repertory)-1));
-        } while ($next_number === $last_number && count($repertory) > 1);
-        $this_paragraph .= $repertory[$next_number] . ' ';
-        $last_number = $next_number;
-      }
-      $element['#source_text'][] = Html::escape($this_paragraph);
-    }
-    $element['#title'] = Html::escape($page_title);
-
-    // Theme function
-    $element['#theme'] = 'loremipsum';
+    $LoremIpsumService = \Drupal::service('loremipsum.loremipsum_service');
+    $element = $LoremIpsumService->generate($paragraphs, $phrases);
 
     return $element;
   }

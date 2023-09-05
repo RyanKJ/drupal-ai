@@ -1,0 +1,4 @@
+services:
+  loremipsum.loremipsum_service:
+    class: \Drupal\loremipsum\Service\LoremIpsumService
+    arguments: []
