@@ -8,7 +8,9 @@ Instructions
 
 Lorem ipsum dolor sit amet... **Just kidding!**
 
-Unpack in the *modules* folder (currently in the root of your Drupal 8
+This module can be installed without Composer.
+
+Unpack in the *modules* folder (currently in the root of your Drupal
 installation) and enable in `/admin/modules`.
 
 Then, visit `/admin/config/development/loremipsum` and enter your own set of
