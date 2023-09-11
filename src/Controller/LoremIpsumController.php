@@ -28,11 +28,10 @@ class LoremIpsumController {
    *   Average number of phrases per paragraph.
    */
 
-  /**
-   * The themeable element.
-   */
+  // The themeable element.
   protected $element = [];
 
+  // The generate method.
   public function generate($paragraphs, $phrases) {
     $LoremIpsumService = \Drupal::service('loremipsum.loremipsum_service');
     $element = $LoremIpsumService->generate($paragraphs, $phrases);
