@@ -20,8 +20,8 @@ class LoremIpsumController {
    * This callback is mapped to the path
    * 'loremipsum/generate/{lorem}/{ipsum}'.
    *
-   * @param Drupal\loremipsum\Service\LoremIpsumService $loremipsum_service
-   *   How many paragraphs of Lorem ipsum text.
+   * @var \Drupal\loremipsum\Service\LoremIpsumService $LoremIpsumService
+   *   A call to the Lorem ipsum service.
    * @param string $paragraphs
    *   How many paragraphs of Lorem ipsum text.
    * @param string $phrases
@@ -30,8 +30,6 @@ class LoremIpsumController {
 
   /**
    * The themeable element.
-   *
-   * @var \Drupal\loremipsum\Service\LoremIpsumService $loremipsum_service
    */
   protected $element = [];
 
