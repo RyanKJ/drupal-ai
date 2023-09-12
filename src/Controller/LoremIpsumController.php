@@ -31,7 +31,7 @@ class LoremIpsumController {
   // The themeable element.
   protected $element = [];
 
-  // The generate method.
+  // The generate method which stores lorem ipsum text in a themeable element.
   public function generate($paragraphs, $phrases) {
     $LoremIpsumService = \Drupal::service('loremipsum.loremipsum_service');
     $element = $LoremIpsumService->generate($paragraphs, $phrases);
