@@ -37,11 +37,8 @@ class LoremIpsumBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function blockForm($form, FormStateInterface $form_state) {
-
     $form = parent::blockForm($form, $form_state);
-
     $config = $this->getConfiguration();
-
     return $form;
   }
 
@@ -49,7 +46,10 @@ class LoremIpsumBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
-    $this->setConfigurationValue('loremipsum_block_settings', $form_state->getValue('loremipsum_block_settings'));
+    $this->setConfigurationValue(
+      'loremipsum_block_settings',
+      $form_state->getValue('loremipsum_block_settings')
+    );
   } 
 
 }

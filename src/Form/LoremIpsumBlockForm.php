@@ -28,7 +28,6 @@ class LoremIpsumBlockForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     // How many paragraphs?
-    // $options = new array();
     for ($i = 1; $i <= 10; $i++) $options[$i] = $i;
     $form['paragraphs'] = array(
       '#type' => 'select',

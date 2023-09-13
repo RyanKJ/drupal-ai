@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\loremipsum\Functional\LoremIpsumTests;
+namespace Drupal\Tests\loremipsum\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 
@@ -32,7 +32,6 @@ class LoremIpsumTests extends BrowserTestBase {
 
   /**
    * Tests that the Lorem ipsum page can be reached.
-   * TODO: block test
    */
   public function testLoremIpsumPageExists() {
     // Login
