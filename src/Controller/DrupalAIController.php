@@ -2,26 +2,26 @@
 
 /**
  * @file
- * Contains \Drupal\loremipsum\Controller\LoremIpsumController
+ * Contains \Drupal\drupalai\Controller\DrupalAIController
  */
 
-namespace Drupal\loremipsum\Controller;
+namespace Drupal\drupalai\Controller;
 
 use Drupal\Component\Utility\Html;
-use Drupal\loremipsum\Service\LoremIpsumService;
+use Drupal\drupalai\Service\DrupalAIService;
 
 /**
- * Controller routines for Lorem ipsum pages.
+ * Controller routines for drupal ai pages.
  */
-class LoremIpsumController {
+class DrupalAIController {
 
   /**
    * Constructs Lorem ipsum text with arguments.
    * This callback is mapped to the path
-   * 'loremipsum/generate/{lorem}/{ipsum}'.
+   * 'drupalai/generate/{lorem}/{ipsum}'.
    *
-   * @var \Drupal\loremipsum\Service\LoremIpsumService $LoremIpsumService
-   *   A call to the Lorem ipsum service.
+   * @var \Drupal\drupalai\Service\DrupalAIService $DrupalAIService
+   *   A call to the Drupal AI service.
    * @param string $paragraphs
    *   How many paragraphs of Lorem ipsum text.
    * @param string $phrases
@@ -33,8 +33,8 @@ class LoremIpsumController {
 
   // The generate method which stores lorem ipsum text in a themeable element.
   public function generate($paragraphs, $phrases) {
-    $LoremIpsumService = \Drupal::service('loremipsum.loremipsum_service');
-    $element = $LoremIpsumService->generate($paragraphs, $phrases);
+    $DrupalAIService = \Drupal::service('drupalai.drupalai_service');
+    $element = $DrupalAIService->generate($paragraphs, $phrases);
 
     return $element;
   }

@@ -2,29 +2,29 @@
 
 /**
  * @file
- * Contains \Drupal\loremipsum\Form\BlockFormController
+ * Contains \Drupal\drupalai\Form\BlockFormController
  */
 
-namespace Drupal\loremipsum\Form;
+namespace Drupal\drupalai\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
 /**
- * Lorem Ipsum block form
+ * Drupal AI block form
  */
-class LoremIpsumBlockForm extends FormBase {
+class DrupalAIBlockForm extends FormBase {
   /** 
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'loremipsum_block_form';
+    return 'drupal_ai_block_form';
   }
 
   /**
    * {@inheritdoc}
-   * Lorem ipsum generator block.
+   * Drupal AI generator block.
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     // How many paragraphs?
@@ -81,7 +81,7 @@ class LoremIpsumBlockForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $form_state->setRedirect(
-      'loremipsum.generate',
+      'drupalai.generate',
       array(
         'paragraphs' => $form_state->getValue('paragraphs'),
         'phrases' => $form_state->getValue('phrases'),

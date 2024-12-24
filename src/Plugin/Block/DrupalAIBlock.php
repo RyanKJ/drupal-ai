@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\loremipsum\Plugin\Block;
+namespace Drupal\drupalai\Plugin\Block;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockBase;
@@ -8,22 +8,22 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 
  /**
- * Provides a Lorem ipsum block with which you can generate dummy text anywhere
+ * Provides a Drupal AI block with which you can generate dummy text anywhere
  *
  * @Block(
- *   id = "loremipsum_block",
- *   admin_label = @Translation("Lorem ipsum block"),
+ *   id = "drupalai_block",
+ *   admin_label = @Translation("Drupal AI block"),
  *   category = @Translation("Forms")
  * )
  */
-class LoremIpsumBlock extends BlockBase {
+class DrupalAIBlock extends BlockBase {
 
   /**
    * {@inheritdoc}
    */
   public function build() {
-    // Return the form @ Form/LoremIpsumBlockForm.php
-    return \Drupal::formBuilder()->getForm('Drupal\loremipsum\Form\LoremIpsumBlockForm');
+    // Return the form @ Form/DrupalAIBlockForm.php
+    return \Drupal::formBuilder()->getForm('Drupal\drupalai\Form\DrupalAIBlockForm');
   }
 
   /**
@@ -47,8 +47,8 @@ class LoremIpsumBlock extends BlockBase {
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
     $this->setConfigurationValue(
-      'loremipsum_block_settings',
-      $form_state->getValue('loremipsum_block_settings')
+      'drupal_ai_block_settings',
+      $form_state->getValue('drupal_ai_block_settings')
     );
   } 
 

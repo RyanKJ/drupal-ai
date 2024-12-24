@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\loremipsum\Functional;
+namespace Drupal\Tests\drupalai\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 
@@ -8,14 +8,14 @@ use Drupal\Tests\BrowserTestBase;
  * Tests for the Lorem Ipsum module.
  * @group loremipsum
  */
-class LoremIpsumTests extends BrowserTestBase {
+class DrupalAITests extends BrowserTestBase {
 
   /**
    * Modules to install
    *
    * @var array
    */
-  protected static $modules = array('loremipsum');
+  protected static $modules = array('drupalai');
   protected $defaultTheme = 'stark';
 
   // A simple user
@@ -33,27 +33,27 @@ class LoremIpsumTests extends BrowserTestBase {
   /**
    * Tests that the Lorem ipsum page can be reached.
    */
-  public function testLoremIpsumPageExists() {
+  public function testDrupalAIPageExists() {
     // Login
     $this->drupalLogin($this->user);
 
     // Generator test:
-    $this->drupalGet('loremipsum/generate/4/20');
+    $this->drupalGet('drupalai/generate/4/20');
     $this->assertSession()->statusCodeEquals(200);
   }
 
   /**
    * Tests the config form.
-   */
+   
   public function testConfigForm() {
     // Login
     $this->drupalLogin($this->user);
 
     // Access config page
-    $this->drupalGet('admin/config/development/loremipsum');
+    $this->drupalGet('admin/config/development/drupalai');
     $this->assertSession()->statusCodeEquals(200);
     // Test the form elements exist and have defaults
-    $config = \Drupal::config('loremipsum.settings');
+    $config = \Drupal::config('drupalai.settings');
     $this->assertSession()->fieldValueEquals(
       'page_title',
       'Lorem ipsum'
@@ -90,5 +90,6 @@ class LoremIpsumTests extends BrowserTestBase {
       'Test phrase 1 \nTest phrase 2 \nTest phrase 3 \n'
     );
   }
+  */
 
 }

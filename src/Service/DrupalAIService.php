@@ -2,17 +2,17 @@
 
 /**
  * @file
- * Contains Drupal\loremipsum\Service\LoremIpsumService
+ * Contains Drupal\drupalai\Service\DrupalAIService
  */
 
-namespace Drupal\loremipsum\Service;
+namespace Drupal\drupalai\Service;
 
 use Drupal\Component\Utility\Html;
 
 /**
- * Service layer for Lorem ipsum generation.
+ * Service layer for drupal AI generation.
  */
-class LoremIpsumService {
+class DrupalAIService {
 
   /**
    * Constructs Lorem ipsum text with arguments.
@@ -24,10 +24,10 @@ class LoremIpsumService {
    */
   public function generate($paragraphs, $phrases) {
     // Default settings
-    $config = \Drupal::config('loremipsum.settings');
+    $config = \Drupal::config('drupalai.settings');
     // Page title and source text.
-    $page_title = $config->get('loremipsum.page_title');
-    $source_text = $config->get('loremipsum.source_text');
+    $page_title = $config->get('drupalai.page_title');
+    $source_text = $config->get('drupalai.source_text');
 
     // Repertory strategy.
     $repertory = explode(PHP_EOL, str_replace(array("\r\n", "\n\r", "\r", "\n"), PHP_EOL, $source_text));
@@ -55,7 +55,7 @@ class LoremIpsumService {
     $element['#title'] = Html::escape($page_title);
 
     // Theme function
-    $element['#theme'] = 'loremipsum';
+    $element['#theme'] = 'drupalai';
 
     return $element;
   }
