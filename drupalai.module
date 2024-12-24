@@ -7,11 +7,11 @@ use Drupal\Core\Routing\RouteMatchInterface;
  */
 function drupalai_theme($existing, $type, $theme, $path) {
   $variables = array(
-    'loremipsum' => array(
+    'drupalai' => array(
       'variables' => array(
         'source_text' => NULL,
       ),
-      'template' => 'loremipsum',
+      'template' => 'drupalai',
     ),
   );
   return $variables;
