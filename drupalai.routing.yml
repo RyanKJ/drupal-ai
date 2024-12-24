@@ -1,0 +1,14 @@
+drupalai.generate:
+  path: '/drupalai/generate/{paragraphs}/{phrases}'
+  defaults:
+    _controller: '\Drupal\drupalai\Controller\DrupalAIController::generate'
+  requirements:
+    _permission: 'generate lorem ipsum'
+
+drupalai.form:
+  path: '/admin/config/development/drupalai'
+  defaults:
+    _form: '\Drupal\drupalai\Form\DrupalAIForm'
+    _title: 'Lorem ipsum settings'
+  requirements:
+    _permission: 'administer site configuration'

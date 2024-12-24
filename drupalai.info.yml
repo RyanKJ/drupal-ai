@@ -1,0 +1,6 @@
+name: Drupal AI 
+type: module
+description: 'Drupal interface system to query various AI LLMs.'
+package: Development
+core_version_requirement: ^10 || ^11
+configure: drupalai.form

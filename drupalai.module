@@ -5,7 +5,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 /**
  * Implements hook_theme().
  */
-function loremipsum_theme($existing, $type, $theme, $path) {
+function drupalai_theme($existing, $type, $theme, $path) {
   $variables = array(
     'loremipsum' => array(
       'variables' => array(
@@ -24,7 +24,7 @@ function loremipsum_theme($existing, $type, $theme, $path) {
  *   An associative array containing:
  *   - source_text
  */
-function template_preprocess_loremipsum(&$variables) {
+function template_preprocess_drupalai(&$variables) {
   // Defines a list of acceptable punctuation.
   $punctuation = array('. ', '! ', '? ', '... ', ': ', '; ');
 
@@ -42,9 +42,9 @@ function template_preprocess_loremipsum(&$variables) {
 /**
  * Implements hook_help().
  */
-function loremipsum_help($route_name, RouteMatchInterface $route_match) {
+function drupalai_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
-    case 'help.page.loremipsum':
+    case 'help.page.drupalai':
       $output = '';
       $output .= '<h2>' . t('Lorem ipsum generator for Drupal.') . '</h2>';
       $output .= '<h3>' . t('Instructions') . '</h3>';

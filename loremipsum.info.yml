@@ -1,6 +1,0 @@
-name: Lorem ipsum
-type: module
-description: 'Lorem ipsum generator for Drupal'
-package: Development
-core_version_requirement: ^10 || ^11
-configure: loremipsum.form

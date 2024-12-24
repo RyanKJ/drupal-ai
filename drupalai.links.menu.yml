@@ -1,0 +1,6 @@
+# Define default links for this module.
+drupalai.form:
+  title: 'Configure Drupal AI'
+  description: 'Settings for querying various AI apis and displaying their results.'
+  route_name: drupalai.form
+  parent: system.admin_config_development

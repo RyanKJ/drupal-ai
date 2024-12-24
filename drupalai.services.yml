@@ -1,0 +1,4 @@
+services:
+  drupalai.drupalai_service:
+    class: \Drupal\drupalai\Service\DrupalAIService
+    arguments: []
