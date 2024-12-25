@@ -43,12 +43,15 @@ class DrupalAIBlock extends BlockBase {
   }
 
   /**
+   * 
+   * Changed drupal_ai_block_settings to drupalai_block_settings in attempt to fix submission bug.
+   *
    * {@inheritdoc}
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
     $this->setConfigurationValue(
-      'drupal_ai_block_settings',
-      $form_state->getValue('drupal_ai_block_settings')
+      'drupalai_block_settings',
+      $form_state->getValue('drupalai_block_settings')
     );
   } 
 
