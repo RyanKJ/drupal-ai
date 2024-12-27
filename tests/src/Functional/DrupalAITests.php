@@ -26,7 +26,7 @@ class DrupalAITests extends BrowserTestBase {
     parent::setUp();
     $this->user = $this->DrupalCreateUser(array(
       'administer site configuration',
-      'generate lorem ipsum',
+      'generate drupalai',
     ));
   }
 

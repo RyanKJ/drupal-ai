@@ -12,6 +12,6 @@ use Drupal\user\RoleInterface;
  */
 function drupalai_install() {
   user_role_change_permissions(RoleInterface::ANONYMOUS_ID, array(
-      'generate lorem ipsum' => TRUE,
+      'generate drupalai' => TRUE,
   ));
 }

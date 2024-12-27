@@ -30,14 +30,14 @@ class DrupalAIForm extends ConfigFormBase {
     // Page title field
     $form['page_title'] = array(
       '#type' => 'textfield',
-      '#title' => t('Lorem ipsum generator page title:'),
+      '#title' => t('Drupal AI generator page title:'),
       '#default_value' => $config->get('drupalai.page_title'),
-      '#description' => t('Give your lorem ipsum generator page a title.'),
+      '#description' => t('Give your Drupal AI generator page a title.'),
     );
     // Source text field
     $form['source_text'] = array(
       '#type' => 'textarea',
-      '#title' => t('Source text for lorem ipsum generation:'),
+      '#title' => t('Source text for Drupal AI generation:'),
       '#default_value' => $config->get('drupalai.source_text'),
       '#description' => t('Write one sentence per line. Those sentences will be used to generate random text.'),
     );

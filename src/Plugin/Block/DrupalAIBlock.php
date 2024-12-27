@@ -30,7 +30,7 @@ class DrupalAIBlock extends BlockBase {
    * {@inheritdoc}
    */
   protected function blockAccess(AccountInterface $account) {
-    return AccessResult::allowedIfHasPermission($account, 'generate lorem ipsum');
+    return AccessResult::allowedIfHasPermission($account, 'generate drupalai');
   }
 
   /**

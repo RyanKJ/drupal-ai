@@ -4,6 +4,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Implements hook_theme().
+ * {machine_name_of_custom_module}_theme(arguments) 
  */
 function drupalai_theme($existing, $type, $theme, $path) {
   $variables = array(
@@ -18,7 +19,7 @@ function drupalai_theme($existing, $type, $theme, $path) {
 }
 
 /**
- * Template preprocess function for Lorem ipsum
+ * Template preprocess function for Drupal AI
  *
  * @param variables
  *   An associative array containing:

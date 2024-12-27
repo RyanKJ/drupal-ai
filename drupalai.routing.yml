@@ -3,12 +3,12 @@ drupalai.generate:
   defaults:
     _controller: '\Drupal\drupalai\Controller\DrupalAIController::generate'
   requirements:
-    _permission: 'generate lorem ipsum'
+    _permission: 'generate drupalai'
 
 drupalai.form:
   path: '/admin/config/development/drupalai'
   defaults:
     _form: '\Drupal\drupalai\Form\DrupalAIForm'
-    _title: 'Lorem ipsum settings'
+    _title: 'drupalai settings'
   requirements:
     _permission: 'administer site configuration'
