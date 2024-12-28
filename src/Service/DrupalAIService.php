@@ -38,6 +38,8 @@ class DrupalAIService {
     // Theme function
     $element['#theme'] = 'drupalai';
     
+    return $element;
+    
     /**
      *
      *
