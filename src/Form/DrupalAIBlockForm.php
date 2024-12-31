@@ -36,22 +36,37 @@ class DrupalAIBlockForm extends FormBase {
       '#type' => 'textarea',
       '#title' => $this->t('Your question'),
       '#required' => TRUE,
+    ]; 
+    
+    $form['#response-prefix'] = '<div id="ai-response-wrapper">';
+    
+    $form['chatgtp-response'] = [
+      '#type' => 'markup',
+      '#markup' => '<div id="chatgtp-response"></div>',
     ];
-
-    $form['claude-response'] = [
+    
+     $form['claude-response'] = [
       '#type' => 'markup',
       '#markup' => '<div id="claude-response"></div>',
     ];
+
+    $form['gemini-response'] = [
+      '#type' => 'markup',
+      '#markup' => '<div id="gemini-response"></div>',
+    ];
+    
+    $form['#response-prefix'] = '</div>';
+    
 
     $form['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Submit Your Query'),
       '#ajax' => [
         'callback' => '::ajaxSubmit',
-        'wrapper' => 'claude-form-wrapper',
+        'wrapper' => 'ai-form-wrapper',
         'progress' => [
           'type' => 'throbber',
-          'message' => $this->t('Asking Claude...'),
+          'message' => $this->t('Asking ChatGTP, Claude, and Gemini...'),
         ],
       ],
     ];
@@ -92,12 +107,22 @@ class DrupalAIBlockForm extends FormBase {
     
     try {
       $query = $form_state->getValue('query');
-      $claude_response = "This is a test of AJAX functionality!";
+      $claude_response = "This is a test of AJAX functionality!" . " " . $query;
       
       $response->addCommand(
         new HtmlCommand(
+          '#chatgtp-response',
+          '<div class="chatgpt-message">' . nl2br($claude_response) . '</div>'
+        )
+        
+        new HtmlCommand(
           '#claude-response',
           '<div class="claude-message">' . nl2br($claude_response) . '</div>'
+        )
+        
+        new HtmlCommand(
+          '#gemini-response',
+          '<div class="gemini-message">' . nl2br($claude_response) . '</div>'
         )
       );
     }
