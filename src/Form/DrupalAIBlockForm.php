@@ -114,12 +114,16 @@ class DrupalAIBlockForm extends FormBase {
           '#chatgtp-response',
           '<div class="chatgpt-message">' . nl2br($claude_response) . '</div>'
         )
-        
+      );
+      
+      $response->addCommand(
         new HtmlCommand(
           '#claude-response',
           '<div class="claude-message">' . nl2br($claude_response) . '</div>'
         )
-        
+      );
+      
+      $response->addCommand(  
         new HtmlCommand(
           '#gemini-response',
           '<div class="gemini-message">' . nl2br($claude_response) . '</div>'
