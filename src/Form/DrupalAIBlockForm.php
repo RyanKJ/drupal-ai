@@ -10,6 +10,8 @@ namespace Drupal\drupalai\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\HtmlCommand;
 
 /**
  * Drupal AI block form
@@ -27,31 +29,88 @@ class DrupalAIBlockForm extends FormBase {
    * Drupal AI generator block.
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    // How many paragraphs?
-    for ($i = 1; $i <= 10; $i++) $options[$i] = $i;
-    $form['paragraphs'] = array(
-      '#type' => 'select',
-      '#title' => t('Paragraphs'),
-      '#options' => $options,
-      '#default_value' => 4,
-      '#description' => t('How many?'),
-    );
+    $form['#prefix'] = '<div id="ai-form-wrapper">';
+    $form['#suffix'] = '</div>';
 
-    // How many phrases?
-    $form['phrases'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Phrases'),
-      '#default_value' => '20',
-      '#description' => t('Maximum per paragraph'),
-    );
+    $form['query'] = [
+      '#type' => 'textarea',
+      '#title' => $this->t('Your question'),
+      '#required' => TRUE,
+    ];
 
-    // Submit
-    $form['submit'] = array(
+    $form['claude-response'] = [
+      '#type' => 'markup',
+      '#markup' => '<div id="claude-response"></div>',
+    ];
+
+    $form['submit'] = [
       '#type' => 'submit',
-      '#value' => t('Generate'),
-    );
+      '#value' => $this->t('Submit Your Query'),
+      '#ajax' => [
+        'callback' => '::ajaxSubmit',
+        'wrapper' => 'claude-form-wrapper',
+        'progress' => [
+          'type' => 'throbber',
+          'message' => $this->t('Asking Claude...'),
+        ],
+      ],
+    ];
 
     return $form;
+  
+/**
+ *   // How many paragraphs?
+ *   for ($i = 1; $i <= 10; $i++) $options[$i] = $i;
+ *   $form['paragraphs'] = array(
+ *     '#type' => 'select',
+ *     '#title' => t('Paragraphs'),
+ *     '#options' => $options,
+ *     '#default_value' => 4,
+ *     '#description' => t('How many?'),
+ *   );
+ *
+ *   // How many phrases?
+ *   $form['phrases'] = array(
+ *     '#type' => 'textfield',
+ *     '#title' => t('Phrases'),
+ *     '#default_value' => '20',
+ *     '#description' => t('Maximum per paragraph'),
+ *   );
+ *
+ *   // Submit
+ *   $form['submit'] = array(
+ *     '#type' => 'submit',
+ *     '#value' => t('Generate'),
+ *   );
+ *
+ *   return $form;
+ */ 
+  }
+  
+  public function ajaxSubmit(array &$form, FormStateInterface $form_state) {
+    $response = new AjaxResponse();
+    
+    try {
+      $query = $form_state->getValue('query');
+      $claude_response = "This is a test of AJAX functionality!";
+      
+      $response->addCommand(
+        new HtmlCommand(
+          '#claude-response',
+          '<div class="claude-message">' . nl2br($claude_response) . '</div>'
+        )
+      );
+    }
+    catch (\Exception $e) {
+      $response->addCommand(
+        new HtmlCommand(
+          '#claude-response',
+          '<div class="claude-error">Error: ' . $e->getMessage() . '</div>'
+        )
+      );
+    }
+
+    return $response;
   }
 
   /**
@@ -80,12 +139,14 @@ class DrupalAIBlockForm extends FormBase {
    * using the provided parameters.
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $form_state->setRedirect(
-      'drupalai.generate',
-      array(
-        'paragraphs' => $form_state->getValue('paragraphs'),
-        'phrases' => $form_state->getValue('phrases'),
-      )
-    );
+    
+ 
+    //$form_state->setRedirect(
+    //  'drupalai.generate',
+    //  array(
+    //    'paragraphs' => $form_state->getValue('paragraphs'),
+    //    'phrases' => $form_state->getValue('phrases'),
+    //  )
+    //);
   }
 }
