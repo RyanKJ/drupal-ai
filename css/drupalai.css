@@ -1,0 +1,17 @@
+// css/claude_api.css
+.claude-message {
+  margin: 20px 0;
+  padding: 15px;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.claude-error {
+  margin: 20px 0;
+  padding: 15px;
+  background: #fee;
+  border: 1px solid #fcc;
+  border-radius: 4px;
+  color: #c00;
+}
