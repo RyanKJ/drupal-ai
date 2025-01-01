@@ -29,7 +29,7 @@ class DrupalAIBlockForm extends FormBase {
    * Drupal AI generator block.
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $form['#attached']['library'][] = 'drupalai/drupalai_styles';
+    $form['#attached']['library'][] = 'drupalai/drupalai';
   
     $form['#prefix'] = '<div id="ai-form-wrapper">';
     $form['#suffix'] = '</div>';
