@@ -108,6 +108,11 @@ class DrupalAIBlockForm extends FormBase {
       ],
       '#value' => $this->t('Claude'),
     ];
+    $form['responses_wrapper']['claude']['header']['claude_model_selection'] = [
+      '#type' => 'select',
+      '#options' => $claude_model_options,
+      '#default_value' => $claude_model_options[0],
+    ]; 
     $form['responses_wrapper']['claude']['content'] = [
       '#type' => 'markup',
       '#markup' => '<div id="claude-response" class="response-content"></div>',
@@ -132,6 +137,11 @@ class DrupalAIBlockForm extends FormBase {
       ],
       '#value' => $this->t('Gemini'),
     ];
+    $form['responses_wrapper']['gemini']['header']['gemini_model_selection'] = [
+      '#type' => 'select',
+      '#options' => $gemini_model_options,
+      '#default_value' => $gemini_model_options[0],
+    ]; 
     $form['responses_wrapper']['gemini']['content'] = [
       '#type' => 'markup',
       '#markup' => '<div id="gemini-response" class="response-content"></div>',
