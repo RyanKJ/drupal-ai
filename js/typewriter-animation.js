@@ -6,15 +6,16 @@
       this.element = element;
       this.text = text;
       this.speed = speed;
-      this.currentChar = 0;
       this.words = this.text.split(' ');
       this.currentWord = 0;
       this.isAnimating = false;
+      this.onComplete = null;
     }
 
-    start() {
+    start(onCompleteCallback) {
       if (this.isAnimating) return;
       this.isAnimating = true;
+      this.onComplete = onCompleteCallback;
       this.element.innerHTML = '';
       this.animateWords();
     }
@@ -22,6 +23,9 @@
     animateWords() {
       if (this.currentWord >= this.words.length) {
         this.isAnimating = false;
+        if (this.onComplete) {
+          this.onComplete();
+        }
         return;
       }
 
@@ -35,25 +39,34 @@
         span.style.opacity = '1';
         this.currentWord++;
         this.animateWords();
-      }, this.speed * 1.853);
+      }, this.speed * 1.583);
     }
 
     stop() {
       this.isAnimating = false;
       this.currentWord = this.words.length;
       this.element.innerHTML = this.text;
+      if (this.onComplete) {
+        this.onComplete();
+      }
     }
   }
 
   Drupal.behaviors.aiResponseAnimation = {
     attach: function (context, settings) {
-      // Store active animations
       if (!Drupal.behaviors.aiResponseAnimation.activeAnimations) {
         Drupal.behaviors.aiResponseAnimation.activeAnimations = new Map();
       }
 
-      // Function to start animation for a specific response
-      function animateResponse(selector, text) {
+      function animateMetaInfo(metaSelector, metaText) {
+        const metaElement = document.querySelector(metaSelector);
+        if (!metaElement) return;
+
+        const metaAnimation = new TypewriterAnimation(metaElement, metaText, 20);
+        metaAnimation.start();
+      }
+
+      function animateResponse(selector, text, metaSelector, metaText) {
         const element = document.querySelector(selector);
         if (!element) return;
 
@@ -63,10 +76,16 @@
           existingAnimation.stop();
         }
 
-        // Create and start new animation
+        // Create and start new animation with callback for meta information
         const animation = new TypewriterAnimation(element, text, 30);
         Drupal.behaviors.aiResponseAnimation.activeAnimations.set(selector, animation);
-        animation.start();
+        
+        animation.start(() => {
+          // Once main content animation is complete, animate the meta information
+          if (metaSelector && metaText) {
+            animateMetaInfo(metaSelector, metaText);
+          }
+        });
       }
 
       // Override the existing HtmlCommand to include animation
@@ -82,11 +101,29 @@
           // Call the original insert command first
           this.original_insert(ajax, response, status);
 
-          // Start animation based on the target selector
-          if (response.selector === '#chatgpt-response' || 
-              response.selector === '#claude-response' || 
-              response.selector === '#gemini-response') {
-            animateResponse(response.selector, text);
+          // Map response selectors to their corresponding meta selectors
+          const selectorPairs = {
+            '#chatgpt-response': '#chatgpt-meta',
+            '#claude-response': '#claude-meta',
+            '#gemini-response': '#gemini-meta'
+          };
+
+          // If this is a main response, animate it and queue up its meta information
+          if (selectorPairs[response.selector]) {
+            animateResponse(
+              response.selector,
+              text,
+              selectorPairs[response.selector],
+              document.querySelector(selectorPairs[response.selector])?.getAttribute('data-meta-text')
+            );
+          }
+          
+          // If this is a meta update, store it for when the main content finishes
+          if (response.selector.endsWith('-meta')) {
+            const element = document.querySelector(response.selector);
+            if (element) {
+              element.setAttribute('data-meta-text', text);
+            }
           }
         };
       }
