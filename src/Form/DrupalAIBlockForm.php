@@ -33,9 +33,9 @@ class DrupalAIBlockForm extends FormBase {
     $form['#prefix'] = '<div id="ai-form-wrapper">';
     $form['#suffix'] = '</div>';
     
-    $chatgpt_model_options = ['ChatGPT Model 1', 'ChatGPT Model 2'];
-    $claude_model_options = ['Claude Haiku', 'Claude Sonnet'];
-    $gemini_model_options = ['Gemini 1', 'Gemini 2'];
+    $chatgpt_model_options = ['chatgpt_2341234' => 'ChatGPT Model 1', 'chatgpt_987899' => 'ChatGPT Model 2'];
+    $claude_model_options = ['claude_haiku_2341' => 'Claude Haiku', 'claude_sonnet_342' => 'Claude Sonnet'];
+    $gemini_model_options = ['gemini_11231' => 'Gemini 1', 'gemini_23421' => 'Gemini 2'];
 
     $form['query'] = [
       '#type' => 'textarea',
