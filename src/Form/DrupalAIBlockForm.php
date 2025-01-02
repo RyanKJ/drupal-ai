@@ -40,25 +40,73 @@ class DrupalAIBlockForm extends FormBase {
       '#required' => TRUE,
     ]; 
     
-    $form['#response-prefix'] = '<div id="ai-response-wrapper">';
-    
-    $form['chatgtp-response'] = [
-      '#type' => 'markup',
-      '#markup' => '<div id="chatgtp-response"></div>',
-    ];
-    
-     $form['claude-response'] = [
-      '#type' => 'markup',
-      '#markup' => '<div id="claude-response"></div>',
+    // Create a container for all responses
+    $form['responses_wrapper'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => ['responses-container'],
+      ],
     ];
 
-    $form['gemini-response'] = [
-      '#type' => 'markup',
-      '#markup' => '<div id="gemini-response"></div>',
+    // ChatGPT response column
+    $form['responses_wrapper']['chatgpt'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => ['response-column'],
+      ],
     ];
-    
-    $form['#response-prefix'] = '</div>';
-    
+    $form['responses_wrapper']['chatgpt']['header'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'div',
+      '#attributes' => [
+        'class' => ['response-header', 'gpt-header'],
+      ],
+      '#value' => $this->t('ChatGPT'),
+    ];
+    $form['responses_wrapper']['chatgpt']['content'] = [
+      '#type' => 'markup',
+      '#markup' => '<div id="chatgpt-response" class="response-content"></div>',
+    ];
+
+    // Claude response column
+    $form['responses_wrapper']['claude'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => ['response-column'],
+      ],
+    ];
+    $form['responses_wrapper']['claude']['header'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'div',
+      '#attributes' => [
+        'class' => ['response-header', 'claude-header'],
+      ],
+      '#value' => $this->t('Claude'),
+    ];
+    $form['responses_wrapper']['claude']['content'] = [
+      '#type' => 'markup',
+      '#markup' => '<div id="claude-response" class="response-content"></div>',
+    ];
+
+    // Gemini response column
+    $form['responses_wrapper']['gemini'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => ['response-column'],
+      ],
+    ];
+    $form['responses_wrapper']['gemini']['header'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'div',
+      '#attributes' => [
+        'class' => ['response-header', 'gemini-header'],
+      ],
+      '#value' => $this->t('Gemini'),
+    ];
+    $form['responses_wrapper']['gemini']['content'] = [
+      '#type' => 'markup',
+      '#markup' => '<div id="gemini-response" class="response-content"></div>',
+    ];
 
     $form['submit'] = [
       '#type' => 'submit',
@@ -68,7 +116,7 @@ class DrupalAIBlockForm extends FormBase {
         'wrapper' => 'ai-form-wrapper',
         'progress' => [
           'type' => 'throbber',
-          'message' => $this->t('Asking ChatGTP, Claude, and Gemini...'),
+          'message' => $this->t('Asking ChatGPT, Claude, and Gemini...'),
         ],
       ],
     ];
