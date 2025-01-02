@@ -77,10 +77,11 @@ class DrupalAIBlockForm extends FormBase {
       '#attributes' => [
         'class' => ['response-header', 'chatgpt-header'],
       ],
-      //'#value' => $this->t('ChatGPT'),
+      '#value' => $this->t('ChatGPT'),
     ];
     $form['responses_wrapper']['chatgpt']['header']['chatgpt_model_selection'] = [
       '#type' => 'select',
+      '#title' => t('Select Version'),
       '#options' => $chatgpt_model_options,
       '#default_value' => $chatgpt_model_options[0],
     ]; 
@@ -110,6 +111,7 @@ class DrupalAIBlockForm extends FormBase {
     ];
     $form['responses_wrapper']['claude']['header']['claude_model_selection'] = [
       '#type' => 'select',
+      '#title' => t('Select Version'),
       '#options' => $claude_model_options,
       '#default_value' => $claude_model_options[0],
     ]; 
@@ -139,6 +141,7 @@ class DrupalAIBlockForm extends FormBase {
     ];
     $form['responses_wrapper']['gemini']['header']['gemini_model_selection'] = [
       '#type' => 'select',
+      '#title' => t('Select Version'),
       '#options' => $gemini_model_options,
       '#default_value' => $gemini_model_options[0],
     ]; 
