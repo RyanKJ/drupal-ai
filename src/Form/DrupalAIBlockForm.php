@@ -190,7 +190,8 @@ class DrupalAIBlockForm extends FormBase {
     
     try {
       $query = $form_state->getValue('query');
-      $claude_response = "This is a test of AJAX functionality!" . " " . $query;
+      $chatgpt_model = $form_state->getValue('chatgpt_model_selection');
+      $claude_response = "This is a test of AJAX functionality!" . " " . "ChatGPT Model Selection is: " . $chatgpt_model . $query;
       $time = "1.53 Seconds";
       
       // ChatGPT
