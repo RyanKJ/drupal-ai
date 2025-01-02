@@ -29,41 +29,32 @@ class DrupalAIBlockForm extends FormBase {
    * Drupal AI generator block.
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $chatgpt_model_options = [];
-    $claude_model_options = [];
-    $gemini_model_options = [];
-  
-  for ($i = 1; $i <= 10; $i++) $options[$i] = $i;
-    $form['paragraphs'] = array(
-      '#type' => 'select',
-      '#title' => t('Paragraphs'),
-      '#options' => $options,
-      '#default_value' => 4,
-      '#description' => t('How many?'),
-    );
- 
-    $form['chatgpt_model_selection'] = array(
-      '#type' => 'select',
-      '#title' => t('ChatGPT Model'),
-      '#options' => $chatgpt_model_options,
-      '#default_value' => $chatgpt_model_options[0],
-      '#description' => t('Which version of ChatGPT would you like to query?'),
-    ); 
- 
- 
-  
-  
-  
     $form['#attached']['library'][] = 'drupalai/drupalai_styles';
-  
     $form['#prefix'] = '<div id="ai-form-wrapper">';
     $form['#suffix'] = '</div>';
+    
+    $chatgpt_model_options = ['ChatGPT Model 1', 'ChatGPT Model 2'];
+    $claude_model_options = ['Claude Haiku', Claude Sonnet'];
+    $gemini_model_options = ['Gemini 1', 'Gemini 2'];
 
     $form['query'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Your question'),
       '#required' => FALSE,
     ]; 
+    
+    $form['submit'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Submit Your Query'),
+      '#ajax' => [
+        'callback' => '::ajaxSubmit',
+        'wrapper' => 'ai-form-wrapper',
+        'progress' => [
+          'type' => 'throbber',
+          'message' => $this->t('Asking ChatGPT, Claude, and Gemini...'),
+        ],
+      ],
+    ];
     
     // Create a container for all responses
     $form['responses_wrapper'] = [
@@ -151,20 +142,6 @@ class DrupalAIBlockForm extends FormBase {
       '#type' => 'markup',
       '#markup' => '<div id="gemini-meta" class="response-meta"></div>',
     ];    
-    
-
-    $form['submit'] = [
-      '#type' => 'submit',
-      '#value' => $this->t('Submit Your Query'),
-      '#ajax' => [
-        'callback' => '::ajaxSubmit',
-        'wrapper' => 'ai-form-wrapper',
-        'progress' => [
-          'type' => 'throbber',
-          'message' => $this->t('Asking ChatGPT, Claude, and Gemini...'),
-        ],
-      ],
-    ];
 
     return $form;
   
