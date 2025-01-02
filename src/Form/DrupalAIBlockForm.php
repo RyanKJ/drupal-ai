@@ -29,6 +29,31 @@ class DrupalAIBlockForm extends FormBase {
    * Drupal AI generator block.
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    $chatgpt_model_options = [];
+    $claude_model_options = [];
+    $gemini_model_options = [];
+  
+  for ($i = 1; $i <= 10; $i++) $options[$i] = $i;
+    $form['paragraphs'] = array(
+      '#type' => 'select',
+      '#title' => t('Paragraphs'),
+      '#options' => $options,
+      '#default_value' => 4,
+      '#description' => t('How many?'),
+    );
+ 
+    $form['chatgpt_model_selection'] = array(
+      '#type' => 'select',
+      '#title' => t('ChatGPT Model'),
+      '#options' => $chatgpt_model_options,
+      '#default_value' => $chatgpt_model_options[0],
+      '#description' => t('Which version of ChatGPT would you like to query?'),
+    ); 
+ 
+ 
+  
+  
+  
     $form['#attached']['library'][] = 'drupalai/drupalai_styles';
   
     $form['#prefix'] = '<div id="ai-form-wrapper">';
@@ -61,8 +86,15 @@ class DrupalAIBlockForm extends FormBase {
       '#attributes' => [
         'class' => ['response-header', 'chatgpt-header'],
       ],
-      '#value' => $this->t('ChatGPT'),
+      //'#value' => $this->t('ChatGPT'),
     ];
+    $form['responses_wrapper']['chatgpt']['header']['chatgpt_model_selection'] = [
+      '#type' => 'select',
+      '#title' => t('ChatGPT Model'),
+      '#options' => $chatgpt_model_options,
+      '#default_value' => $chatgpt_model_options[0],
+      '#description' => t('Which version of ChatGPT would you like to query?'),
+    ]; 
     $form['responses_wrapper']['chatgpt']['content'] = [
       '#type' => 'markup',
       '#markup' => '<div id="chatgpt-response" class="response-content"></div>',
