@@ -74,27 +74,45 @@
         // Update the animation set ID to invalidate any pending callbacks
         Drupal.behaviors.aiResponseAnimation.currentAnimationSet = Date.now();
 
+        // Define all selectors
+        const allSelectors = {
+          responses: ['#chatgpt-response', '#claude-response', '#gemini-response'],
+          meta: ['#chatgpt-meta', '#claude-meta', '#gemini-meta']
+        };
+
         // Clear main response divs
-        ['#chatgpt-response', '#claude-response', '#gemini-response'].forEach(selector => {
+        allSelectors.responses.forEach(selector => {
           const element = document.querySelector(selector);
-          if (element) element.innerHTML = '';
+          if (element) {
+            while (element.firstChild) {
+              element.removeChild(element.firstChild);
+            }
+          }
         });
 
-        // Clear meta divs
-        ['#chatgpt-meta', '#claude-meta', '#gemini-meta'].forEach(selector => {
+        // Clear meta divs - using direct text content removal
+        allSelectors.meta.forEach(selector => {
           const element = document.querySelector(selector);
-          if (element) element.innerHTML = '';
+          if (element) {
+            while (element.firstChild) {
+              element.removeChild(element.firstChild);
+            }
+            element.textContent = ''; // Ensure complete clearing
+          }
         });
+
+        // Stop any active animations and clear them from tracking
+        Drupal.behaviors.aiResponseAnimation.activeAnimations.forEach(animation => {
+          if (animation && typeof animation.stop === 'function') {
+            animation.stop();
+          }
+        });
+        Drupal.behaviors.aiResponseAnimation.activeAnimations.clear();
 
         // Clear stored meta content
         Drupal.behaviors.aiResponseAnimation.metaContent.clear();
-
-        // Stop any active animations
-        Drupal.behaviors.aiResponseAnimation.activeAnimations.forEach(animation => {
-          animation.stop();
-        });
-        Drupal.behaviors.aiResponseAnimation.activeAnimations.clear();
       }
+
 
       function animateMetaInfo(metaSelector, metaText, animationSetId) {
         // Only animate if this is still the current animation set
@@ -131,6 +149,15 @@
           if (metaSelector && metaText) {
             animateMetaInfo(metaSelector, metaText, currentAnimationSetId);
           }
+        });
+      }
+      
+      // Ensure we're properly binding the form submit event
+      const form = document.querySelector('form.drupal-ai-block-form');
+      if (form && !form.hasAttribute('data-clear-listener')) {
+        form.setAttribute('data-clear-listener', 'true');
+        form.addEventListener('submit', function(e) {
+          clearAllContent();
         });
       }
 
