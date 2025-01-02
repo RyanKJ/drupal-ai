@@ -162,7 +162,7 @@ class DrupalAIBlockForm extends FormBase {
       $response->addCommand(
         new HtmlCommand(
           '#chatgtp-response',
-          '<div class="chatgpt-message">' . nl2br($claude_response) . '</div>'
+          '<div class="chatgtp-message">' . nl2br($claude_response) . '</div>'
         )
       );
       
