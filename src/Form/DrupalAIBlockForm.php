@@ -34,7 +34,7 @@ class DrupalAIBlockForm extends FormBase {
     $form['#suffix'] = '</div>';
     
     $chatgpt_model_options = ['ChatGPT Model 1', 'ChatGPT Model 2'];
-    $claude_model_options = ['Claude Haiku', Claude Sonnet'];
+    $claude_model_options = ['Claude Haiku', 'Claude Sonnet'];
     $gemini_model_options = ['Gemini 1', 'Gemini 2'];
 
     $form['query'] = [
