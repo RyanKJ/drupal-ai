@@ -58,17 +58,36 @@
         Drupal.behaviors.aiResponseAnimation.activeAnimations = new Map();
       }
 
-      // Store meta information until needed
       if (!Drupal.behaviors.aiResponseAnimation.metaContent) {
         Drupal.behaviors.aiResponseAnimation.metaContent = new Map();
+      }
+
+      function clearAllContent() {
+        // Clear main response divs
+        ['#chatgpt-response', '#claude-response', '#gemini-response'].forEach(selector => {
+          const element = document.querySelector(selector);
+          if (element) element.innerHTML = '';
+        });
+
+        // Clear meta divs
+        ['#chatgpt-meta', '#claude-meta', '#gemini-meta'].forEach(selector => {
+          const element = document.querySelector(selector);
+          if (element) element.innerHTML = '';
+        });
+
+        // Clear stored meta content
+        Drupal.behaviors.aiResponseAnimation.metaContent.clear();
+
+        // Stop any active animations
+        Drupal.behaviors.aiResponseAnimation.activeAnimations.forEach(animation => {
+          animation.stop();
+        });
+        Drupal.behaviors.aiResponseAnimation.activeAnimations.clear();
       }
 
       function animateMetaInfo(metaSelector, metaText) {
         const metaElement = document.querySelector(metaSelector);
         if (!metaElement) return;
-
-        // Clear any existing content first
-        metaElement.innerHTML = '';
         
         const metaAnimation = new TypewriterAnimation(metaElement, metaText, 20);
         metaAnimation.start();
@@ -89,11 +108,18 @@
         Drupal.behaviors.aiResponseAnimation.activeAnimations.set(selector, animation);
         
         animation.start(() => {
-          // Once main content animation is complete, animate the meta information
           const metaText = Drupal.behaviors.aiResponseAnimation.metaContent.get(metaSelector);
           if (metaSelector && metaText) {
             animateMetaInfo(metaSelector, metaText);
           }
+        });
+      }
+
+      // Listen for form submission
+      const form = document.querySelector('form.drupal-ai-block-form');
+      if (form) {
+        form.addEventListener('submit', function(e) {
+          clearAllContent();
         });
       }
 
@@ -112,6 +138,11 @@
             '#claude-response': '#claude-meta',
             '#gemini-response': '#gemini-meta'
           };
+
+          // If this is the first response in a new set, clear previous content
+          if (response.selector === '#chatgpt-response') {
+            clearAllContent();
+          }
 
           // If this is a meta update, store it instead of inserting
           if (response.selector.endsWith('-meta')) {
