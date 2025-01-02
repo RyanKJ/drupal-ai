@@ -58,6 +58,13 @@ function drupalai_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_
 }
 
 /**
+ * Implements hook_page_attachments().
+ */
+function drupalai_page_attachments(array &$attachments) {
+  $attachments['#attached']['library'][] = 'drupalai/drupalai_styles';
+}
+
+/**
  * Implements hook_help().
  */
 function drupalai_help($route_name, RouteMatchInterface $route_match) {
