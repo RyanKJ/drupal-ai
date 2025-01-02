@@ -10,7 +10,6 @@
       this.currentWord = 0;
       this.isAnimating = false;
       this.onComplete = null;
-      this.id = Date.now();
     }
 
     start(onCompleteCallback) {
@@ -22,13 +21,10 @@
     }
 
     animateWords() {
-      if (!this.isAnimating || this.currentWord >= this.words.length) {
-        const wasAnimating = this.isAnimating;
+      if (this.currentWord >= this.words.length) {
         this.isAnimating = false;
-        
-        // Call callback if we finished naturally (not stopped)
-        if (wasAnimating && this.onComplete && this.currentWord >= this.words.length) {
-          this.onComplete(this.id);
+        if (this.onComplete) {
+          this.onComplete();
         }
         return;
       }
@@ -40,11 +36,9 @@
       this.element.appendChild(span);
 
       setTimeout(() => {
-        if (this.isAnimating) {
-          span.style.opacity = '1';
-          this.currentWord++;
-          this.animateWords();
-        }
+        span.style.opacity = '1';
+        this.currentWord++;
+        this.animateWords();
       }, this.speed * 1.53);
     }
 
@@ -52,6 +46,9 @@
       this.isAnimating = false;
       this.currentWord = this.words.length;
       this.element.innerHTML = this.text;
+      if (this.onComplete) {
+        this.onComplete();
+      }
     }
   }
 
@@ -65,66 +62,34 @@
         Drupal.behaviors.aiResponseAnimation.metaContent = new Map();
       }
 
-      // Add a property to track the current animation set
-      if (!Drupal.behaviors.aiResponseAnimation.currentAnimationSet) {
-        Drupal.behaviors.aiResponseAnimation.currentAnimationSet = Date.now();
-      }
-
       function clearAllContent() {
-        // Update the animation set ID to invalidate any pending callbacks
-        Drupal.behaviors.aiResponseAnimation.currentAnimationSet = Date.now();
-
-        // Define all selectors
-        const allSelectors = {
-          responses: ['#chatgpt-response', '#claude-response', '#gemini-response'],
-          meta: ['#chatgpt-meta', '#claude-meta', '#gemini-meta']
-        };
-
         // Clear main response divs
-        allSelectors.responses.forEach(selector => {
+        ['#chatgpt-response', '#claude-response', '#gemini-response'].forEach(selector => {
           const element = document.querySelector(selector);
-          if (element) {
-            while (element.firstChild) {
-              element.removeChild(element.firstChild);
-            }
-          }
+          if (element) element.innerHTML = '';
         });
 
-        // Clear meta divs - using direct text content removal
-        allSelectors.meta.forEach(selector => {
+        // Clear meta divs
+        ['#chatgpt-meta', '#claude-meta', '#gemini-meta'].forEach(selector => {
           const element = document.querySelector(selector);
-          if (element) {
-            while (element.firstChild) {
-              element.removeChild(element.firstChild);
-            }
-            element.textContent = ''; // Ensure complete clearing
-          }
+          if (element) element.innerHTML = '';
         });
-
-        // Stop any active animations and clear them from tracking
-        Drupal.behaviors.aiResponseAnimation.activeAnimations.forEach(animation => {
-          if (animation && typeof animation.stop === 'function') {
-            animation.stop();
-          }
-        });
-        Drupal.behaviors.aiResponseAnimation.activeAnimations.clear();
 
         // Clear stored meta content
         Drupal.behaviors.aiResponseAnimation.metaContent.clear();
+
+        // Stop any active animations
+        Drupal.behaviors.aiResponseAnimation.activeAnimations.forEach(animation => {
+          animation.stop();
+        });
+        Drupal.behaviors.aiResponseAnimation.activeAnimations.clear();
       }
 
-
-      function animateMetaInfo(metaSelector, metaText, animationSetId) {
-        // Only animate if this is still the current animation set
-        if (animationSetId !== Drupal.behaviors.aiResponseAnimation.currentAnimationSet) {
-          return;
-        }
-
+      function animateMetaInfo(metaSelector, metaText) {
         const metaElement = document.querySelector(metaSelector);
         if (!metaElement) return;
         
         const metaAnimation = new TypewriterAnimation(metaElement, metaText, 20);
-        Drupal.behaviors.aiResponseAnimation.activeAnimations.set(metaSelector, metaAnimation);
         metaAnimation.start();
       }
 
@@ -138,26 +103,15 @@
           existingAnimation.stop();
         }
 
-        // Create and start new animation
+        // Create and start new animation with callback for meta information
         const animation = new TypewriterAnimation(element, text, 30);
-        const currentAnimationSetId = Drupal.behaviors.aiResponseAnimation.currentAnimationSet;
-        
         Drupal.behaviors.aiResponseAnimation.activeAnimations.set(selector, animation);
         
         animation.start(() => {
           const metaText = Drupal.behaviors.aiResponseAnimation.metaContent.get(metaSelector);
           if (metaSelector && metaText) {
-            animateMetaInfo(metaSelector, metaText, currentAnimationSetId);
+            animateMetaInfo(metaSelector, metaText);
           }
-        });
-      }
-      
-      // Ensure we're properly binding the form submit event
-      const form = document.querySelector('form.drupal-ai-block-form');
-      if (form && !form.hasAttribute('data-clear-listener')) {
-        form.setAttribute('data-clear-listener', 'true');
-        form.addEventListener('submit', function(e) {
-          clearAllContent();
         });
       }
 
@@ -184,6 +138,11 @@
             '#claude-response': '#claude-meta',
             '#gemini-response': '#gemini-meta'
           };
+
+          // If this is the first response in a new set, clear previous content
+          if (response.selector === '#chatgpt-response') {
+            clearAllContent();
+          }
 
           // If this is a meta update, store it instead of inserting
           if (response.selector.endsWith('-meta')) {
