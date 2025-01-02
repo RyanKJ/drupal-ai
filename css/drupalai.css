@@ -82,7 +82,7 @@
   color: var(--claude-accent);
 }
 
-.gpt-header {
+.chatgpt-header {
   background: color-mix(in srgb, var(--gpt-accent) 10%, transparent);
   color: var(--gpt-accent);
 }

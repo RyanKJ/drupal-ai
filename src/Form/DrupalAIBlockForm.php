@@ -67,6 +67,10 @@ class DrupalAIBlockForm extends FormBase {
       '#type' => 'markup',
       '#markup' => '<div id="chatgpt-response" class="response-content"></div>',
     ];
+    $form['responses_wrapper']['chatgpt']['meta'] = [
+      '#type' => 'markup',
+      '#markup' => '<div id="chatgpt-meta" class="response-meta"></div>',
+    ];
 
     // Claude response column
     $form['responses_wrapper']['claude'] = [
@@ -87,6 +91,10 @@ class DrupalAIBlockForm extends FormBase {
       '#type' => 'markup',
       '#markup' => '<div id="claude-response" class="response-content"></div>',
     ];
+    $form['responses_wrapper']['claude']['meta'] = [
+      '#type' => 'markup',
+      '#markup' => '<div id="claude-meta" class="response-meta"></div>',
+    ]; 
 
     // Gemini response column
     $form['responses_wrapper']['gemini'] = [
@@ -107,6 +115,11 @@ class DrupalAIBlockForm extends FormBase {
       '#type' => 'markup',
       '#markup' => '<div id="gemini-response" class="response-content"></div>',
     ];
+    $form['responses_wrapper']['gemini']['meta'] = [
+      '#type' => 'markup',
+      '#markup' => '<div id="gemini-meta" class="response-meta"></div>',
+    ];    
+    
 
     $form['submit'] = [
       '#type' => 'submit',
@@ -158,25 +171,47 @@ class DrupalAIBlockForm extends FormBase {
     try {
       $query = $form_state->getValue('query');
       $claude_response = "This is a test of AJAX functionality!" . " " . $query;
+      $time = "1.53 Seconds";
       
+      // ChatGPT
       $response->addCommand(
         new HtmlCommand(
           '#chatgpt-response',
           '<div class="chatgpt-message">' . nl2br($claude_response) . '</div>'
         )
       );
+      $response->addCommand(
+        new HtmlCommand(
+          '#chatgpt-meta',
+          '<div class="response-meta">' . $time . '</div>'
+        )
+      );
       
+      // Claude
       $response->addCommand(
         new HtmlCommand(
           '#claude-response',
           '<div class="claude-message">' . nl2br($claude_response) . '</div>'
         )
       );
+      $response->addCommand(
+        new HtmlCommand(
+          '#claude-meta',
+          '<div class="response-meta">' . $time . '</div>'
+        )
+      );
       
+      // Gemini
       $response->addCommand(  
         new HtmlCommand(
           '#gemini-response',
           '<div class="gemini-message">' . nl2br($claude_response) . '</div>'
+        )
+      );
+      $response->addCommand(
+        new HtmlCommand(
+          '#gemini-meta',
+          '<div class="response-meta">' . $time . '</div>'
         )
       );
     }
