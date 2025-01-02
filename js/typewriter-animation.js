@@ -39,7 +39,7 @@
         span.style.opacity = '1';
         this.currentWord++;
         this.animateWords();
-      }, this.speed * 1.583);
+      }, this.speed * 1.53);
     }
 
     stop() {
@@ -58,15 +58,23 @@
         Drupal.behaviors.aiResponseAnimation.activeAnimations = new Map();
       }
 
+      // Store meta information until needed
+      if (!Drupal.behaviors.aiResponseAnimation.metaContent) {
+        Drupal.behaviors.aiResponseAnimation.metaContent = new Map();
+      }
+
       function animateMetaInfo(metaSelector, metaText) {
         const metaElement = document.querySelector(metaSelector);
         if (!metaElement) return;
 
+        // Clear any existing content first
+        metaElement.innerHTML = '';
+        
         const metaAnimation = new TypewriterAnimation(metaElement, metaText, 20);
         metaAnimation.start();
       }
 
-      function animateResponse(selector, text, metaSelector, metaText) {
+      function animateResponse(selector, text, metaSelector) {
         const element = document.querySelector(selector);
         if (!element) return;
 
@@ -82,24 +90,21 @@
         
         animation.start(() => {
           // Once main content animation is complete, animate the meta information
+          const metaText = Drupal.behaviors.aiResponseAnimation.metaContent.get(metaSelector);
           if (metaSelector && metaText) {
             animateMetaInfo(metaSelector, metaText);
           }
         });
       }
 
-      // Override the existing HtmlCommand to include animation
+      // Override the existing HtmlCommand
       if (typeof Drupal.AjaxCommands.prototype.original_insert === 'undefined') {
         Drupal.AjaxCommands.prototype.original_insert = Drupal.AjaxCommands.prototype.insert;
         
         Drupal.AjaxCommands.prototype.insert = function (ajax, response, status) {
-          // Extract the text content from the HTML
           const tempDiv = document.createElement('div');
           tempDiv.innerHTML = response.data;
           const text = tempDiv.textContent || tempDiv.innerText;
-
-          // Call the original insert command first
-          this.original_insert(ajax, response, status);
 
           // Map response selectors to their corresponding meta selectors
           const selectorPairs = {
@@ -108,22 +113,21 @@
             '#gemini-response': '#gemini-meta'
           };
 
-          // If this is a main response, animate it and queue up its meta information
+          // If this is a meta update, store it instead of inserting
+          if (response.selector.endsWith('-meta')) {
+            Drupal.behaviors.aiResponseAnimation.metaContent.set(response.selector, text);
+            return; // Don't proceed with original insert
+          }
+
+          // For main responses, proceed with animation
+          this.original_insert(ajax, response, status);
+
           if (selectorPairs[response.selector]) {
             animateResponse(
               response.selector,
               text,
-              selectorPairs[response.selector],
-              document.querySelector(selectorPairs[response.selector])?.getAttribute('data-meta-text')
+              selectorPairs[response.selector]
             );
-          }
-          
-          // If this is a meta update, store it for when the main content finishes
-          if (response.selector.endsWith('-meta')) {
-            const element = document.querySelector(response.selector);
-            if (element) {
-              element.setAttribute('data-meta-text', text);
-            }
           }
         };
       }
