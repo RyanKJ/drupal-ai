@@ -3,3 +3,8 @@ drupalai_styles:
   css:
     theme:
       css/drupalai.css: {}
+  js:
+      js/typewriter-animation.js: {}
+    dependencies:
+      - core/jquery
+      - core/drupal

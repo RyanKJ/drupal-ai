@@ -151,3 +151,9 @@
     animation: none;
   }
 }
+
+.chatgpt-message span,
+.claude-message span,
+.gemini-message span {
+  transition: opacity 0.2s ease-in-out;
+}
