@@ -10,6 +10,7 @@
       this.currentWord = 0;
       this.isAnimating = false;
       this.onComplete = null;
+      this.id = Date.now(); // Add unique identifier for each animation
     }
 
     start(onCompleteCallback) {
@@ -21,10 +22,10 @@
     }
 
     animateWords() {
-      if (this.currentWord >= this.words.length) {
+      if (!this.isAnimating || this.currentWord >= this.words.length) {
         this.isAnimating = false;
-        if (this.onComplete) {
-          this.onComplete();
+        if (this.onComplete && this.isAnimating) {
+          this.onComplete(this.id);
         }
         return;
       }
@@ -36,9 +37,11 @@
       this.element.appendChild(span);
 
       setTimeout(() => {
-        span.style.opacity = '1';
-        this.currentWord++;
-        this.animateWords();
+        if (this.isAnimating) {  // Check if still animating before showing word
+          span.style.opacity = '1';
+          this.currentWord++;
+          this.animateWords();
+        }
       }, this.speed * 1.53);
     }
 
@@ -46,9 +49,7 @@
       this.isAnimating = false;
       this.currentWord = this.words.length;
       this.element.innerHTML = this.text;
-      if (this.onComplete) {
-        this.onComplete();
-      }
+      // Don't call onComplete when stopping
     }
   }
 
@@ -62,7 +63,15 @@
         Drupal.behaviors.aiResponseAnimation.metaContent = new Map();
       }
 
+      // Add a property to track the current animation set
+      if (!Drupal.behaviors.aiResponseAnimation.currentAnimationSet) {
+        Drupal.behaviors.aiResponseAnimation.currentAnimationSet = Date.now();
+      }
+
       function clearAllContent() {
+        // Update the animation set ID to invalidate any pending callbacks
+        Drupal.behaviors.aiResponseAnimation.currentAnimationSet = Date.now();
+
         // Clear main response divs
         ['#chatgpt-response', '#claude-response', '#gemini-response'].forEach(selector => {
           const element = document.querySelector(selector);
@@ -85,11 +94,17 @@
         Drupal.behaviors.aiResponseAnimation.activeAnimations.clear();
       }
 
-      function animateMetaInfo(metaSelector, metaText) {
+      function animateMetaInfo(metaSelector, metaText, animationSetId) {
+        // Only animate if this is still the current animation set
+        if (animationSetId !== Drupal.behaviors.aiResponseAnimation.currentAnimationSet) {
+          return;
+        }
+
         const metaElement = document.querySelector(metaSelector);
         if (!metaElement) return;
         
         const metaAnimation = new TypewriterAnimation(metaElement, metaText, 20);
+        Drupal.behaviors.aiResponseAnimation.activeAnimations.set(metaSelector, metaAnimation);
         metaAnimation.start();
       }
 
@@ -103,14 +118,16 @@
           existingAnimation.stop();
         }
 
-        // Create and start new animation with callback for meta information
+        // Create and start new animation
         const animation = new TypewriterAnimation(element, text, 30);
+        const currentAnimationSetId = Drupal.behaviors.aiResponseAnimation.currentAnimationSet;
+        
         Drupal.behaviors.aiResponseAnimation.activeAnimations.set(selector, animation);
         
         animation.start(() => {
           const metaText = Drupal.behaviors.aiResponseAnimation.metaContent.get(metaSelector);
           if (metaSelector && metaText) {
-            animateMetaInfo(metaSelector, metaText);
+            animateMetaInfo(metaSelector, metaText, currentAnimationSetId);
           }
         });
       }
@@ -138,11 +155,6 @@
             '#claude-response': '#claude-meta',
             '#gemini-response': '#gemini-meta'
           };
-
-          // If this is the first response in a new set, clear previous content
-          if (response.selector === '#chatgpt-response') {
-            clearAllContent();
-          }
 
           // If this is a meta update, store it instead of inserting
           if (response.selector.endsWith('-meta')) {
