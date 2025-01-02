@@ -35,7 +35,7 @@
         span.style.opacity = '1';
         this.currentWord++;
         this.animateWords();
-      }, this.speed);
+      }, this.speed * 1.853);
     }
 
     stop() {
