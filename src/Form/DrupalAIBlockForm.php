@@ -59,7 +59,7 @@ class DrupalAIBlockForm extends FormBase {
       '#type' => 'html_tag',
       '#tag' => 'div',
       '#attributes' => [
-        'class' => ['response-header', 'gpt-header'],
+        'class' => ['response-header', 'chatgpt-header'],
       ],
       '#value' => $this->t('ChatGPT'),
     ];
