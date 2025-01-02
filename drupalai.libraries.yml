@@ -5,6 +5,6 @@ drupalai_styles:
       css/drupalai.css: {}
   js:
       js/typewriter-animation.js: {}
-    dependencies:
-      - core/jquery
-      - core/drupal
+  dependencies:
+    - core/jquery
+    - core/drupal
