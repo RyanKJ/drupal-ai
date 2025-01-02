@@ -81,10 +81,8 @@ class DrupalAIBlockForm extends FormBase {
     ];
     $form['responses_wrapper']['chatgpt']['header']['chatgpt_model_selection'] = [
       '#type' => 'select',
-      '#title' => t('ChatGPT Model'),
       '#options' => $chatgpt_model_options,
       '#default_value' => $chatgpt_model_options[0],
-      '#description' => t('Which version of ChatGPT would you like to query?'),
     ]; 
     $form['responses_wrapper']['chatgpt']['content'] = [
       '#type' => 'markup',
