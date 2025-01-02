@@ -37,7 +37,7 @@ class DrupalAIBlockForm extends FormBase {
     $form['query'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Your question'),
-      '#required' => TRUE,
+      '#required' => FALSE,
     ]; 
     
     // Create a container for all responses
