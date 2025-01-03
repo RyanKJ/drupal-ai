@@ -9,9 +9,9 @@
   --claude-accent: #E6927F;    /* Terra Cotta */
   --gemini-accent: #3A7B9A;    /* Blue */
   --neutral-accent: #F4E3D7;   /* Slight Gray */
-  --warm-neutral-accent: #F4E3D7 /* warm beige */
-  --highlight-accent: #D8A15E /* Soft gold or copper */
-  --neutral-base: #F5F5F5 /* Slight Gray */
+  --warm-neutral-accent: #F4E3D7; /* warm beige */
+  --highlight-accent: #D8A15E; /* Soft gold or copper */
+  --neutral-base: #F5F5F5; /* Slight Gray */
 }
 
 /* Chat container */
@@ -151,4 +151,8 @@
 
 .drupal-ai-block-form .block__title {
   display: none; 
+}
+
+.main-content-area .container {
+background: var(--neutral-base);
 }
