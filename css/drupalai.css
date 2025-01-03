@@ -1,20 +1,3 @@
-// css/claude_api.css
-//.claude-message {
-//  margin: 20px 0;
-//  padding: 15px;
-//  background: #f5f5f5;
-//  border: 1px solid #ddd;
-//  border-radius: 4px;
-//}
-
-//.claude-error {
-//  margin: 20px 0;
-//  padding: 15px;
-//  background: #fee;
-//  border: 1px solid #fcc;
-//  border-radius: 4px;
-//  color: #c00;
-//}
 
 /* Previous CSS remains the same until the message bubbles section */
 
@@ -22,9 +5,9 @@
   /* Previous color variables remain the same */
 
   /* Add new variables for API-specific colors */
-  --claude-accent: #7c3aed;    /* Purple */
-  --gpt-accent: #10a37f;       /* Green */
-  --gemini-accent: #1a73e8;    /* Blue */
+  --gpt-accent: #5fb8b0;       /* Teal */
+  --claude-accent: #da7756;    /* Terra Cotta */
+  --gemini-accent: #007bff;    /* Blue */
 }
 
 /* Chat container */
