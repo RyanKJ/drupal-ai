@@ -5,9 +5,10 @@
   /* Previous color variables remain the same */
 
   /* Add new variables for API-specific colors */
-  --gpt-accent: #5fb8b0;       /* Teal */
-  --claude-accent: #da7756;    /* Terra Cotta */
-  --gemini-accent: #007bff;    /* Blue */
+  --gpt-accent: #77C0BD;       /* Teal */
+  --claude-accent: #E69980;    /* Terra Cotta */
+  --gemini-accent: #0066CC;    /* Blue */
+  --neutral-accent: #F0F0F0;   /* Slight Gray */
 }
 
 /* Chat container */
