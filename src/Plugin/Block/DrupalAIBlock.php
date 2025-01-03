@@ -23,7 +23,8 @@ class DrupalAIBlock extends BlockBase {
    */
   public function build() {
     // Return the form @ Form/DrupalAIBlockForm.php
-    return \Drupal::formBuilder()->getForm('Drupal\drupalai\Form\DrupalAIBlockForm');
+    unset($form['#title']); 
+    return \Drupal::formBuilder()->getForm('Drupal\drupalai\Form\DrupalAIBlockForm'); 
   }
 
   /**
