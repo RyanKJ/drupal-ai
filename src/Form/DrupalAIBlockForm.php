@@ -30,6 +30,9 @@ class DrupalAIBlockForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['#attached']['library'][] = 'drupalai/drupalai_styles';
+    
+    $form['#title_display'] = 'invisible'; 
+    
     $form['#prefix'] = '<div id="ai-form-wrapper">';
     $form['#suffix'] = '</div>';
     
