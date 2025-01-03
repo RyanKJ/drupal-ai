@@ -154,5 +154,5 @@
 }
 
 .main-content-area .container {
-background: var(--neutral-base);
+background: var(--neutral-base) !important;
 }
