@@ -5,10 +5,13 @@
   /* Previous color variables remain the same */
 
   /* Add new variables for API-specific colors */
-  --gpt-accent: #68B0AD;       /* Teal */
+  --gpt-accent: #4FA3A1;       /* Teal */
   --claude-accent: #E6927F;    /* Terra Cotta */
-  --gemini-accent: #4B8FD9;    /* Blue */
-  --neutral-accent: #F5F5F5;   /* Slight Gray */
+  --gemini-accent: #3A7B9A;    /* Blue */
+  --neutral-accent: #F4E3D7;   /* Slight Gray */
+  --warm-neutral-accent: #F4E3D7 /* warm beige */
+  --highlight-accent: #D8A15E /* Soft gold or copper */
+  --neutral-base: #F5F5F5 /* Slight Gray */
 }
 
 /* Chat container */
