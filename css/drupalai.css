@@ -173,6 +173,10 @@ header.layout-header {
   margin: 0px;
 }
 
+.layout-highlighted {
+  display: none;
+}
+
 //.branding__site-logo {
 //  display: inline-block;
 //  width: 100%;
