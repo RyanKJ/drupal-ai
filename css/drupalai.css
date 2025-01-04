@@ -90,7 +90,8 @@
 .chatgpt-header {
   background: color-mix(in srgb, var(--gpt-accent) 29%, transparent);
   color: var(--gpt-accent);
-  border: 2px solid var(--gpt-border);
+  border-radius: 12px;
+  border: 1px solid var(--gpt-border);
 }
 
 #chatgpt-response {
