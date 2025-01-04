@@ -169,6 +169,10 @@ header.layout-header {
   padding: 0px;
 }
 
+.umami-header__logo {
+  margin: 0px;
+}
+
 //.branding__site-logo {
 //  display: inline-block;
 //  width: 100%;
