@@ -154,5 +154,5 @@
 }
 
 body > div.dialogue-off-canvas-main-canvas > main > div.main-content-area.container {
-  background: var(--neutral-base) !important;
+  background-color: #F5F5F5 !important;
 }
