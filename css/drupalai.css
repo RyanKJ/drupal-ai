@@ -181,11 +181,15 @@ header.layout-header {
   display: none;
 }
 
-.layout-content {
-  background-color: #F4E3D7;
-}
+//.layout-content {
+//  background-color: #F4E3D7;
+//}
 
-.node--view-mode-full {
+//.node--view-mode-full {
+//  background-color: #F4E3D7;
+//}
+
+#block-umami-content > article {
   background-color: #F4E3D7;
 }
 
