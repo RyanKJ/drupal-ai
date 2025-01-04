@@ -15,6 +15,12 @@
   --warm-neutral-accent: #F4E3D7; /* warm beige */
   --highlight-accent: #D8A15E; /* Soft gold or copper */
   --neutral-base: #F5F5F5; /* Slight Gray */
+  --gray-border: #6B7280;
+  --gpt-border: #367875;
+  --claude-border: #D15F45;
+  --gemini-border: #1E5FA8;
+  --neutral-border: #6B7280;
+  
 }
 
 /* Chat container */
@@ -84,6 +90,7 @@
 .chatgpt-header {
   background: color-mix(in srgb, var(--gpt-accent) 29%, transparent);
   color: var(--gpt-accent);
+  border: 2px solid var(--gpt-border);
 }
 
 #chatgpt-response {
