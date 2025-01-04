@@ -161,12 +161,20 @@ header.layout-header {
 
 }
 
-.branding__site-logo {
-  display: inline-block;
-  width: 100%;
-  max-width: 53px;
-  background-color: inherit;
+.umami-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px;
 }
+
+//.branding__site-logo {
+//  display: inline-block;
+//  width: 100%;
+//  max-width: 53px;
+//  background-color: inherit;
+//}
 
 //#edit-submit {
 //  background-color: #F5F5F5 !important;
