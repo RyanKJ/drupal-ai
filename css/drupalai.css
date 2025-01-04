@@ -153,6 +153,6 @@
   display: none; 
 }
 
-body .main-content-area .container {
-background: var(--neutral-base) !important;
+body > div.dialogue-off-canvas-main-canvas > main > div.main-content-area.container {
+  background: var(--neutral-base) !important;
 }
