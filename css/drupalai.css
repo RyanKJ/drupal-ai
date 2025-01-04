@@ -91,7 +91,9 @@
   background: color-mix(in srgb, var(--gpt-accent) 29%, transparent);
   color: var(--gpt-accent);
   border-radius: 12px;
-  border: 1px solid var(--gpt-border);
+  border-top: 1px solid color-mix(in srgb, var(--gpt-border) 89%, transparent);
+  border-left: 1px solid color-mix(in srgb, var(--gpt-border) 89%, transparent);
+  border-right: 1px solid color-mix(in srgb, var(--gpt-border) 89%, transparent);
 }
 
 #chatgpt-response {
