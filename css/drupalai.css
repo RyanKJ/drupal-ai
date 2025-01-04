@@ -263,6 +263,7 @@ header.layout-header {
 
 #block-umami-content > article {
   background-color: #F5F5F5;
+  border-radius: 4px;
   border-top: 1px #D8A15E;
   border-bottom: 1px #D8A15E;
   border-right: 1px #D8A15E;
