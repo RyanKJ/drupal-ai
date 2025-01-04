@@ -185,6 +185,10 @@ header.layout-header {
   background-color: #F4E3D7;
 }
 
+.node--view-mode-full {
+  background-color: #F4E3D7;
+}
+
 //.branding__site-logo {
 //  display: inline-block;
 //  width: 100%;
