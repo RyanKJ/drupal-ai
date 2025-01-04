@@ -173,6 +173,10 @@ header.layout-header {
   margin: 0px;
 }
 
+.layout-container {
+  background-color: #F5F5F5;
+}
+
 .layout-highlighted {
   display: none;
 }
