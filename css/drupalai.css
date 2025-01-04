@@ -76,15 +76,27 @@
 .claude-header {
   background: color-mix(in srgb, var(--claude-accent) 29%, transparent);
   color: var(--claude-accent);
+  border-top-left-radius: 12px;
+  border-top-right-radius 12px;
+  border-top: 1px solid color-mix(in srgb, var(--claude-border) 89%, transparent);
+  border-left: 1px solid color-mix(in srgb, var(--claude-border) 89%, transparent);
+  border-right: 1px solid color-mix(in srgb, var(--claude-border) 89%, transparent);
 }
 
 #claude-response {
   background: color-mix(in srgb, var(--claude-accent-content) 11%, transparent);
   min-height: 42px;
+  border-left: 1px solid color-mix(in srgb, var(--claude-border) 89%, transparent);
+  border-right: 1px solid color-mix(in srgb, var(--claude-border) 89%, transparent);
 }
 
 #claude-meta {
   background: color-mix(in srgb, var(--claude-accent-content) 11%, transparent);
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  border-left: 1px solid color-mix(in srgb, var(--claude-border) 89%, transparent);
+  border-right: 1px solid color-mix(in srgb, var(--claude-border) 89%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--claude-border) 89%, transparent);
 }
 
 .chatgpt-header {
@@ -107,7 +119,7 @@
 #chatgpt-meta {
   background: color-mix(in srgb, var(--gpt-accent-content) 11%, transparent);
   border-bottom-left-radius: 12px;
-  border-bottom-right-radius 12px;
+  border-bottom-right-radius: 12px;
   border-left: 1px solid color-mix(in srgb, var(--gpt-border) 89%, transparent);
   border-right: 1px solid color-mix(in srgb, var(--gpt-border) 89%, transparent);
   border-bottom: 1px solid color-mix(in srgb, var(--gpt-border) 89%, transparent);
@@ -116,15 +128,27 @@
 .gemini-header {
   background: color-mix(in srgb, var(--gemini-accent) 29%, transparent);
   color: var(--gemini-accent);
+  border-top-left-radius: 12px;
+  border-top-right-radius 12px;
+  border-top: 1px solid color-mix(in srgb, var(--gemini-border) 89%, transparent);
+  border-left: 1px solid color-mix(in srgb, var(--gemini-border) 89%, transparent);
+  border-right: 1px solid color-mix(in srgb, var(--gemini-border) 89%, transparent);
 }
 
 #gemini-response {
   background: color-mix(in srgb, var(--gemini-accent-content) 11%, transparent);
   min-height: 42px;
+  border-left: 1px solid color-mix(in srgb, var(--gemini-border) 89%, transparent);
+  border-right: 1px solid color-mix(in srgb, var(--gemini-border) 89%, transparent);
 }
 
 #gemini-meta {
   background: color-mix(in srgb, var(--gemini-accent-content) 11%, transparent);
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  border-left: 1px solid color-mix(in srgb, var(--gemini-border) 89%, transparent);
+  border-right: 1px solid color-mix(in srgb, var(--gemini-border) 89%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--gemini-border) 89%, transparent);
 }
 
 /* Response Content */
