@@ -73,13 +73,13 @@
   color: var(--gpt-accent);
 }
 
-.chatgpt-response {
-  background: color-mix(in srgb, var(--gpt-accent-content) 10%, transparent);
-}
+//.chatgpt-response {
+//  background: color-mix(in srgb, var(--gpt-accent-content) 10%, transparent);
+//}
 
-.chatgpt-meta {
-  background: color-mix(in srgb, var(--gpt-accent-content) 10%, transparent);
-}
+//.chatgpt-meta {
+//  background: color-mix(in srgb, var(--gpt-accent-content) 10%, transparent);
+//}
 
 
 // Claude Colors
@@ -88,13 +88,13 @@
   color: var(--claude-accent);
 }
 
-.claude-response {
-  background: color-mix(in srgb, var(--claude-accent-content) 10%, transparent);
-}
+//.claude-response {
+//  background: color-mix(in srgb, var(--claude-accent-content) 10%, transparent);
+//}
 
-.claude-meta {
-  background: color-mix(in srgb, var(--claude-accent-content) 10%, transparent);
-}
+//.claude-meta {
+//  background: color-mix(in srgb, var(--claude-accent-content) 10%, transparent);
+//}
 
 // Gemini Colors
 .gemini-header {
@@ -102,13 +102,13 @@
   color: var(--gemini-accent);
 }
 
-.gemini-response {
-  background: color-mix(in srgb, var(--gemini-accent-content) 10%, transparent);
-}
+//.gemini-response {
+//  background: color-mix(in srgb, var(--gemini-accent-content) 10%, transparent);
+//}
 
-.gemini-meta {
-  background: color-mix(in srgb, var(--gemini-accent-content) 10%, transparent);
-}
+//.gemini-meta {
+//  background: color-mix(in srgb, var(--gemini-accent-content) 10%, transparent);
+//}
 
 
 
