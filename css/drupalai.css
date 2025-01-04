@@ -154,7 +154,7 @@
 }
 
 main {
-  background-color: #F4E3D7 !important;
+  background-color: #fff !important;
 }
 
 header.layout-header {
@@ -173,7 +173,7 @@ header.layout-header {
   margin: 0px;
 }
 
-.layout-container {
+.layout-header {
   background-color: #F5F5F5;
 }
 
