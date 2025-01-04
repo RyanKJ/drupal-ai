@@ -157,6 +157,17 @@ main {
   background-color: #F5F5F5 !important;
 }
 
+header.layout-header {
+
+}
+
+.branding__site-logo {
+  display: inline-block;
+  width: 100%;
+  max-width: 53px;
+  background-color: inherit;
+}
+
 //#edit-submit {
 //  background-color: #F5F5F5 !important;
 //}
