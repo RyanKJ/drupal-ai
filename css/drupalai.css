@@ -191,6 +191,8 @@ header.layout-header {
 
 #block-umami-content > article {
   background-color: #F5F5F5;
+  border-top: none;
+  border-bottom: none;
 }
 
 //.branding__site-logo {
