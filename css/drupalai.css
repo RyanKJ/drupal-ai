@@ -74,7 +74,7 @@
 
 #claude-response {
   background: color-mix(in srgb, var(--claude-accent-content) 11%, transparent);
-  min-height: 44px;
+  min-height: 42px;
 }
 
 #claude-meta {
@@ -88,7 +88,6 @@
 
 #chatgpt-response {
   background: color-mix(in srgb, var(--gpt-accent-content) 11%, transparent);
-  min-height: 44px;
 }
 
 #chatgpt-meta {
@@ -102,7 +101,7 @@
 
 #gemini-response {
   background: color-mix(in srgb, var(--gemini-accent-content) 11%, transparent);
-  min-height: 44px;
+  min-height: 42px;
 }
 
 #gemini-meta {
