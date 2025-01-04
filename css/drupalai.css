@@ -6,9 +6,9 @@
 
   /* Add new variables for API-specific colors */
   --gpt-accent: #459894;       /* Teal */
-  --gpt-accent-content: #4FA3A1
+  --gpt-accent-content: #4FA3A1;
   --claude-accent: #E67D66;    /* Terra Cotta */
-  --claude-accent-content: #E6927F
+  --claude-accent-content: #E6927F;
   --gemini-accent: #2B7ACC;    /* Blue */
   --gemini-accent-content: #3A7B9A;
   --neutral-accent: #F4E3D7;   /* Slight Gray */
