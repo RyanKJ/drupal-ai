@@ -90,7 +90,8 @@
 .chatgpt-header {
   background: color-mix(in srgb, var(--gpt-accent) 29%, transparent);
   color: var(--gpt-accent);
-  border-radius: 12px;
+  border-top-left-radius: 12px;
+  border-top-right-radius 12px;
   border-top: 1px solid color-mix(in srgb, var(--gpt-border) 89%, transparent);
   border-left: 1px solid color-mix(in srgb, var(--gpt-border) 89%, transparent);
   border-right: 1px solid color-mix(in srgb, var(--gpt-border) 89%, transparent);
@@ -99,11 +100,17 @@
 #chatgpt-response {
   background: color-mix(in srgb, var(--gpt-accent-content) 11%, transparent);
   min-height: 42px;
-  border-top: 1px black;
+  border-left: 1px solid color-mix(in srgb, var(--gpt-border) 89%, transparent);
+  border-right: 1px solid color-mix(in srgb, var(--gpt-border) 89%, transparent);
 }
 
 #chatgpt-meta {
   background: color-mix(in srgb, var(--gpt-accent-content) 11%, transparent);
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius 12px;
+  border-left: 1px solid color-mix(in srgb, var(--gpt-border) 89%, transparent);
+  border-right: 1px solid color-mix(in srgb, var(--gpt-border) 89%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--gpt-border) 89%, transparent);
 }
 
 .gemini-header {
