@@ -68,17 +68,17 @@
 }
 
 .claude-header {
-  background: color-mix(in srgb, var(--claude-accent) 30%, transparent);
+  background: color-mix(in srgb, var(--claude-accent) 25%, transparent);
   color: var(--claude-accent);
 }
 
 .chatgpt-header {
-  background: color-mix(in srgb, var(--gpt-accent) 30%, transparent);
+  background: color-mix(in srgb, var(--gpt-accent) 25%, transparent);
   color: var(--gpt-accent);
 }
 
 .gemini-header {
-  background: color-mix(in srgb, var(--gemini-accent) 30%, transparent);
+  background: color-mix(in srgb, var(--gemini-accent) 25%, transparent);
   color: var(--gemini-accent);
 }
 
