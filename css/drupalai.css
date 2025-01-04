@@ -191,10 +191,10 @@ header.layout-header {
 
 #block-umami-content > article {
   background-color: #F5F5F5;
-  border-top: #D8A15E;
-  border-bottom: #D8A15E;
-  border-right: #D8A15E;
-  border-left: #D8A15E;
+  border-top: 1px #D8A15E;
+  border-bottom: 1px #D8A15E;
+  border-right: 1px #D8A15E;
+  border-left: 1px #D8A15E;
 }
 
 //.branding__site-logo {
