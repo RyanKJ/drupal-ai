@@ -76,6 +76,10 @@
   background: color-mix(in srgb, var(--claude-accent-content) 10%, transparent);
 }
 
+#claude-meta {
+  background: color-mix(in srgb, var(--claude-accent-content) 10%, transparent);
+}
+
 .chatgpt-header {
   background: color-mix(in srgb, var(--gpt-accent) 25%, transparent);
   color: var(--gpt-accent);
