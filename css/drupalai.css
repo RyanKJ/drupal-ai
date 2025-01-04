@@ -153,6 +153,6 @@
   display: none; 
 }
 
-.main-content-area .container {
+body .main-content-area .container {
 background: var(--neutral-base) !important;
 }
