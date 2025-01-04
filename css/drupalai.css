@@ -85,9 +85,26 @@
   color: var(--gpt-accent);
 }
 
+#chatgpt-response {
+  background: color-mix(in srgb, var(--gpt-accent-content) 10%, transparent);
+}
+
+#chatgpt-meta {
+  background: color-mix(in srgb, var(--gpt-accent-content) 10%, transparent);
+}
+
 .gemini-header {
   background: color-mix(in srgb, var(--gemini-accent) 25%, transparent);
   color: var(--gemini-accent);
+}
+
+#gemini-response {
+  background: color-mix(in srgb, var(--gemini-accent-content) 10%, transparent);
+  color: var(--gemini-accent);
+}
+
+#gemini-meta {
+  background: color-mix(in srgb, var(--gemini-accent-content) 10%, transparent);
 }
 
 /* Response Content */
