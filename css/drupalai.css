@@ -67,52 +67,20 @@
   gap: 8px;
 }
 
-// ChatGPT Colors
-.chatgpt-header {
-  background: color-mix(in srgb, var(--gpt-accent) 10%, transparent);
-  color: var(--gpt-accent);
-}
-
-//.chatgpt-response {
-//  background: color-mix(in srgb, var(--gpt-accent-content) 10%, transparent);
-//}
-
-//.chatgpt-meta {
-//  background: color-mix(in srgb, var(--gpt-accent-content) 10%, transparent);
-//}
-
-
-// Claude Colors
 .claude-header {
   background: color-mix(in srgb, var(--claude-accent) 10%, transparent);
   color: var(--claude-accent);
 }
 
-//.claude-response {
-//  background: color-mix(in srgb, var(--claude-accent-content) 10%, transparent);
-//}
+.chatgpt-header {
+  background: color-mix(in srgb, var(--gpt-accent) 10%, transparent);
+  color: var(--gpt-accent);
+}
 
-//.claude-meta {
-//  background: color-mix(in srgb, var(--claude-accent-content) 10%, transparent);
-//}
-
-// Gemini Colors
 .gemini-header {
   background: color-mix(in srgb, var(--gemini-accent) 10%, transparent);
   color: var(--gemini-accent);
 }
-
-//.gemini-response {
-//  background: color-mix(in srgb, var(--gemini-accent-content) 10%, transparent);
-//}
-
-//.gemini-meta {
-//  background: color-mix(in srgb, var(--gemini-accent-content) 10%, transparent);
-//}
-
-
-
-
 
 /* Response Content */
 .response-content {
