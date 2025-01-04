@@ -181,6 +181,10 @@ header.layout-header {
   display: none;
 }
 
+.layout-content {
+  background-color: #F4E3D7;
+}
+
 //.branding__site-logo {
 //  display: inline-block;
 //  width: 100%;
