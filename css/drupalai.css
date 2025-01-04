@@ -89,6 +89,7 @@
 #chatgpt-response {
   background: color-mix(in srgb, var(--gpt-accent-content) 11%, transparent);
   min-height: 42px;
+  border-top: 1px black;
 }
 
 #chatgpt-meta {
