@@ -193,6 +193,8 @@ header.layout-header {
   background-color: #F5F5F5;
   border-top: none;
   border-bottom: none;
+  border-right: none;
+  border-left: none;
 }
 
 //.branding__site-logo {
