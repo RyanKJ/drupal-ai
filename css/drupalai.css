@@ -72,6 +72,10 @@
   color: var(--claude-accent);
 }
 
+.claude-response {
+  background: color-mix(in srgb, var(--claude-accent-content) 10%, transparent);
+}
+
 .chatgpt-header {
   background: color-mix(in srgb, var(--gpt-accent) 25%, transparent);
   color: var(--gpt-accent);
