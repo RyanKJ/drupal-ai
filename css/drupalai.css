@@ -58,7 +58,7 @@
 /* Individual Response Column */
 .response-column {
   background: var(--surface);
-  border-radius: 12px;
+  border-radius: 8px;
   border: 1px solid var(--border-color);
   overflow: hidden;
 }
@@ -76,8 +76,8 @@
 .claude-header {
   background: color-mix(in srgb, var(--claude-accent) 29%, transparent);
   color: var(--claude-accent);
-  border-top-left-radius: 12px;
-  border-top-right-radius: 12px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
   border-top: 1px solid color-mix(in srgb, var(--claude-border) 59%, transparent);
   border-left: 1px solid color-mix(in srgb, var(--claude-border) 59%, transparent);
   border-right: 1px solid color-mix(in srgb, var(--claude-border) 59%, transparent);
@@ -92,8 +92,8 @@
 
 #claude-meta {
   background: color-mix(in srgb, var(--claude-accent-content) 11%, transparent);
-  border-bottom-left-radius: 12px;
-  border-bottom-right-radius: 12px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
   border-left: 1px solid color-mix(in srgb, var(--claude-border) 59%, transparent);
   border-right: 1px solid color-mix(in srgb, var(--claude-border) 59%, transparent);
   border-bottom: 1px solid color-mix(in srgb, var(--claude-border) 59%, transparent);
@@ -102,8 +102,8 @@
 .chatgpt-header {
   background: color-mix(in srgb, var(--gpt-accent) 29%, transparent);
   color: var(--gpt-accent);
-  border-top-left-radius: 12px;
-  border-top-right-radius: 12px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
   border-top: 1px solid color-mix(in srgb, var(--gpt-border) 59%, transparent);
   border-left: 1px solid color-mix(in srgb, var(--gpt-border) 59%, transparent);
   border-right: 1px solid color-mix(in srgb, var(--gpt-border) 59%, transparent);
@@ -118,8 +118,8 @@
 
 #chatgpt-meta {
   background: color-mix(in srgb, var(--gpt-accent-content) 11%, transparent);
-  border-bottom-left-radius: 12px;
-  border-bottom-right-radius: 12px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
   border-left: 1px solid color-mix(in srgb, var(--gpt-border) 59%, transparent);
   border-right: 1px solid color-mix(in srgb, var(--gpt-border) 59%, transparent);
   border-bottom: 1px solid color-mix(in srgb, var(--gpt-border) 59%, transparent);
@@ -128,8 +128,8 @@
 .gemini-header {
   background: color-mix(in srgb, var(--gemini-accent) 29%, transparent);
   color: var(--gemini-accent);
-  border-top-left-radius: 12px;
-  border-top-right-radius: 12px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
   border-top: 1px solid color-mix(in srgb, var(--gemini-border) 59%, transparent);
   border-left: 1px solid color-mix(in srgb, var(--gemini-border) 59%, transparent);
   border-right: 1px solid color-mix(in srgb, var(--gemini-border) 59%, transparent);
@@ -144,8 +144,8 @@
 
 #gemini-meta {
   background: color-mix(in srgb, var(--gemini-accent-content) 11%, transparent);
-  border-bottom-left-radius: 12px;
-  border-bottom-right-radius: 12px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
   border-left: 1px solid color-mix(in srgb, var(--gemini-border) 59%, transparent);
   border-right: 1px solid color-mix(in srgb, var(--gemini-border) 59%, transparent);
   border-bottom: 1px solid color-mix(in srgb, var(--gemini-border) 59%, transparent);
@@ -263,7 +263,7 @@ header.layout-header {
 
 #block-umami-content > article {
   background-color: #F5F5F5;
-  border-radius: 4px;
+  border-radius: 8px;
   border-top: 1px #D8A15E;
   border-bottom: 1px #D8A15E;
   border-right: 1px #D8A15E;
