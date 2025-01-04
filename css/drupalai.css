@@ -153,14 +153,10 @@
   display: none; 
 }
 
-body > div.dialogue-off-canvas-main-canvas > main > div.main-content-area.container {
-  background-color: #F5F5F5 !important;
-}
-
 main {
   background-color: #F5F5F5 !important;
 }
 
-#edit-submit {
-  background-color: #F5F5F5 !important;
-}
+//#edit-submit {
+//  background-color: #F5F5F5 !important;
+//}
