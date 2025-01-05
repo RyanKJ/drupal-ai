@@ -515,27 +515,3 @@ header.layout-header {
   margin: 0;
   padding: 0;
 }
-
-//
-
-/* AI name label styling */
-.response-header > div:first-child {
-  font-weight: 700; /* Increased from 600 for darker text */
-  font-size: 1.125rem; /* Increased from default, equivalent to 18px */
-  padding: 12px 16px;
-  display: flex;
-  align-items: center;
-}
-
-/* Specific color adjustments for each AI */
-.chatgpt-header > div:first-child {
-  color: color-mix(in srgb, var(--gpt-accent) 90%, black); /* Darker teal */
-}
-
-.claude-header > div:first-child {
-  color: color-mix(in srgb, var(--claude-accent) 90%, black); /* Darker terra cotta */
-}
-
-.gemini-header > div:first-child {
-  color: color-mix(in srgb, var(--gemini-accent) 90%, black); /* Darker blue */
-}
