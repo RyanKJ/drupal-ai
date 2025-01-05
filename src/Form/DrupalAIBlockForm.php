@@ -73,19 +73,23 @@ class DrupalAIBlockForm extends FormBase {
       ],
     ];
     $form['responses_wrapper']['chatgpt']['header'] = [
-      '#type' => 'html_tag',
-      '#tag' => 'div',
+      '#type' => 'container',
       '#attributes' => [
         'class' => ['response-header', 'chatgpt-header'],
       ],
+    ];
+    $form['responses_wrapper']['chatgpt']['header']['name'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'div',
       '#value' => $this->t('ChatGPT'),
     ];
     $form['responses_wrapper']['chatgpt']['header']['chatgpt_model_selection'] = [
       '#type' => 'select',
       '#title' => t('Select Version'),
+      '#title_display' => 'invisible',
       '#options' => $chatgpt_model_options,
       '#default_value' => reset($chatgpt_model_options),
-    ]; 
+    ];
     $form['responses_wrapper']['chatgpt']['content'] = [
       '#type' => 'markup',
       '#markup' => '<div id="chatgpt-response" class="response-content"></div>',
@@ -103,19 +107,23 @@ class DrupalAIBlockForm extends FormBase {
       ],
     ];
     $form['responses_wrapper']['claude']['header'] = [
-      '#type' => 'html_tag',
-      '#tag' => 'div',
+      '#type' => 'container',
       '#attributes' => [
         'class' => ['response-header', 'claude-header'],
       ],
+    ];
+    $form['responses_wrapper']['claude']['header']['name'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'div',
       '#value' => $this->t('Claude'),
     ];
     $form['responses_wrapper']['claude']['header']['claude_model_selection'] = [
       '#type' => 'select',
       '#title' => t('Select Version'),
+      '#title_display' => 'invisible',
       '#options' => $claude_model_options,
       '#default_value' => reset($claude_model_options),
-    ]; 
+    ];
     $form['responses_wrapper']['claude']['content'] = [
       '#type' => 'markup',
       '#markup' => '<div id="claude-response" class="response-content"></div>',
@@ -124,7 +132,7 @@ class DrupalAIBlockForm extends FormBase {
       '#type' => 'markup',
       '#markup' => '<div id="claude-meta" class="response-meta"></div>',
     ]; 
-
+  
     // Gemini response column
     $form['responses_wrapper']['gemini'] = [
       '#type' => 'container',
@@ -133,19 +141,23 @@ class DrupalAIBlockForm extends FormBase {
       ],
     ];
     $form['responses_wrapper']['gemini']['header'] = [
-      '#type' => 'html_tag',
-      '#tag' => 'div',
+      '#type' => 'container',
       '#attributes' => [
         'class' => ['response-header', 'gemini-header'],
       ],
+    ];
+    $form['responses_wrapper']['gemini']['header']['name'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'div',
       '#value' => $this->t('Gemini'),
     ];
     $form['responses_wrapper']['gemini']['header']['gemini_model_selection'] = [
       '#type' => 'select',
       '#title' => t('Select Version'),
+      '#title_display' => 'invisible',
       '#options' => $gemini_model_options,
       '#default_value' => reset($gemini_model_options),
-    ]; 
+    ];
     $form['responses_wrapper']['gemini']['content'] = [
       '#type' => 'markup',
       '#markup' => '<div id="gemini-response" class="response-content"></div>',

@@ -280,3 +280,72 @@ header.layout-header {
 //#edit-submit {
 //  background-color: #F5F5F5 !important;
 //}
+
+//
+
+/* General header layout */
+.response-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+}
+
+/* Style for the LLM name div */
+.response-header > div:first-child {
+  font-weight: 600;
+  flex-grow: 1;
+}
+
+/* Common styles for all model selection dropdowns */
+.chatgpt_model_selection,
+.claude_model_selection,
+.gemini_model_selection {
+  background-color: transparent;
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  padding: 4px 24px 4px 8px;
+  font-size: 0.875rem;
+  max-width: 140px;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 12px;
+}
+
+/* Specific styles for each AI's selector */
+.chatgpt-header .chatgpt_model_selection {
+  color: var(--gpt-accent);
+  border-color: color-mix(in srgb, var(--gpt-border) 59%, transparent);
+}
+
+.claude-header .claude_model_selection {
+  color: var(--claude-accent);
+  border-color: color-mix(in srgb, var(--claude-border) 59%, transparent);
+}
+
+.gemini-header .gemini_model_selection {
+  color: var(--gemini-accent);
+  border-color: color-mix(in srgb, var(--gemini-border) 59%, transparent);
+}
+
+/* Hover states */
+.chatgpt_model_selection:hover,
+.claude_model_selection:hover,
+.gemini_model_selection:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Focus states */
+.chatgpt_model_selection:focus,
+.claude_model_selection:focus,
+.gemini_model_selection:focus {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* Remove the default Drupal form element title */
+.response-header .form-item__label {
+  display: none;
+}
