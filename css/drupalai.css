@@ -285,11 +285,23 @@ header.layout-header {
 //  margin: 20px 0;
 //}
 
+///* Container for centering the submit button */
+//.drupal-ai-block-form .js-form-wrapper {
+//  display: flex;
+//  justify-content: center;
+//  width: 100%;
+//}
+
+/* Container styles */
+//.drupal-ai-block-form {
+//  width: 100%;
+//}
+
 /* Submit button styling */
 #edit-submit {
-  /* Balanced size - between previous versions */
+  /* Keeping balanced size */
   padding: 15px 35px;
-  font-size: 1.0625rem;  /* Between 1rem and 1.125rem */
+  font-size: 1.0625rem;
   font-weight: 500;
   border-radius: 6px;
   cursor: pointer;
@@ -297,21 +309,21 @@ header.layout-header {
   margin: 20px auto;
   display: block;
 
-  /* Slightly lighter neutral color scheme */
-  background-color: #666666;    /* Lighter grey but still maintains presence */
+  /* Lighter neutral color scheme */
+  background-color: #737373;    /* Lighter grey */
   color: #FFFFFF;               /* Keeping white text for contrast */
-  border: 1px solid #595959;
+  border: 1px solid #666666;
 
   /* Hover state */
   &:hover {
-    background-color: #595959;
-    border-color: #4D4D4D;
+    background-color: #666666;
+    border-color: #595959;
   }
 
   /* Focus state */
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 2px white, 0 0 0 4px #666666;
+    box-shadow: 0 0 0 2px white, 0 0 0 4px #737373;
   }
 
   /* Active state */
