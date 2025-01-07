@@ -199,6 +199,8 @@ class DrupalAIBlockForm extends FormBase {
   }
   
   public function ajaxSubmit(array &$form, FormStateInterface $form_state) {
+    sleep(10);
+  
     $response = new AjaxResponse();
     
     try {
