@@ -287,9 +287,9 @@ header.layout-header {
 
 /* Submit button styling */
 #edit-submit {
-  /* Further increased size */
-  padding: 16px 38px;
-  font-size: 1.125rem;
+  /* Balanced size - between previous versions */
+  padding: 15px 35px;
+  font-size: 1.0625rem;  /* Between 1rem and 1.125rem */
   font-weight: 500;
   border-radius: 6px;
   cursor: pointer;
@@ -297,21 +297,21 @@ header.layout-header {
   margin: 20px auto;
   display: block;
 
-  /* Medium-dark neutral color scheme */
-  background-color: #575757;    /* Lighter than before but still contrasts well */
+  /* Slightly lighter neutral color scheme */
+  background-color: #666666;    /* Lighter grey but still maintains presence */
   color: #FFFFFF;               /* Keeping white text for contrast */
-  border: 1px solid #4A4A4A;
+  border: 1px solid #595959;
 
   /* Hover state */
   &:hover {
-    background-color: #4A4A4A;
-    border-color: #404040;
+    background-color: #595959;
+    border-color: #4D4D4D;
   }
 
   /* Focus state */
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 2px white, 0 0 0 4px #575757;
+    box-shadow: 0 0 0 2px white, 0 0 0 4px #666666;
   }
 
   /* Active state */
