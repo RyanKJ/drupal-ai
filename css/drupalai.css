@@ -277,11 +277,51 @@ header.layout-header {
 //  background-color: inherit;
 //}
 
-//#edit-submit {
-//  background-color: #F5F5F5 !important;
-//}
+/* Container for centering the submit button */
+.drupal-ai-block-form {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 20px 0;
+}
 
-//
+/* Submit button styling */
+#edit-submit {
+  /* Basic styling */
+  padding: 12px 28px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  /* Colors based on your theme */
+  background-color: color-mix(in srgb, var(--gpt-accent) 29%, transparent);
+  color: var(--gpt-accent);
+  border: 1px solid color-mix(in srgb, var(--gpt-border) 59%, transparent);
+
+  /* Hover state */
+  &:hover {
+    background-color: color-mix(in srgb, var(--gpt-accent) 35%, transparent);
+    border-color: var(--gpt-border);
+  }
+
+  /* Focus state */
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px white, 0 0 0 4px var(--gpt-accent);
+  }
+
+  /* Active state */
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+/* Ensure proper spacing in the layout */
+.input-container {
+  margin-bottom: 20px;
+}
 
 /* General header layout */
 .response-header {
