@@ -287,9 +287,9 @@ header.layout-header {
 
 /* Submit button styling */
 #edit-submit {
-  /* Basic styling */
-  padding: 12px 28px;
-  font-size: 0.875rem;
+  /* Increased size */
+  padding: 14px 32px;
+  font-size: 1rem;
   font-weight: 500;
   border-radius: 6px;
   cursor: pointer;
@@ -297,22 +297,21 @@ header.layout-header {
   margin: 20px auto;
   display: block;
 
-  /* Neutral, professional color scheme */
-  background-color: #F5F5F5;  /* Using your existing --neutral-base */
-  color: #6B7280;            /* Using your existing --gray-border */
-  border: 1px solid #6B7280;
+  /* Darker neutral color scheme */
+  background-color: #404040;    /* Significantly darker background */
+  color: #FFFFFF;               /* White text for contrast */
+  border: 1px solid #333333;
 
   /* Hover state */
   &:hover {
-    background-color: #E5E5E5;
-    border-color: #4B5563;
-    color: #4B5563;
+    background-color: #333333;
+    border-color: #262626;
   }
 
   /* Focus state */
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 2px white, 0 0 0 4px #6B7280;
+    box-shadow: 0 0 0 2px white, 0 0 0 4px #404040;
   }
 
   /* Active state */
@@ -320,7 +319,6 @@ header.layout-header {
     transform: translateY(1px);
   }
 }
-
 /* Ensure proper spacing in the layout */
 .input-container {
   margin-bottom: 20px;
