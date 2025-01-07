@@ -278,12 +278,12 @@ header.layout-header {
 //}
 
 /* Container for centering the submit button */
-.drupal-ai-block-form {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  margin: 20px 0;
-}
+//.drupal-ai-block-form {
+//  display: flex;
+//  justify-content: center;
+//  width: 100%;
+//  margin: 20px 0;
+//}
 
 /* Submit button styling */
 #edit-submit {
@@ -294,22 +294,24 @@ header.layout-header {
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
+  margin: 20px auto;
+  display: block;
 
-  /* Colors based on your theme */
-  background-color: color-mix(in srgb, var(--gpt-accent) 29%, transparent);
-  color: var(--gpt-accent);
-  border: 1px solid color-mix(in srgb, var(--gpt-border) 59%, transparent);
+  /* New complementary golden/copper accent colors */
+  background-color: color-mix(in srgb, var(--highlight-accent) 29%, transparent);
+  color: #8B5E34; /* Deeper copper tone for contrast */
+  border: 1px solid color-mix(in srgb, #8B5E34 59%, transparent);
 
   /* Hover state */
   &:hover {
-    background-color: color-mix(in srgb, var(--gpt-accent) 35%, transparent);
-    border-color: var(--gpt-border);
+    background-color: color-mix(in srgb, var(--highlight-accent) 35%, transparent);
+    border-color: #8B5E34;
   }
 
   /* Focus state */
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 2px white, 0 0 0 4px var(--gpt-accent);
+    box-shadow: 0 0 0 2px white, 0 0 0 4px #8B5E34;
   }
 
   /* Active state */
