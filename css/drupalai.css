@@ -287,9 +287,9 @@ header.layout-header {
 
 /* Submit button styling */
 #edit-submit {
-  /* Increased size */
-  padding: 14px 32px;
-  font-size: 1rem;
+  /* Further increased size */
+  padding: 16px 38px;
+  font-size: 1.125rem;
   font-weight: 500;
   border-radius: 6px;
   cursor: pointer;
@@ -297,21 +297,21 @@ header.layout-header {
   margin: 20px auto;
   display: block;
 
-  /* Darker neutral color scheme */
-  background-color: #404040;    /* Significantly darker background */
-  color: #FFFFFF;               /* White text for contrast */
-  border: 1px solid #333333;
+  /* Medium-dark neutral color scheme */
+  background-color: #575757;    /* Lighter than before but still contrasts well */
+  color: #FFFFFF;               /* Keeping white text for contrast */
+  border: 1px solid #4A4A4A;
 
   /* Hover state */
   &:hover {
-    background-color: #333333;
-    border-color: #262626;
+    background-color: #4A4A4A;
+    border-color: #404040;
   }
 
   /* Focus state */
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 2px white, 0 0 0 4px #404040;
+    box-shadow: 0 0 0 2px white, 0 0 0 4px #575757;
   }
 
   /* Active state */
@@ -319,6 +319,7 @@ header.layout-header {
     transform: translateY(1px);
   }
 }
+
 /* Ensure proper spacing in the layout */
 .input-container {
   margin-bottom: 20px;
