@@ -297,6 +297,10 @@ header.layout-header {
 //  width: 100%;
 //}
 
+.menu-main {
+  font-family: "Source Sans Pro", Verdana, sans-serif;
+}
+
 /* Submit button styling */
 #edit-submit {
   /* Keeping balanced size */
