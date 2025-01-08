@@ -297,12 +297,12 @@ header.layout-header {
 //  width: 100%;
 //}
 
-#block-umami-main-menu {
-  font-family: "Source Sans Pro", Verdana, sans-serif;
-}
-
 .menu-main {
   font-family: "Source Sans Pro", Verdana, sans-serif !important;
+}
+
+.menu-main__link:active, menu-main__link.is-active {
+  border-bottom-color: #0678BE;
 }
 
 /* Submit button styling */
