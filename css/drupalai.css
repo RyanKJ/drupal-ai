@@ -337,13 +337,17 @@ header.layout-header {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  margin-top: -15px;
+  margin-top: -17px;
   text-align: center;
 }
 
 /* Ensure proper spacing in the layout */
 .input-container {
   margin-bottom: 20px;
+}
+
+.responses-container {
+  margin-top: 30px;
 }
 
 /* General header layout */
