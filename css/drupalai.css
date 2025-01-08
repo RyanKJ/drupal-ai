@@ -302,7 +302,7 @@ header.layout-header {
 }
 
 .menu-main {
-  font-family: "Source Sans Pro", Verdana, sans-serif;
+  font-family: "Source Sans Pro", Verdana, sans-serif !important;
 }
 
 /* Submit button styling */
