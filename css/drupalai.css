@@ -422,7 +422,7 @@ header.layout-header {
 .claude-header div,
 .chatgpt-header div,
 .gemini-header div {
-  font-size: 1.125rem;  /* Slightly larger than the default */
+  font-size: 1.1rem;  /* Slightly larger than the default */
   font-weight: 600;     /* Keeping the existing font weight */
 }
 
