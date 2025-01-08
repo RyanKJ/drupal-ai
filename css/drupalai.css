@@ -418,6 +418,27 @@ header.layout-header {
   display: none;
 }
 
+/* Response header name styling */
+.claude-header div,
+.chatgpt-header div,
+.gemini-header div {
+  font-size: 1.125rem;  /* Slightly larger than the default */
+  font-weight: 600;     /* Keeping the existing font weight */
+}
+
+/* Specific color adjustments for each header */
+.claude-header div {
+  color: color-mix(in srgb, var(--claude-accent) 85%, black); /* Darker terra cotta */
+}
+
+.chatgpt-header div {
+  color: color-mix(in srgb, var(--gpt-accent) 85%, black);    /* Darker teal */
+}
+
+.gemini-header div {
+  color: color-mix(in srgb, var(--gemini-accent) 85%, black); /* Darker blue */
+}
+
 //
 
 
