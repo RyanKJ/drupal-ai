@@ -46,7 +46,7 @@ class DrupalAIBlockForm extends FormBase {
     
     $form['submit'] = [
       '#type' => 'submit',
-      '#value' => $this->t('Submit Your Query'),
+      '#value' => $this->t('Submit Your Question'),
       '#ajax' => [
         'callback' => '::ajaxSubmit',
         'wrapper' => 'ai-form-wrapper',
@@ -199,8 +199,6 @@ class DrupalAIBlockForm extends FormBase {
   }
   
   public function ajaxSubmit(array &$form, FormStateInterface $form_state) {
-    sleep(60);
-  
     $response = new AjaxResponse();
     
     try {
