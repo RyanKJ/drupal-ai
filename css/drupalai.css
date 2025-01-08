@@ -297,12 +297,12 @@ header.layout-header {
 //  width: 100%;
 //}
 
-.menu-main {
-  font-family: "Source Sans Pro", Verdana, sans-serif !important;
-}
+//.menu-main {
+//  font-family: "Source Sans Pro", Verdana, sans-serif !important;
+//}
 
 .menu-main__link:active, menu-main__link.is-active {
-  border-bottom-color: #0678BE;
+  border-bottom-color: #0678BE !important;
 }
 
 /* Submit button styling */
