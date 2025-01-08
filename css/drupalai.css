@@ -332,9 +332,18 @@ header.layout-header {
   }
 }
 
+/* Ajax progress indicator styling */
+.ajax-progress.ajax-progress-throbber {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 10px;
+  text-align: center;
+}
+
 /* Ensure proper spacing in the layout */
 .input-container {
-  margin-bottom: 20px;
+  margin-bottom: 40px;
 }
 
 /* General header layout */
