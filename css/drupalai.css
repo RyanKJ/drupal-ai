@@ -337,7 +337,7 @@ header.layout-header {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  margin-top: -17px;
+  margin-top: -19px;
   text-align: center;
 }
 
@@ -347,7 +347,7 @@ header.layout-header {
 }
 
 .responses-container {
-  margin-top: 25px;
+  margin-top: 27px;
 }
 
 /* General header layout */
