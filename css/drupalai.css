@@ -303,6 +303,7 @@ header.layout-header {
   padding: 15px 35px;
   font-size: 1.0625rem;
   font-weight: 500;
+  font-family: "Source Sans Pro", Verdana, sans-serif;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
