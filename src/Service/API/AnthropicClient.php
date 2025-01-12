@@ -143,8 +143,10 @@ class AnthropicClient {
             throw new Exception('API request failed with status code: ' . $httpCode . "\nResponse: " . $response);
         }
         
-        $sanitized_response = $this->sanitizeHtml(json_decode($response, true));
+        return json_decode($response, true);
         
-        return $sanitized_response;
+        //$sanitized_response = $this->sanitizeHtml(json_decode($response, true));
+        
+        //return $sanitized_response;
     }
 }
