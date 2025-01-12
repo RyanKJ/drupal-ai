@@ -56,12 +56,9 @@ class AnthropicClient {
         ];
         
         $data = [
-          'model' => $this->model,
-          'messages' => [
-                [
-                    'role' => 'system',
-                    'content' => 'Please format your responses in HTML using appropriate tags for structure and styling. Use <p> for paragraphs, <h1>-<h6> for headings, <ul>/<ol> for lists, etc.'
-                ],
+            'model' => $this->model,
+            'system' => 'Please format your responses in HTML using appropriate tags for structure and styling. Use <p> for paragraphs, <h1>-<h6> for headings, <ul>/<ol> for lists, etc.',
+            'messages' => [
                 [
                     'role' => 'user',
                     'content' => $prompt
