@@ -17,7 +17,7 @@ class AnthropicClient {
     private $model;
     private $apiKey;
 
-    public function __construct($apiKey, $model) {
+    public function __construct($model) {
         $this->model = $model;        
         $this->apiKey = $this->getClaudeApiKey();
     }
