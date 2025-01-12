@@ -65,7 +65,7 @@ class AnthropicClient {
                 
             if (isset($claude_json_response['content'][0]['text'])) {
                 $unsanitized_response = $claude_json_response['content'][0]['text'];
-                $response = $this->sanitizeHtml(unsanitized_response);      
+                $response = $this->sanitizeHtml($unsanitized_response);      
             } else {
                 $response = "Unexpected response format for Claude.\n";
             }
