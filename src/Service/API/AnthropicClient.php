@@ -18,6 +18,10 @@ class AnthropicClient {
     private static $model_options = ['claude-3-haiku-20240307' => 'Claude Haiku', 'claude_sonnet_342' => 'Claude Sonnet'];
     private $model;
     private $apiKey;
+    
+    public static function getModelOptions() {
+        return self::$model_options;
+    }
 
     public function __construct($model) {
         $this->model = $model;        
@@ -26,10 +30,6 @@ class AnthropicClient {
     
     private function getClaudeApiKey() {
         return trim(file_get_contents('/home/master/api_keys/claude_api_key.txt'));
-    }
-    
-    public static function getModelOptions() {
-        return self::$model_options;
     }
     
     public function getResponseAndTime($prompt) {
@@ -64,7 +64,8 @@ class AnthropicClient {
             $claude_json_response = $this->createMessage($prompt);
                 
             if (isset($claude_json_response['content'][0]['text'])) {
-                $response = $claude_json_response['content'][0]['text'];
+                $unsanitized_response = $claude_json_response['content'][0]['text'];
+                $response = $this->sanitizeHtml(unsanitized_response);      
             } else {
                 $response = "Unexpected response format for Claude.\n";
             }
@@ -144,9 +145,5 @@ class AnthropicClient {
         }
         
         return json_decode($response, true);
-        
-        //$sanitized_response = $this->sanitizeHtml(json_decode($response, true));
-        
-        //return $sanitized_response;
     }
 }
