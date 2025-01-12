@@ -6,13 +6,14 @@
  */
 
 namespace Drupal\drupalai\Form;
-namespace Drupal\drupalai\Service\API;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
+
+namespace Drupal\drupalai\Service\API;
 
 use Drupal\drupalai\Service\API\AnthropicClient;
 
