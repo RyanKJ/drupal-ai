@@ -104,17 +104,6 @@ class AnthropicClient {
             'max_tokens' => 1024
         ];
 
-//        $data = [
-//            'model' => $this->model,
-//            'messages' => [
-//                [
-//                    'role' => 'user',
-//                    'content' => $prompt
-//                ]
-//            ],
-//            'max_tokens' => 1024
-//        ];
-
         $ch = curl_init($this->baseUrl);
         
         // HTTP/2 specific settings
@@ -153,25 +142,8 @@ class AnthropicClient {
         if ($httpCode !== 200) {
             throw new Exception('API request failed with status code: ' . $httpCode . "\nResponse: " . $response);
         }
-
+        
+        $sanitized_response = $this->sanitizeHtml(json_decode($response, true));
         return json_decode($response, true);
     }
 }
-
-
-// Example usage:
-//try {
-//    $model = AnthropicClient::getModelOptions();
-//    
-//    $client = new AnthropicClient($model);
-//    $response = $client->createMessage('Claude, what is your take on the nature of consciousness?');
-//    
-//    if (isset($response['content'][0]['text'])) {
-//        echo $response['content'][0]['text'];
-//    } else {
-//        echo "Unexpected response format for Claude.\n";
-//        print_r($response); // Print full response for debugging
-//    }
-//} catch (Exception $e) {
-//    echo "Error: " . $e->getMessage();
-//}
