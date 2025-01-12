@@ -181,7 +181,7 @@ class DrupalAIBlockForm extends FormBase {
       $query = $form_state->getValue('query');
       $chatgpt_model = $form_state->getValue('chatgpt_model_selection');
       
-      $claude_response = "This is a test of AJAX functionality!" . " " . "ChatGPT Model Selection is: " . $chatgpt_model . $query;
+      $claude_response = "";
       $time = "1.53 Seconds";
       
       // ChatGPT
@@ -199,6 +199,20 @@ class DrupalAIBlockForm extends FormBase {
       );
       
       // Claude
+      try {
+          $claude_model = $form_state->getValue('claude_model_selection');
+          
+          $client = new AnthropicClient($claude_model);
+          $claude_json_response = $client->createMessage($query);
+          
+          if (isset($claude_json_response['content'][0]['text'])) {
+              $claude_response = $claude_json_response['content'][0]['text'];
+          } else {
+              $claude_response = "Unexpected response format for Claude.\n";
+          }
+      } catch (Exception $e) {
+          $claude_response = "Error: " . $e->getMessage();
+      }
       $response->addCommand(
         new HtmlCommand(
           '#claude-response',
