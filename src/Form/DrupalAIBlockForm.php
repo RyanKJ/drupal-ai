@@ -12,7 +12,8 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
-use Drupal\drupalai\Service\API\Claude\AnthropicClient;
+use Drupal\drupalai\Service\API\AnthropicClient;
+
 
 /**
  * Drupal AI block form

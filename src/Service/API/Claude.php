@@ -7,9 +7,13 @@
  * $response = $client->createMessage('Tell me a joke');
  * echo $response['content'][0]['text'];
  */
+ 
+namespace Drupal\drupalai\Service\API;
+
+ 
 class AnthropicClient {
     private $baseUrl = 'https://api.anthropic.com/v1/messages';
-    private $model_options = ['claude_haiku_2341' => 'Claude Haiku', 'claude_sonnet_342' => 'Claude Sonnet'];
+    private static $model_options = ['claude_haiku_2341' => 'Claude Haiku', 'claude_sonnet_342' => 'Claude Sonnet'];
     private $model;
     private $apiKey;
 
@@ -22,8 +26,8 @@ class AnthropicClient {
         return trim(file_get_contents('/home/master/api_keys/claude_api_key.txt'));
     }
     
-    public static function getModelOptions {
-        return $this->model_options;
+    public static function getModelOptions() {
+        return self::$model_options;
     }
 
     public function createMessage($prompt) {
