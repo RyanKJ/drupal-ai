@@ -31,6 +31,12 @@ class AnthropicClient {
     public static function getModelOptions() {
         return self::$model_options;
     }
+    
+    public function getMessageAndTime($prompt) {
+        $messageAndTime = []
+        
+        return messageAndTime 
+    }
 
     public function createMessage($prompt) {
         $headers = [

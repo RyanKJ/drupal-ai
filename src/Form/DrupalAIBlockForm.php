@@ -37,8 +37,8 @@ class DrupalAIBlockForm extends FormBase {
     $form['#suffix'] = '</div>';
     
     $chatgpt_model_options = ['chatgpt_2341234' => 'ChatGPT Model 1', 'chatgpt_987899' => 'ChatGPT Model 2'];
-    $claude_model_options = ['claude_haiku_2341' => 'Claude Haiku', 'claude_sonnet_342' => 'Claude Sonnet'];
-    //$claude_model_options = AnthropicClient::getModelOptions();
+    //$claude_model_options = ['claude_haiku_2341' => 'Claude Haiku', 'claude_sonnet_342' => 'Claude Sonnet'];
+    $claude_model_options = AnthropicClient::getModelOptions();
     $gemini_model_options = ['gemini_11231' => 'Gemini 1', 'gemini_23421' => 'Gemini 2'];
 
     $form['query'] = [
@@ -181,7 +181,7 @@ class DrupalAIBlockForm extends FormBase {
       $query = $form_state->getValue('query');
       $chatgpt_model = $form_state->getValue('chatgpt_model_selection');
       
-      $claude_response = "This is a test ";
+      $claude_response = "This is a test!";
       $time = "1.53 Seconds";
       
       // ChatGPT
@@ -198,21 +198,7 @@ class DrupalAIBlockForm extends FormBase {
         )
       );
       
-      // Claude
-      //try {
-      //    $claude_model = $form_state->getValue('claude_model_selection');
-      //    
-      //    $client = new AnthropicClient($claude_model);
-      //    $claude_json_response = $client->createMessage($query);
-      //    
-      //    if (isset($claude_json_response['content'][0]['text'])) {
-      //        $claude_response = $claude_json_response['content'][0]['text'];
-      //    } else {
-      //        $claude_response = "Unexpected response format for Claude.\n";
-      //    }
-      //} catch (Exception $e) {
-      //    $claude_response = "Error: " . $e->getMessage();
-      //}
+      
       $response->addCommand(
         new HtmlCommand(
           '#claude-response',
