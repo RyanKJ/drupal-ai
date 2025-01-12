@@ -15,7 +15,7 @@ use \Exception;
  
 class AnthropicClient {
     private $baseUrl = 'https://api.anthropic.com/v1/messages';
-    private static $model_options = ['claude_haiku_2341' => 'Claude Haiku', 'claude_sonnet_342' => 'Claude Sonnet'];
+    private static $model_options = ['claude-3-haiku-20240307' => 'Claude Haiku', 'claude_sonnet_342' => 'Claude Sonnet'];
     private $model;
     private $apiKey;
 
