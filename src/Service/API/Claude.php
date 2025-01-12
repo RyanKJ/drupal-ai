@@ -8,12 +8,22 @@
  * echo $response['content'][0]['text'];
  */
 class AnthropicClient {
-    private $apiKey;
     private $baseUrl = 'https://api.anthropic.com/v1/messages';
-    private $model = 'claude-3-haiku-20240307';
+    private $model_options = ['claude_haiku_2341' => 'Claude Haiku', 'claude_sonnet_342' => 'Claude Sonnet'];
+    private $model;
+    private $apiKey;
 
-    public function __construct($apiKey) {
-        $this->apiKey = $apiKey;
+    public function __construct($apiKey, $model) {
+        $this->model = $model        
+        $this->apiKey = $this->getClaudeApiKey();
+    }
+    
+    private function getClaudeApiKey() {
+        return trim(file_get_contents('/home/master/api_keys/claude_api_key.txt'));
+    }
+    
+    public static function getModelOptions {
+        return $this->model_options;
     }
 
     public function createMessage($prompt) {
@@ -77,24 +87,18 @@ class AnthropicClient {
     }
 }
 
-function getClaudeApiKey() {
-    return trim(file_get_contents('/home/master/api_keys/claude_api_key.txt'));
-}
 
 // Example usage:
 try {
-    $api_key = getClaudeApiKey();
-    echo "API key is :";
-    echo $api_key;
-    echo " ";
+    $model = AnthropicClient::getModelOptions();
     
-    $client = new AnthropicClient($api_key);
-    $response = $client->createMessage('What is the capital of France?');
+    $client = new AnthropicClient($model);
+    $response = $client->createMessage('Claude, what is your take on the nature of consciousness?');
     
     if (isset($response['content'][0]['text'])) {
         echo $response['content'][0]['text'];
     } else {
-        echo "Unexpected response format\n";
+        echo "Unexpected response format for Claude.\n";
         print_r($response); // Print full response for debugging
     }
 } catch (Exception $e) {

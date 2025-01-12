@@ -6,12 +6,15 @@
  */
 
 namespace Drupal\drupalai\Form;
+namespace Drupal\drupalai\Service\API;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
+
+use Drupal\drupalai\Service\API\AnthropicClient;
 
 /**
  * Drupal AI block form
@@ -35,7 +38,8 @@ class DrupalAIBlockForm extends FormBase {
     $form['#suffix'] = '</div>';
     
     $chatgpt_model_options = ['chatgpt_2341234' => 'ChatGPT Model 1', 'chatgpt_987899' => 'ChatGPT Model 2'];
-    $claude_model_options = ['claude_haiku_2341' => 'Claude Haiku', 'claude_sonnet_342' => 'Claude Sonnet'];
+    //$claude_model_options = ['claude_haiku_2341' => 'Claude Haiku', 'claude_sonnet_342' => 'Claude Sonnet'];
+    $claude_model_options = AnthropicClient::getModelOptions();
     $gemini_model_options = ['gemini_11231' => 'Gemini 1', 'gemini_23421' => 'Gemini 2'];
 
     $form['query'] = [
@@ -169,33 +173,6 @@ class DrupalAIBlockForm extends FormBase {
 
     return $form;
   
-/**
- *   // How many paragraphs?
- *   for ($i = 1; $i <= 10; $i++) $options[$i] = $i;
- *   $form['paragraphs'] = array(
- *     '#type' => 'select',
- *     '#title' => t('Paragraphs'),
- *     '#options' => $options,
- *     '#default_value' => 4,
- *     '#description' => t('How many?'),
- *   );
- *
- *   // How many phrases?
- *   $form['phrases'] = array(
- *     '#type' => 'textfield',
- *     '#title' => t('Phrases'),
- *     '#default_value' => '20',
- *     '#description' => t('Maximum per paragraph'),
- *   );
- *
- *   // Submit
- *   $form['submit'] = array(
- *     '#type' => 'submit',
- *     '#value' => t('Generate'),
- *   );
- *
- *   return $form;
- */ 
   }
   
   public function ajaxSubmit(array &$form, FormStateInterface $form_state) {
@@ -204,6 +181,7 @@ class DrupalAIBlockForm extends FormBase {
     try {
       $query = $form_state->getValue('query');
       $chatgpt_model = $form_state->getValue('chatgpt_model_selection');
+      
       $claude_response = "This is a test of AJAX functionality!" . " " . "ChatGPT Model Selection is: " . $chatgpt_model . $query;
       $time = "1.53 Seconds";
       
