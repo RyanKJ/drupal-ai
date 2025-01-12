@@ -144,6 +144,7 @@ class AnthropicClient {
         }
         
         $sanitized_response = $this->sanitizeHtml(json_decode($response, true));
-        return json_decode($response, true);
+        
+        return $sanitized_response;
     }
 }
