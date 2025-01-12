@@ -10,6 +10,8 @@
  
 namespace Drupal\drupalai\Service\API;
 
+use \Exception;
+
  
 class AnthropicClient {
     private $baseUrl = 'https://api.anthropic.com/v1/messages';
