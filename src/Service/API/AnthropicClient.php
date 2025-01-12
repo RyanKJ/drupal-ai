@@ -50,6 +50,7 @@ class AnthropicClient {
 
         // Convert to Seconds (1 second = 1 billion nanoseconds)
         $execution_time_in_seconds = round($execution_time / 1e9, 2);
+        $execution_time_in_seconds = strval($execution_time_in_seconds) . " Seconds";
 
         $response_and_time["time"] = $execution_time_in_seconds;
         
