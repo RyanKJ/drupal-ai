@@ -37,6 +37,16 @@ class AnthropicClient {
         
         return $messageAndTime;
     }
+    
+    private function sanitizeHtml($html) {
+        // Define allowed HTML tags
+        $allowedTags = '<p><h1><h2><h3><h4><h5><h6><ul><ol><li><strong><em><br><div><span>';
+        
+        // Strip unwanted tags and attributes
+        $sanitized = strip_tags($html, $allowedTags);
+        
+        return $sanitized;
+    }
 
     public function createMessage($prompt) {
         $headers = [
@@ -44,10 +54,14 @@ class AnthropicClient {
             'x-api-key: ' . $this->apiKey,
             'anthropic-version: 2023-06-01'
         ];
-
+        
         $data = [
-            'model' => $this->model,
-            'messages' => [
+          'model' => $this->model,
+          'messages' => [
+                [
+                    'role' => 'system',
+                    'content' => 'Please format your responses in HTML using appropriate tags for structure and styling. Use <p> for paragraphs, <h1>-<h6> for headings, <ul>/<ol> for lists, etc.'
+                ],
                 [
                     'role' => 'user',
                     'content' => $prompt
@@ -55,6 +69,17 @@ class AnthropicClient {
             ],
             'max_tokens' => 1024
         ];
+
+//        $data = [
+//            'model' => $this->model,
+//            'messages' => [
+//                [
+//                    'role' => 'user',
+//                    'content' => $prompt
+//                ]
+//            ],
+//            'max_tokens' => 1024
+//        ];
 
         $ch = curl_init($this->baseUrl);
         
