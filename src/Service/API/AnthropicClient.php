@@ -32,10 +32,46 @@ class AnthropicClient {
         return self::$model_options;
     }
     
-    public function getMessageAndTime($prompt) {
-        $messageAndTime = [];
+    public function getResponseAndTime($prompt) {
+        $response_and_time = []; 
         
-        return $messageAndTime;
+        // Start Time
+        $start_time = hrtime(true);
+        
+        // Get response here
+        $response = $this->getResponse($prompt);
+        $response_and_time["response"] = $response;
+        
+        // End Time
+        $end_time = hrtime(true);
+
+        // Calculate Execution time (in Nanoseconds)
+        $execution_time = $end_time - $start_time;
+
+        // Convert to Seconds (1 second = 1 billion nanoseconds)
+        $execution_time_in_seconds = round($execution_time / 1e9, 2);
+
+        $response_and_time["time"] = $execution_time_in_seconds;
+        
+        return $response_and_time;
+    }
+    
+    private function getResponse($prompt) {
+        $response = ""; 
+        
+        try {
+            $claude_json_response = $this->createMessage($prompt);
+                
+            if (isset($claude_json_response['content'][0]['text'])) {
+                $response = $claude_json_response['content'][0]['text'];
+            } else {
+                $response = "Unexpected response format for Claude.\n";
+            }
+        } catch (Exception $e) {
+            $response = "Error: " . $e->getMessage();
+        } 
+    
+        return $response;
     }
     
     private function sanitizeHtml($html) {

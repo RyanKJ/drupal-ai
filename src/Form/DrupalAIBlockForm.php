@@ -182,7 +182,6 @@ class DrupalAIBlockForm extends FormBase {
       $chatgpt_model = $form_state->getValue('chatgpt_model_selection');
       $claude_model = $form_state->getValue('claude_model_selection');
       
-      $claude_response = "This is a test!";
       $time = "1.53 Seconds";
       
       // ChatGPT
@@ -200,24 +199,79 @@ class DrupalAIBlockForm extends FormBase {
       );
       
       // Claude
-      
-      
-      try {
-        $client = new AnthropicClient($claude_model);
-        $claude_json_response = $client->createMessage($query);
+      $client = new AnthropicClient($claude_model);
+      $claude_response_and_time = $client->getResponseAndTime($query);
         
-        if (isset($claude_json_response['content'][0]['text'])) {
-            $claude_response = $claude_json_response['content'][0]['text'];
-        } else {
-            $claude_response = "Unexpected response format for Claude.\n";
-        }
-      } catch (Exception $e) {
-          $claude_response = "Error: " . $e->getMessage();
-      } 
-          
- 
-      
+      $claude_response = $claude_response_and_time["response"];
+      $claude_time = $claude_response_and_time["time"];
        
+      $response->addCommand(
+        new HtmlCommand(
+          '#claude-response',
+          '<div class="claude-message">' . $claude_response . '</div>'
+        )
+      );
+      $response->addCommand(
+        new HtmlCommand(
+          '#claude-meta',
+          '<div class="response-meta">' . $claude_time . '</div>'
+        )
+      );
+      
+      // Gemini
+      $response->addCommand(  
+        new HtmlCommand(
+          '#gemini-response',
+          '<div class="gemini-message">' . nl2br($claude_response) . '</div>'
+        )
+      );
+      $response->addCommand(
+        new HtmlCommand(
+          '#gemini-meta',
+          '<div class="response-meta">' . $time . '</div>'
+        )
+      );
+    }
+    catch (\Exception $e) {
+      $response->addCommand(
+        new HtmlCommand(
+          '#claude-response',
+          '<div class="claude-error">Error: ' . $e->getMessage() . '</div>'
+        )
+      );
+    }
+
+    return $response;
+  }
+  
+  
+  /**
+   * Test dummy expression of ajaxSubmit as to not waste API Tokens.
+   */
+  public function testAjaxSubmit(array &$form, FormStateInterface $form_state) {
+    $response = new AjaxResponse();
+    
+    try {
+      $query = $form_state->getValue('query');
+      $chatgpt_model = $form_state->getValue('chatgpt_model_selection');
+      $claude_response = "This is a test of AJAX functionality!" . " " . "ChatGPT Model Selection is: " . $chatgpt_model . $query;
+      $time = "1.53 Seconds";
+      
+      // ChatGPT
+      $response->addCommand(
+        new HtmlCommand(
+          '#chatgpt-response',
+          '<div class="chatgpt-message">' . nl2br($claude_response) . '</div>'
+        )
+      );
+      $response->addCommand(
+        new HtmlCommand(
+          '#chatgpt-meta',
+          '<div class="response-meta">' . $time . '</div>'
+        )
+      );
+      
+      // Claude
       $response->addCommand(
         new HtmlCommand(
           '#claude-response',
@@ -256,6 +310,8 @@ class DrupalAIBlockForm extends FormBase {
 
     return $response;
   }
+  
+  
 
   /**
    * {@inheritdoc}
