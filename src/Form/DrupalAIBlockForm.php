@@ -12,10 +12,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
-
-//namespace Drupal\drupalai\Service\API;
-
-//use Drupal\drupalai\Service\API\AnthropicClient;
+use Drupal\drupalai\Service\API\AnthropicClient;
 
 /**
  * Drupal AI block form
@@ -39,8 +36,8 @@ class DrupalAIBlockForm extends FormBase {
     $form['#suffix'] = '</div>';
     
     $chatgpt_model_options = ['chatgpt_2341234' => 'ChatGPT Model 1', 'chatgpt_987899' => 'ChatGPT Model 2'];
-    $claude_model_options = ['claude_haiku_2341' => 'Claude Haiku', 'claude_sonnet_342' => 'Claude Sonnet'];
-    //$claude_model_options = AnthropicClient::getModelOptions();
+    //$claude_model_options = ['claude_haiku_2341' => 'Claude Haiku', 'claude_sonnet_342' => 'Claude Sonnet'];
+    $claude_model_options = AnthropicClient::getModelOptions();
     $gemini_model_options = ['gemini_11231' => 'Gemini 1', 'gemini_23421' => 'Gemini 2'];
 
     $form['query'] = [
