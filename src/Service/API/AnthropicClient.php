@@ -33,9 +33,9 @@ class AnthropicClient {
     }
     
     public function getMessageAndTime($prompt) {
-        $messageAndTime = []
+        $messageAndTime = [];
         
-        return messageAndTime 
+        return $messageAndTime;
     }
 
     public function createMessage($prompt) {
