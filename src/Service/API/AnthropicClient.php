@@ -101,18 +101,18 @@ class AnthropicClient {
 
 
 // Example usage:
-try {
-    $model = AnthropicClient::getModelOptions();
-    
-    $client = new AnthropicClient($model);
-    $response = $client->createMessage('Claude, what is your take on the nature of consciousness?');
-    
-    if (isset($response['content'][0]['text'])) {
-        echo $response['content'][0]['text'];
-    } else {
-        echo "Unexpected response format for Claude.\n";
-        print_r($response); // Print full response for debugging
-    }
-} catch (Exception $e) {
-    echo "Error: " . $e->getMessage();
-}
+//try {
+//    $model = AnthropicClient::getModelOptions();
+//    
+//    $client = new AnthropicClient($model);
+//    $response = $client->createMessage('Claude, what is your take on the nature of consciousness?');
+//    
+//    if (isset($response['content'][0]['text'])) {
+//        echo $response['content'][0]['text'];
+//    } else {
+//        echo "Unexpected response format for Claude.\n";
+//        print_r($response); // Print full response for debugging
+//    }
+//} catch (Exception $e) {
+//    echo "Error: " . $e->getMessage();
+//}
