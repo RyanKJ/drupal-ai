@@ -12,13 +12,20 @@ namespace Drupal\drupalai\Service\API;
 
 use \Exception;
 
- 
+
+/**
+ * Class that calls and interfaces with Anthropic's Claude LLM
+ */
 class AnthropicClient {
     private $baseUrl = 'https://api.anthropic.com/v1/messages';
-    private static $model_options = ['claude-3-haiku-20240307' => 'Claude Haiku', 'claude_sonnet_342' => 'Claude Sonnet'];
+    private static $model_options = ['claude-3-haiku-20240307' => 'Claude Haiku', 
+                                     'claude-3-5-sonnet-20241022' => 'Claude Sonnet'];
     private $model;
     private $apiKey;
     
+    /**
+     * Method to fetch various models of the API
+     */
     public static function getModelOptions() {
         return self::$model_options;
     }
@@ -32,6 +39,10 @@ class AnthropicClient {
         return trim(file_get_contents('/home/master/api_keys/claude_api_key.txt'));
     }
     
+    /**
+     * Fetches an associative array that gives both the sanitized response from the LLM and also
+     * the amount of time it took to fetch the API response.
+     */
     public function getResponseAndTime($prompt) {
         $response_and_time = []; 
         
@@ -57,6 +68,9 @@ class AnthropicClient {
         return $response_and_time;
     }
     
+    /**
+     * Gets the API response given a prompt, has sanitization and error handling.
+     */
     private function getResponse($prompt) {
         $response = ""; 
         
@@ -86,6 +100,9 @@ class AnthropicClient {
         return $sanitized;
     }
 
+    /**
+     * Calls the LLM API using PHP's curl.
+     */
     public function createMessage($prompt) {
         $headers = [
             'Content-Type: application/json',
