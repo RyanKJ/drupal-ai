@@ -43,7 +43,7 @@ class DrupalAIBlockForm extends FormBase {
     //$claude_model_options = ['claude_haiku_2341' => 'Claude Haiku', 'claude_sonnet_342' => 'Claude Sonnet'];
     $claude_model_options = AnthropicClient::getModelOptions();
     //$gemini_model_options = ['gemini_11231' => 'Gemini 1', 'gemini_23421' => 'Gemini 2'];
-    $gemini_mode_options = BardClient::getModelOptions();
+    $gemini_model_options = BardClient::getModelOptions();
 
     $form['query'] = [
       '#type' => 'textarea',
