@@ -18,7 +18,7 @@ use \Exception;
  */
 class OpenAIClient {
     private $baseUrl = 'https://api.openai.com/v1/chat/completions';
-    todo private static $model_options = ['gpt-3.5-turbo' => 'ChatGPT 3.5', 
+    private static $model_options = ['gpt-3.5-turbo' => 'ChatGPT 3.5', 
                                           'gpt-4' => 'ChatGPT 4.0'];
     private $model;
     private $apiKey;
