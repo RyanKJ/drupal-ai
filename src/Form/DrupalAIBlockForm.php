@@ -42,8 +42,8 @@ class DrupalAIBlockForm extends FormBase {
     $chatgpt_model_options = OpenAIClient::getModelOptions();
     //$claude_model_options = ['claude_haiku_2341' => 'Claude Haiku', 'claude_sonnet_342' => 'Claude Sonnet'];
     $claude_model_options = AnthropicClient::getModelOptions();
-    $gemini_model_options = ['gemini_11231' => 'Gemini 1', 'gemini_23421' => 'Gemini 2'];
-    //$gemini_mode_options = BardClient::getModelOptions();
+    //$gemini_model_options = ['gemini_11231' => 'Gemini 1', 'gemini_23421' => 'Gemini 2'];
+    $gemini_mode_options = BardClient::getModelOptions();
 
     $form['query'] = [
       '#type' => 'textarea',
@@ -185,8 +185,7 @@ class DrupalAIBlockForm extends FormBase {
       $query = $form_state->getValue('query');
       $chatgpt_model = $form_state->getValue('chatgpt_model_selection');
       $claude_model = $form_state->getValue('claude_model_selection');
-      
-      $time = "1.53 Seconds";
+      $gemini_model = $form_state->getValue('gemini_model_selection');
       
       // ChatGPT
       $chatgpt_client = new OpenAIClient($chatgpt_model);
@@ -194,9 +193,6 @@ class DrupalAIBlockForm extends FormBase {
         
       $chatgpt_response = $chatgpt_response_and_time["response"];
       $chatgpt_time = $chatgpt_response_and_time["time"];
-      
-      //$chatgpt_response = "Test";
-      //$chatgpt_time = "1.53 Second Test";
       
       $response->addCommand(
         new HtmlCommand(
@@ -232,16 +228,22 @@ class DrupalAIBlockForm extends FormBase {
       );
       
       // Gemini
+      $gemini_client = new BardClient($gemini_model);
+      $gemini_response_and_time = $gemini_client->getResponseAndTime($query);
+        
+      $gemini_response = $gemini_response_and_time["response"];
+      $gemini_time = $gemini_response_and_time["time"];
+      
       $response->addCommand(  
         new HtmlCommand(
           '#gemini-response',
-          '<div class="gemini-message">' . nl2br($claude_response) . '</div>'
+          '<div class="gemini-message">' . nl2br($gemini_response) . '</div>'
         )
       );
       $response->addCommand(
         new HtmlCommand(
           '#gemini-meta',
-          '<div class="response-meta">' . $time . '</div>'
+          '<div class="response-meta">' . $gemini_time . '</div>'
         )
       );
     }
