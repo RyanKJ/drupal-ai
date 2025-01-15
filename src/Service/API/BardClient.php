@@ -10,16 +10,21 @@
  
 namespace Drupal\drupalai\Service\API;
 
+use Drupal\Component\Serialization\Json;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 use \Exception;
 
 
 /**
  * Class that calls and interfaces with Anthropic's Claude LLM
  */
-class AnthropicClient {
-    // to do private $baseUrl = 'https://api.anthropic.com/v1/messages';
-    // to do private static $model_options = ['claude-3-haiku-20240307' => 'Claude Haiku', 
-    //                                 'claude-3-5-sonnet-20241022' => 'Claude Sonnet'];
+class BardClient {
+    private $baseUrl = 'https://generativelanguage.googleapis.com/v1';
+    
+    private static $model_options = ['gemini-1.5-flash-8b' => 'Gemini 1.5 Flash', 
+                                     'gemini-1.5-pro' => 'Gemini 1.5 Pro'
+                                     'gemini-2.0-flash-exp' => 'Gemini 2.0 Flash'];
     private $model;
     private $apiKey;
     
@@ -37,6 +42,15 @@ class AnthropicClient {
     
     private function getApiKey() {
         return trim(file_get_contents('/home/master/api_keys/gemini_api_key.txt'));
+    }
+    
+    /**
+     * Generate full URL for Gemini query.
+     */
+    private function generateApiUrl() {
+      full_url = $this->baseUrl . '/models/' . $this->model . ':generateContent'; 
+      
+      return full_url;
     }
     
     /**
@@ -69,98 +83,93 @@ class AnthropicClient {
     }
     
     /**
-     * Gets the API response given a prompt, has sanitization and error handling.
+     * Gets the API response given a prompt.
      */
     private function getResponse($prompt) {
-        $response = ""; 
-        
-        try {
-            $claude_json_response = $this->createMessage($prompt);
-                
-            if (isset($claude_json_response['content'][0]['text'])) {
-                $unsanitized_response = $claude_json_response['content'][0]['text'];
-                $response = $this->sanitizeHtml($unsanitized_response);      
-            } else {
-                $response = "Unexpected response format for Claude.\n";
-            }
-        } catch (Exception $e) {
-            $response = "Error: " . $e->getMessage();
-        } 
+        $response = $this->createMessage($prompt);
     
         return $response;
     }
     
-    private function sanitizeHtml($html) {
-        // Define allowed HTML tags
-        $allowedTags = '<p><h1><h2><h3><h4><h5><h6><ul><ol><li><strong><em><br><div><span>';
-        
-        // Strip unwanted tags and attributes
-        $sanitized = strip_tags($html, $allowedTags);
-        
-        return $sanitized;
-    }
-
     /**
-     * Calls the LLM API using PHP's curl.
+     * Sanitizes data from the API response.
+     *
+     * @param array $data
+     *   The data array to sanitize.
+     *
+     * @return array
+     *   The sanitized data array.
      */
-    public function createMessage($prompt) {
-        $headers = [
-            'Content-Type: application/json',
-            'x-api-key: ' . $this->apiKey,
-            'anthropic-version: 2023-06-01'
+    private function sanitizeData(array $data) {
+        $sanitizedData = [];
+        // Loop through each key in the data array
+        foreach ($data as $key => $value) {
+          // Check if the value is an array
+          if (is_array($value)) {
+            // If it is an array, sanitize the values recursively
+            $sanitizedData[$key] = sanitizeData($value);
+          } else {
+            // If the value is not an array, apply the sanitation
+             //Sanitize value against xss
+             if(is_string($value)){
+                $sanitizedData[$key] = filter_var($value, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+             } else {
+                $sanitizedData[$key] = $value;
+             }
+          }
+        }
+        return $sanitizedData;
+    }
+    
+    
+    /**
+     * Sends a message to the Gemini API.
+     *
+     * @param string $prompt
+     *   The user prompt for the Gemini API.
+     * @param string $apiUrl
+     *   The API URL for the Gemini API.
+     * @param string $apiKey
+     *   The API key for the Gemini API.
+     *
+     * @return array|null
+     *   Returns the API response data or null if the request fails.
+     */
+    public function createMessage(string $prompt) {
+        $httpClient = new Client();
+
+        $messageData = [
+          'contents' => [
+             [ 'parts' => [
+                 ['text' => $prompt]
+               ]
+             ]
+          ],
+          'generationConfig' => [
+            'model' => $model, // Add the model parameter
+          ], 
+        ];
+        $options = [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'x-goog-api-key' => $this->apiKey,
+             ], 
+            'json' => $messageData,
         ];
         
-        $data = [
-            'model' => $this->model,
-            'system' => 'Please format your responses in HTML using appropriate tags for structure and styling. Use <p> for paragraphs, <h1>-<h6> for headings, <ul>/<ol> for lists, etc.',
-            'messages' => [
-                [
-                    'role' => 'user',
-                    'content' => $prompt
-                ]
-            ],
-            'max_tokens' => 1024
-        ];
+        try {
+            $response = $httpClient->request('POST', $this->generateApiUrl(), $options);
+            $body = $response->getBody();
+            $data = Json::decode($body, true);
 
-        $ch = curl_init($this->baseUrl);
-        
-        // HTTP/2 specific settings
-        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2_0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-        curl_setopt($ch, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_2);
-        
-        // General settings
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        
-        // Additional error handling settings
-        curl_setopt($ch, CURLOPT_VERBOSE, true);
-        $verbose = fopen('php://temp', 'w+');
-        curl_setopt($ch, CURLOPT_STDERR, $verbose);
-
-        $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        
-        if (curl_errno($ch)) {
-            rewind($verbose);
-            $verboseLog = stream_get_contents($verbose);
-            
-            throw new Exception(sprintf(
-                "Curl error: %s\nVerbose log:\n%s",
-                curl_error($ch),
-                $verboseLog
-            ));
+          if($data){
+            return $this->sanitizeData($data);
+          } else {
+            return ['error' => 'Failed to decode JSON from Gemini API.'];
+          }
+        } catch (RequestException $e) {
+          \Drupal::logger('my_module')->error('Gemini API Request Error: @message', ['@message' => $e->getMessage()]);
+            return ['error' => 'Gemini API request failed: ' . $e->getMessage()];
         }
-        
-        fclose($verbose);
-        curl_close($ch);
-
-        if ($httpCode !== 200) {
-            throw new Exception('API request failed with status code: ' . $httpCode . "\nResponse: " . $response);
-        }
-        
-        return json_decode($response, true);
     }
 }
