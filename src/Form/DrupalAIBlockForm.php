@@ -12,7 +12,9 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
+use Drupal\drupalai\Service\API\OpenAIClient;
 use Drupal\drupalai\Service\API\AnthropicClient;
+use Drupal\drupalai\Service\API\BardClient;
 
 
 /**
@@ -36,10 +38,12 @@ class DrupalAIBlockForm extends FormBase {
     $form['#prefix'] = '<div id="ai-form-wrapper">';
     $form['#suffix'] = '</div>';
     
-    $chatgpt_model_options = ['chatgpt_2341234' => 'ChatGPT Model 1', 'chatgpt_987899' => 'ChatGPT Model 2'];
+    //$chatgpt_model_options = ['chatgpt_2341234' => 'ChatGPT Model 1', 'chatgpt_987899' => 'ChatGPT Model 2'];
+    $chatgpt_model_options = OpenAIClient::getModelOptions();
     //$claude_model_options = ['claude_haiku_2341' => 'Claude Haiku', 'claude_sonnet_342' => 'Claude Sonnet'];
     $claude_model_options = AnthropicClient::getModelOptions();
     $gemini_model_options = ['gemini_11231' => 'Gemini 1', 'gemini_23421' => 'Gemini 2'];
+    //$gemini_mode_options = BardClient::getModelOptions();
 
     $form['query'] = [
       '#type' => 'textarea',
@@ -185,22 +189,28 @@ class DrupalAIBlockForm extends FormBase {
       $time = "1.53 Seconds";
       
       // ChatGPT
+      $chatgpt_client = new OpenAIClient($chatgpt_model);
+      $chatgpt_response_and_time = $chatgpt_client->getResponseAndTime($query);
+        
+      $chatgpt_response = $chatgpt_response_and_time["response"];
+      $chatgpt_time = $chatgpt_response_and_time["time"];
+      
       $response->addCommand(
         new HtmlCommand(
           '#chatgpt-response',
-          '<div class="chatgpt-message">' . nl2br($claude_response) . '</div>'
+          '<div class="chatgpt-message">' . $chatgpt_response . '</div>'
         )
       );
       $response->addCommand(
         new HtmlCommand(
           '#chatgpt-meta',
-          '<div class="response-meta">' . $time . '</div>'
+          '<div class="response-meta">' . $chatgpt_time . '</div>'
         )
       );
       
       // Claude
-      $client = new AnthropicClient($claude_model);
-      $claude_response_and_time = $client->getResponseAndTime($query);
+      $claude_client = new AnthropicClient($claude_model);
+      $claude_response_and_time = $claude_client->getResponseAndTime($query);
         
       $claude_response = $claude_response_and_time["response"];
       $claude_time = $claude_response_and_time["time"];
@@ -335,18 +345,7 @@ class DrupalAIBlockForm extends FormBase {
   /**
    * {@inheritdoc}
    * 
-   * Redirects users to the results page with the Lorem ipsum text created
-   * using the provided parameters.
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    
- 
-    //$form_state->setRedirect(
-    //  'drupalai.generate',
-    //  array(
-    //    'paragraphs' => $form_state->getValue('paragraphs'),
-    //    'phrases' => $form_state->getValue('phrases'),
-    //  )
-    //);
   }
 }

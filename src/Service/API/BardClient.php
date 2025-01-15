@@ -1,9 +1,9 @@
 <?php
 /**
- * Anthropic API Client with HTTP/2 support
+ * Bard API Client with HTTP/2 support
  *
  * Suggested usage:
- * $client = new AnthropicClient('your-api-key-here');
+ * $client = new BardClient('your-api-key-here');
  * $response = $client->createMessage('Tell me a joke');
  * echo $response;
  */
@@ -17,9 +17,9 @@ use \Exception;
  * Class that calls and interfaces with Anthropic's Claude LLM
  */
 class AnthropicClient {
-    private $baseUrl = 'https://api.anthropic.com/v1/messages';
-    private static $model_options = ['claude-3-haiku-20240307' => 'Claude Haiku', 
-                                     'claude-3-5-sonnet-20241022' => 'Claude Sonnet'];
+    // to do private $baseUrl = 'https://api.anthropic.com/v1/messages';
+    // to do private static $model_options = ['claude-3-haiku-20240307' => 'Claude Haiku', 
+    //                                 'claude-3-5-sonnet-20241022' => 'Claude Sonnet'];
     private $model;
     private $apiKey;
     
@@ -36,7 +36,7 @@ class AnthropicClient {
     }
     
     private function getApiKey() {
-        return trim(file_get_contents('/home/master/api_keys/claude_api_key.txt'));
+        return trim(file_get_contents('/home/master/api_keys/gemini_api_key.txt'));
     }
     
     /**
