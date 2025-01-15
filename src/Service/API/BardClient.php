@@ -48,9 +48,9 @@ class BardClient {
      * Generate full URL for Gemini query.
      */
     private function generateApiUrl() {
-      full_url = $this->baseUrl . '/models/' . $this->model . ':generateContent'; 
+      $full_url = $this->baseUrl . '/models/' . $this->model . ':generateContent'; 
       
-      return full_url;
+      return $full_url;
     }
     
     /**
