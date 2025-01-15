@@ -192,11 +192,11 @@ class DrupalAIBlockForm extends FormBase {
       $chatgpt_client = new OpenAIClient($chatgpt_model);
       $chatgpt_response_and_time = $chatgpt_client->getResponseAndTime($query);
         
-      //$chatgpt_response = $chatgpt_response_and_time["response"];
-      //$chatgpt_time = $chatgpt_response_and_time["time"];
+      $chatgpt_response = $chatgpt_response_and_time["response"];
+      $chatgpt_time = $chatgpt_response_and_time["time"];
       
-      $chatgpt_response = "Test";
-      $chatgpt_time = "1.53 Second Test";
+      //$chatgpt_response = "Test";
+      //$chatgpt_time = "1.53 Second Test";
       
       $response->addCommand(
         new HtmlCommand(

@@ -18,8 +18,7 @@ use \Exception;
  */
 class OpenAIClient {
     private $baseUrl = 'https://api.openai.com/v1/chat/completions';
-    private static $model_options = ['gpt-3.5-turbo' => 'ChatGPT 3.5', 
-                                          'gpt-4' => 'ChatGPT 4.0'];
+    private static $model_options = ['gpt-3.5-turbo' => 'ChatGPT 3.5', 'gpt-4' => 'ChatGPT 4.0'];
     private $model;
     private $apiKey;
     
@@ -74,7 +73,6 @@ class OpenAIClient {
     private function getResponse($prompt) {
         $response_data = $this->createMessage($prompt);
         
-        
         // Check and return the response content.
         if (isset($response_data['choices'][0]['message']['content'])) {
             return $response_data['choices'][0]['message']['content'];
@@ -120,7 +118,7 @@ class OpenAIClient {
         $ch = curl_init();
 
         // Set cURL options.
-        curl_setopt($ch, CURLOPT_URL, $baseUrl);
+        curl_setopt($ch, CURLOPT_URL, $this->baseUrl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
