@@ -177,7 +177,7 @@ class BardClient {
 
 // Example usage:
 try {
-    $model = reset(BardClient::getModelOptions());
+    $model = 'gemini-1.5-flash-8b';
     
     $client = new BardClient($model);
     $response = $client->createMessage('Gemini, what is your take on the nature of consciousness?');
