@@ -7,11 +7,11 @@
       this.speed = speed;
       this.isAnimating = false;
       this.onComplete = null;
-      
+
       const tempDiv = document.createElement('div');
       tempDiv.innerHTML = html;
       this.words = [];
-      
+
       const extractTextNodes = (node) => {
         if (node.nodeType === Node.TEXT_NODE) {
           const words = node.textContent.split(' ').filter(word => word.length > 0);
@@ -21,7 +21,7 @@
           if (['p', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(tag)) {
             this.words.push({ text: '', tag: tag, isBlockStart: true });
           }
-          
+
           node.childNodes.forEach(child => {
             if (child.nodeType === Node.TEXT_NODE) {
               const words = child.textContent.split(' ').filter(word => word.length > 0);
@@ -30,16 +30,16 @@
               extractTextNodes(child);
             }
           });
-          
+
           if (['p', 'div', 'br', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(tag)) {
             this.words.push({ text: '', tag: 'br' });
           }
         }
       };
-      
+
       extractTextNodes(tempDiv);
       this.currentWord = 0;
-      
+
       // Initialize container for block elements
       this.currentContainer = null;
     }
@@ -53,77 +53,83 @@
       this.animateWords();
     }
 
-    animateWords() {
-      if (this.currentWord >= this.words.length) {
-        this.isAnimating = false;
-        if (this.onComplete) {
-          this.onComplete();
+   animateWords() {
+        if (this.currentWord >= this.words.length) {
+            this.isAnimating = false;
+            if (this.onComplete) {
+                this.onComplete();
+            }
+            return;
         }
-        return;
-      }
 
-      const word = this.words[this.currentWord];
+        const word = this.words[this.currentWord];
 
-      // Handle block elements
-      if (word.isBlockStart) {
-        this.currentContainer = document.createElement(word.tag);
-        this.element.appendChild(this.currentContainer);
+        // Handle block elements
+        if (word.isBlockStart) {
+            // Only create a new container if one doesn't exist
+          if (!this.currentContainer) {
+              this.currentContainer = document.createElement(word.tag);
+              this.element.appendChild(this.currentContainer);
+          }
 
-        // Move to the next word and continue animation
-        this.currentWord++;
-        this.animateWords();
-        return;
+          // Move to the next word and continue animation
+          this.currentWord++;
+          this.animateWords();
+          return;
       }
 
       let element;
       let targetContainer = this.currentContainer || this.element;
+    
 
       if (word.tag === 'br') {
           this.currentContainer = null;
-          element = document.createElement('br');
-          this.element.appendChild(element);
+          // Defer adding BR element until later
       } else {
         const wrapper = document.createDocumentFragment();
         const textNode = document.createTextNode(word.text + ' ');
-
-          if (word.tag && !['p', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(word.tag)) {
+        
+        if (word.tag && !['p', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(word.tag)) {
             element = document.createElement(word.tag);
             element.appendChild(textNode);
             element.style.opacity = '0';
             wrapper.appendChild(element);
-          } else {
+        } else {
             element = document.createElement('span');
             element.appendChild(textNode);
             element.style.opacity = '0';
             element.style.display = 'inline';
             wrapper.appendChild(element);
-          }
+        }
 
-          targetContainer.appendChild(wrapper);
+        targetContainer.appendChild(wrapper);
 
-          if (this.currentContainer && this.currentContainer.style.opacity !== '1'){
+        if (this.currentContainer && this.currentContainer.style.opacity !== '1') {
             this.currentContainer.style.opacity = '1';
-          }
-      }
-
-
+        }
+          
+        if (this.words[this.currentWord - 1] && this.words[this.currentWord - 1].tag === 'br'){
+          let brElement = document.createElement('br');
+          this.element.appendChild(brElement);
+        }
+    }
+        
       setTimeout(() => {
-          if (element && element.style) {
-              element.style.opacity = '1';
-          }
-          this.currentWord++;
+        if (element && element.style) {
+            element.style.opacity = '1';
+        }
+        this.currentWord++;
           this.animateWords();
       }, this.speed * 1.53);
     }
 
-
     stop() {
       this.isAnimating = false;
       this.currentWord = this.words.length;
-      
+
       const tempDiv = document.createElement('div');
       let currentBlock = null;
-      
+
       this.words.forEach(word => {
         if (word.isBlockStart) {
           currentBlock = document.createElement(word.tag);
@@ -142,9 +148,9 @@
           }
         }
       });
-      
+
       this.element.innerHTML = tempDiv.innerHTML;
-      
+
       if (this.onComplete) {
         this.onComplete();
       }
@@ -173,7 +179,7 @@
         });
 
         Drupal.behaviors.aiResponseAnimation.metaContent.clear();
-        
+
         Drupal.behaviors.aiResponseAnimation.activeAnimations.forEach(animation => {
           animation.stop();
         });
@@ -183,7 +189,7 @@
       function animateMetaInfo(metaSelector, metaText) {
         const metaElement = document.querySelector(metaSelector);
         if (!metaElement) return;
-        
+
         const metaAnimation = new HTMLTypewriterAnimation(metaElement, metaText, 20);
         metaAnimation.start();
       }
@@ -199,7 +205,7 @@
 
         const animation = new HTMLTypewriterAnimation(element, html, 30);
         Drupal.behaviors.aiResponseAnimation.activeAnimations.set(selector, animation);
-        
+
         animation.start(() => {
           const metaText = Drupal.behaviors.aiResponseAnimation.metaContent.get(metaSelector);
           if (metaSelector && metaText) {
@@ -217,7 +223,7 @@
 
       if (typeof Drupal.AjaxCommands.prototype.original_insert === 'undefined') {
         Drupal.AjaxCommands.prototype.original_insert = Drupal.AjaxCommands.prototype.insert;
-        
+
         Drupal.AjaxCommands.prototype.insert = function (ajax, response, status) {
           const selectorPairs = {
             '#chatgpt-response': '#chatgpt-meta',
@@ -247,5 +253,4 @@
       }
     }
   };
-
 })(jQuery, Drupal);
