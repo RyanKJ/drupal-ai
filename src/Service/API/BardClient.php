@@ -135,9 +135,9 @@ class BardClient
                     ]
                  ]
             ],
-             'generationConfig' => [
-               'model' => $this->model,
-             ],
+              'generationConfig' => [
+                 'modelName' => $this->model,
+               ],
          ];
 
 
