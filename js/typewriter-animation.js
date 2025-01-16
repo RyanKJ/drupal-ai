@@ -14,18 +14,37 @@
 
       const extractTextNodes = (node, isMeta = false) => {
         if (node.nodeType === Node.TEXT_NODE) {
-          const words = node.textContent.split(' ').filter(word => word.length > 0);
-          words.forEach(word => this.words.push({ text: word, tag: null }));
+          const text = node.textContent.trim();
+          if (text) {
+            const words = text.split(' ').filter(word => word.length > 0);
+            words.forEach((word, index) => {
+              this.words.push({ 
+                text: word, 
+                tag: null,
+                isLastWord: index === words.length - 1
+              });
+            });
+          }
         } else if (node.nodeType === Node.ELEMENT_NODE) {
           const tag = node.tagName.toLowerCase();
           if (['p', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(tag)) {
             this.words.push({ text: '', tag: tag, isBlockStart: true });
           }
           
-          node.childNodes.forEach(child => {
+          const children = Array.from(node.childNodes);
+          children.forEach((child, index) => {
             if (child.nodeType === Node.TEXT_NODE) {
-              const words = child.textContent.split(' ').filter(word => word.length > 0);
-              words.forEach(word => this.words.push({ text: word, tag: tag }));
+              const text = child.textContent.trim();
+              if (text) {
+                const words = text.split(' ').filter(word => word.length > 0);
+                words.forEach((word, wordIndex) => {
+                  this.words.push({ 
+                    text: word, 
+                    tag: tag,
+                    isLastWord: index === children.length - 1 && wordIndex === words.length - 1
+                  });
+                });
+              }
             } else {
               extractTextNodes(child, isMeta);
             }
@@ -39,8 +58,6 @@
 
       extractTextNodes(tempDiv);
       this.currentWord = 0;
-
-      // Initialize container for block elements
       this.currentContainer = null;
     }
 
@@ -55,24 +72,20 @@
 
     animateWords() {
       if (this.currentWord >= this.words.length) {
-          this.isAnimating = false;
-          if (this.onComplete) {
-              this.onComplete();
-          }
-          return;
+        this.isAnimating = false;
+        if (this.onComplete) {
+          this.onComplete();
+        }
+        return;
       }
 
       const word = this.words[this.currentWord];
 
-      // Handle block elements
-        if (word.isBlockStart) {
-          // Only create a new container if one doesn't exist
+      if (word.isBlockStart) {
         if (!this.currentContainer) {
-            this.currentContainer = document.createElement(word.tag);
-            this.element.appendChild(this.currentContainer);
+          this.currentContainer = document.createElement(word.tag);
+          this.element.appendChild(this.currentContainer);
         }
-
-        // Move to the next word and continue animation
         this.currentWord++;
         this.animateWords();
         return;
@@ -82,38 +95,38 @@
       let targetContainer = this.currentContainer || this.element;
 
       if (word.tag === 'br') {
-          this.currentContainer = null;
-          // Defer adding BR element until later
+        this.currentContainer = null;
       } else {
-          const wrapper = document.createDocumentFragment();
-          const textNode = document.createTextNode(word.text + ' ');
+        const wrapper = document.createDocumentFragment();
+        // Only add space if it's not the last word in its context
+        const textNode = document.createTextNode(word.text + (!word.isLastWord ? ' ' : ''));
 
-          if (word.tag && !['p', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(word.tag)) {
-              element = document.createElement(word.tag);
-              element.appendChild(textNode);
-              element.style.opacity = '0';
-              wrapper.appendChild(element);
-          } else {
-              element = document.createElement('span');
-              element.appendChild(textNode);
-              element.style.opacity = '0';
-              element.style.display = 'inline';
-              wrapper.appendChild(element);
-          }
+        if (word.tag && !['p', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(word.tag)) {
+          element = document.createElement(word.tag);
+          element.appendChild(textNode);
+          element.style.opacity = '0';
+          wrapper.appendChild(element);
+        } else {
+          element = document.createElement('span');
+          element.appendChild(textNode);
+          element.style.opacity = '0';
+          element.style.display = 'inline';
+          wrapper.appendChild(element);
+        }
 
-          targetContainer.appendChild(wrapper);
+        targetContainer.appendChild(wrapper);
 
-          if (this.currentContainer && this.currentContainer.style.opacity !== '1') {
-              this.currentContainer.style.opacity = '1';
-          }
+        if (this.currentContainer && this.currentContainer.style.opacity !== '1') {
+          this.currentContainer.style.opacity = '1';
+        }
       }
       
       setTimeout(() => {
         if (element && element.style) {
-            element.style.opacity = '1';
+          element.style.opacity = '1';
         }
         
-        if (this.words[this.currentWord] && this.words[this.currentWord].tag === 'br'){
+        if (this.words[this.currentWord] && this.words[this.currentWord].tag === 'br') {
           let brElement = document.createElement('br');
           this.element.appendChild(brElement);
           this.currentWord++;
@@ -133,7 +146,7 @@
       const tempDiv = document.createElement('div');
       let currentBlock = null;
 
-      this.words.forEach(word => {
+      this.words.forEach((word, index) => {
         if (word.isBlockStart) {
           currentBlock = document.createElement(word.tag);
           tempDiv.appendChild(currentBlock);
@@ -144,10 +157,10 @@
           const container = currentBlock || tempDiv;
           if (word.tag && !['p', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(word.tag)) {
             const element = document.createElement(word.tag);
-            element.textContent = word.text + ' ';
+            element.textContent = word.text + (!word.isLastWord ? ' ' : '');
             container.appendChild(element);
           } else {
-            container.appendChild(document.createTextNode(word.text + ' '));
+            container.appendChild(document.createTextNode(word.text + (!word.isLastWord ? ' ' : '')));
           }
         }
       });
@@ -189,48 +202,56 @@
         Drupal.behaviors.aiResponseAnimation.activeAnimations.clear();
       }
 
-    function animateMetaInfo(metaSelector, metaText) {
-    const metaElement = document.querySelector(metaSelector);
+      function animateMetaInfo(metaSelector, metaText) {
+        const metaElement = document.querySelector(metaSelector);
         if (!metaElement) return;
-      
-      const tempDiv = document.createElement('div');
-      tempDiv.innerHTML = metaText;
-      let words = [];
-      
-      const extractMetaTextNodes = (node) => {
+        
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = metaText;
+        let words = [];
+        
+        const extractMetaTextNodes = (node) => {
           if (node.nodeType === Node.TEXT_NODE) {
-              const wordsArray = node.textContent.split(' ').filter(word => word.length > 0);
-              wordsArray.forEach(word => words.push({ text: word, tag: null }));
+            const text = node.textContent.trim();
+            if (text) {
+              const wordsArray = text.split(' ').filter(word => word.length > 0);
+              wordsArray.forEach((word, index) => {
+                words.push({ 
+                  text: word, 
+                  isLastWord: index === wordsArray.length - 1 
+                });
+              });
+            }
           } else if (node.nodeType === Node.ELEMENT_NODE) {
-             node.childNodes.forEach(child => {
-                extractMetaTextNodes(child);
-             });
+            node.childNodes.forEach(child => {
+              extractMetaTextNodes(child);
+            });
           }
-      }
+        }
+        
+        extractMetaTextNodes(tempDiv);
       
-      extractMetaTextNodes(tempDiv);
-    
-      metaElement.innerHTML = '';
-      let currentWordIndex = 0;
-      
-      const animateMetaWords = () => {
+        metaElement.innerHTML = '';
+        let currentWordIndex = 0;
+        
+        const animateMetaWords = () => {
           if (currentWordIndex >= words.length) {
             return;
           }
 
           const word = words[currentWordIndex];
-        
+          
           const wrapper = document.createDocumentFragment();
-          const textNode = document.createTextNode(word.text + ' ');
+          const textNode = document.createTextNode(word.text + (!word.isLastWord ? ' ' : ''));
 
           const element = document.createElement('span');
           element.appendChild(textNode);
           element.style.opacity = '0';
           element.style.display = 'inline';
           wrapper.appendChild(element);
-        
+          
           metaElement.appendChild(wrapper);
-        
+          
           setTimeout(() => {
             if (element && element.style) {
               element.style.opacity = '1';
@@ -238,10 +259,10 @@
             currentWordIndex++;
             animateMetaWords();
           }, 20 * 1.53);
+        }
+      
+        animateMetaWords();
       }
-    
-      animateMetaWords();
- }
 
       function animateResponse(selector, html, metaSelector) {
         const element = document.querySelector(selector);
