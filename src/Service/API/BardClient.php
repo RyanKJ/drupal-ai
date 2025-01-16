@@ -1,11 +1,6 @@
 <?php
 /**
  * Bard API Client with cURL (No Drupal JSON Serializer)
- *
- * Suggested usage:
- * $client = new BardClient('your-api-key-here');
- * $response = $client->createMessage('Tell me a joke');
- * echo $response;
  */
 
 namespace Drupal\drupalai\Service\API;
@@ -129,21 +124,32 @@ class BardClient
      *   Returns the API response data or null if the request fails.
      */
     public function createMessage(string $prompt) {
-        $apiUrl = $this->generateApiUrl();
+         $apiUrl = $this->generateApiUrl();
+         error_log("API URL: " . $apiUrl);
 
-        $messageData = [
+        // Start with the minimal request
+         $messageData = [
             'contents' => [
                 [ 'parts' => [
                     ['text' => $prompt]
                     ]
                  ]
             ],
-            'generationConfig' => [
-              'model' => $this->model, // Add the model parameter
-            ],
-        ];
+             'generationConfig' => [
+               'model' => $this->model,
+             ],
+         ];
 
+
+        error_log("Message Data (Pre-JSON): " . print_r($messageData, true));
         $jsonData = json_encode($messageData);
+        error_log("JSON Data: " . $jsonData);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+              $error = json_last_error_msg();
+             error_log("JSON Encode Error: " . $error);
+             return ['error' => 'JSON Encoding Error: ' . $error];
+        }
+
 
         $curl = curl_init($apiUrl);
         curl_setopt($curl, CURLOPT_POST, true);
@@ -153,31 +159,34 @@ class BardClient
             'Content-Type: application/json',
             'x-goog-api-key: ' . $this->apiKey,
         ]);
-         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // This line is not ideal for production, it should be removed
-
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // This line is not ideal for production, it should be removed
+      
         $response = curl_exec($curl);
 
         if ($response === false) {
             $error = curl_error($curl);
             curl_close($curl);
-           \Drupal::logger('my_module')->error('Gemini API cURL Error: @message', ['@message' => $error]);
+            error_log("cURL Error: " . $error);
             return ['error' => 'Gemini API request failed: ' . $error];
-        }
-
+         }
+           
         $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        error_log("HTTP Code: " . $httpCode);
         curl_close($curl);
-
-       if ($httpCode >= 200 && $httpCode < 300) {
-           $data = json_decode($response, true);
-           if ($data) {
-               return $this->sanitizeData($data);
-           } else {
-               return ['error' => 'Failed to decode JSON from Gemini API.'];
+        
+        if ($httpCode >= 200 && $httpCode < 300) {
+             $data = json_decode($response, true);
+             if ($data) {
+                  return $this->sanitizeData($data);
+             } else {
+                    error_log("JSON Decode Error: Could not decode response " . $response);
+                    return ['error' => 'Failed to decode JSON from Gemini API.'];
+             }
+          } else {
+              error_log("Gemini API request failed with HTTP code: " . $httpCode . ", Response: " . $response);
+               return ['error' => 'Gemini API request failed with HTTP code: ' . $httpCode];
            }
-       } else {
-            return ['error' => 'Gemini API request failed with HTTP code: ' . $httpCode];
-       }
-    }
+        }
 }
 
 
