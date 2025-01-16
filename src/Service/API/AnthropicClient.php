@@ -19,7 +19,8 @@ use \Exception;
 class AnthropicClient {
     private $baseUrl = 'https://api.anthropic.com/v1/messages';
     private static $model_options = ['claude-3-haiku-20240307' => 'Claude Haiku', 
-                                     'claude-3-5-sonnet-20241022' => 'Claude Sonnet'];
+                                     'claude-3-5-sonnet-20241022' => 'Claude Sonnet',
+                                     'claude-3-opus-20240229' => 'Claude Opus'];
     private $model;
     private $apiKey;
     
@@ -112,7 +113,6 @@ class AnthropicClient {
         
         $data = [
             'model' => $this->model,
-            'system' => 'Please format your responses in HTML using appropriate tags for structure and styling. Use <p> for paragraphs, <h1>-<h6> for headings, <ul>/<ol> for lists, etc.',
             'messages' => [
                 [
                     'role' => 'user',
