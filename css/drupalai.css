@@ -657,3 +657,7 @@ header.layout-header {
   white-space: normal;
   word-wrap: break-word;
 }
+
+#chatgpt-response {
+  padding-bottom: 0;
+}
