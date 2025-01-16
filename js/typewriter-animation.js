@@ -50,8 +50,12 @@
             }
           });
           
+          // Only add br tag if it's not at the end of the content
           if (['p', 'div', 'br', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(tag) && !isMeta) {
-            this.words.push({ text: '', tag: 'br' });
+            const isLastElement = this.isLastElement(node);
+            if (!isLastElement || tag === 'br') {
+              this.words.push({ text: '', tag: 'br', isLastBr: isLastElement });
+            }
           }
         }
       };
@@ -59,6 +63,25 @@
       extractTextNodes(tempDiv);
       this.currentWord = 0;
       this.currentContainer = null;
+
+      // Remove trailing br tags
+      while (this.words.length > 0 && 
+             this.words[this.words.length - 1].tag === 'br' && 
+             this.words[this.words.length - 1].isLastBr) {
+        this.words.pop();
+      }
+    }
+
+    isLastElement(node) {
+      let current = node;
+      while (current.nextSibling) {
+        if (current.nextSibling.nodeType === Node.ELEMENT_NODE || 
+            (current.nextSibling.nodeType === Node.TEXT_NODE && current.nextSibling.textContent.trim())) {
+          return false;
+        }
+        current = current.nextSibling;
+      }
+      return true;
     }
 
     start(onCompleteCallback) {
@@ -95,47 +118,44 @@
       let targetContainer = this.currentContainer || this.element;
 
       if (word.tag === 'br') {
-        this.currentContainer = null;
+        if (!word.isLastBr) {
+          this.currentContainer = null;
+          let brElement = document.createElement('br');
+          this.element.appendChild(brElement);
+        }
+        this.currentWord++;
+        this.animateWords();
+        return;
+      }
+
+      const wrapper = document.createDocumentFragment();
+      const textNode = document.createTextNode(word.text + (!word.isLastWord ? ' ' : ''));
+
+      if (word.tag && !['p', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(word.tag)) {
+        element = document.createElement(word.tag);
+        element.appendChild(textNode);
+        element.style.opacity = '0';
+        wrapper.appendChild(element);
       } else {
-        const wrapper = document.createDocumentFragment();
-        // Only add space if it's not the last word in its context
-        const textNode = document.createTextNode(word.text + (!word.isLastWord ? ' ' : ''));
+        element = document.createElement('span');
+        element.appendChild(textNode);
+        element.style.opacity = '0';
+        element.style.display = 'inline';
+        wrapper.appendChild(element);
+      }
 
-        if (word.tag && !['p', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(word.tag)) {
-          element = document.createElement(word.tag);
-          element.appendChild(textNode);
-          element.style.opacity = '0';
-          wrapper.appendChild(element);
-        } else {
-          element = document.createElement('span');
-          element.appendChild(textNode);
-          element.style.opacity = '0';
-          element.style.display = 'inline';
-          wrapper.appendChild(element);
-        }
+      targetContainer.appendChild(wrapper);
 
-        targetContainer.appendChild(wrapper);
-
-        if (this.currentContainer && this.currentContainer.style.opacity !== '1') {
-          this.currentContainer.style.opacity = '1';
-        }
+      if (this.currentContainer && this.currentContainer.style.opacity !== '1') {
+        this.currentContainer.style.opacity = '1';
       }
       
       setTimeout(() => {
         if (element && element.style) {
           element.style.opacity = '1';
         }
-        
-        if (this.words[this.currentWord] && this.words[this.currentWord].tag === 'br') {
-          let brElement = document.createElement('br');
-          this.element.appendChild(brElement);
-          this.currentWord++;
-          this.animateWords();
-        } else {
-          this.currentWord++;
-          this.animateWords();
-        }
-          
+        this.currentWord++;
+        this.animateWords();
       }, this.speed * 1.53);
     }
 
@@ -146,11 +166,11 @@
       const tempDiv = document.createElement('div');
       let currentBlock = null;
 
-      this.words.forEach((word, index) => {
+      this.words.forEach((word) => {
         if (word.isBlockStart) {
           currentBlock = document.createElement(word.tag);
           tempDiv.appendChild(currentBlock);
-        } else if (word.tag === 'br') {
+        } else if (word.tag === 'br' && !word.isLastBr) {
           currentBlock = null;
           tempDiv.appendChild(document.createElement('br'));
         } else {
@@ -173,6 +193,7 @@
     }
   }
 
+  // Rest of the code remains the same...
   Drupal.behaviors.aiResponseAnimation = {
     attach: function (context, settings) {
       if (!Drupal.behaviors.aiResponseAnimation.activeAnimations) {
