@@ -1,4 +1,5 @@
-/* Previous CSS remains the same */
+
+/* Previous CSS remains the same until the message bubbles section */
 
 :root {
   /* Previous color variables remain the same */
@@ -165,7 +166,6 @@
   border-top: 1px solid var(--border-color);
   font-size: 12px;
   color: var(--secondary-text);
-    min-height: 1em;
 }
 
 /* Loading States */
@@ -615,13 +615,13 @@ header.layout-header {
 }
 
 .response-content p {
-  margin-bottom: 0.65em;
+  margin-bottom: 1em;
 }
 
 .response-content br {
   display: block;
   content: "";
-    margin-top: 0.65em;
+  margin-top: 1em;
 }
 
 .response-content span {
@@ -641,13 +641,13 @@ header.layout-header {
 .response-content h5,
 .response-content h6 {
   display: block;
-    margin-bottom: 0.65em;
+  margin-bottom: 1em;
 }
 
 .response-content br {
   display: block;
   content: "";
-  margin-top: 0.35em;
+  margin-top: 0.5em;
 }
 
 .chatgpt-message,
