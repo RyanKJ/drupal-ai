@@ -189,9 +189,9 @@
         Drupal.behaviors.aiResponseAnimation.activeAnimations.clear();
       }
 
-      function animateMetaInfo(metaSelector, metaText) {
+     function animateMetaInfo(metaSelector, metaText) {
         const metaElement = document.querySelector(metaSelector);
-        if (!metaElement) return;
+          if (!metaElement) return;
 
         const metaAnimation = new HTMLTypewriterAnimation(metaElement, metaText, 20);
         metaAnimation.start();
