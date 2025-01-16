@@ -647,13 +647,13 @@ header.layout-header {
 .response-content br {
   display: block;
   content: "";
-  margin-top: 0.2em;
+  margin-top: 0.5em;
 }
 
 .chatgpt-message,
 .claude-message,
 .gemini-message {
-  line-height: 1.2;
+  line-height: 1.5;
   white-space: normal;
   word-wrap: break-word;
 }
