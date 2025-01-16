@@ -173,3 +173,17 @@ class BardClient {
         }
     }
 }
+
+
+// Example usage:
+try {
+    $model = reset(BardClient::getModelOptions());
+    
+    $client = new BardClient($model);
+    $response = $client->createMessage('Gemini, what is your take on the nature of consciousness?');
+    
+    echo $response; 
+} catch (Exception $e) {
+    echo "Error: " . $e->getMessage();
+}
+  
