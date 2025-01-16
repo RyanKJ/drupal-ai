@@ -1,6 +1,6 @@
 <?php
 /**
- * Bard API Client with cURL
+ * Bard API Client with cURL (No Drupal JSON Serializer)
  *
  * Suggested usage:
  * $client = new BardClient('your-api-key-here');
@@ -10,7 +10,6 @@
 
 namespace Drupal\drupalai\Service\API;
 
-use Drupal\Component\Serialization\Json;
 use \Exception;
 
 /**
@@ -144,7 +143,7 @@ class BardClient
             ],
         ];
 
-        $jsonData = Json::encode($messageData);
+        $jsonData = json_encode($messageData);
 
         $curl = curl_init($apiUrl);
         curl_setopt($curl, CURLOPT_POST, true);
@@ -168,9 +167,8 @@ class BardClient
         $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
 
-
        if ($httpCode >= 200 && $httpCode < 300) {
-           $data = Json::decode($response, true);
+           $data = json_decode($response, true);
            if ($data) {
                return $this->sanitizeData($data);
            } else {
