@@ -12,7 +12,7 @@
       tempDiv.innerHTML = html;
       this.words = [];
 
-      const extractTextNodes = (node) => {
+      const extractTextNodes = (node, isMeta = false) => {
         if (node.nodeType === Node.TEXT_NODE) {
           const words = node.textContent.split(' ').filter(word => word.length > 0);
           words.forEach(word => this.words.push({ text: word, tag: null }));
@@ -21,17 +21,17 @@
           if (['p', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(tag)) {
             this.words.push({ text: '', tag: tag, isBlockStart: true });
           }
-
+          
           node.childNodes.forEach(child => {
             if (child.nodeType === Node.TEXT_NODE) {
               const words = child.textContent.split(' ').filter(word => word.length > 0);
               words.forEach(word => this.words.push({ text: word, tag: tag }));
             } else {
-              extractTextNodes(child);
+              extractTextNodes(child, isMeta);
             }
           });
-
-          if (['p', 'div', 'br', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(tag)) {
+          
+          if (['p', 'div', 'br', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(tag) && !isMeta) {
             this.words.push({ text: '', tag: 'br' });
           }
         }
@@ -189,13 +189,59 @@
         Drupal.behaviors.aiResponseAnimation.activeAnimations.clear();
       }
 
-     function animateMetaInfo(metaSelector, metaText) {
-        const metaElement = document.querySelector(metaSelector);
-          if (!metaElement) return;
-
-        const metaAnimation = new HTMLTypewriterAnimation(metaElement, metaText, 20);
-        metaAnimation.start();
+    function animateMetaInfo(metaSelector, metaText) {
+    const metaElement = document.querySelector(metaSelector);
+        if (!metaElement) return;
+      
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = metaText;
+      let words = [];
+      
+      const extractMetaTextNodes = (node) => {
+          if (node.nodeType === Node.TEXT_NODE) {
+              const wordsArray = node.textContent.split(' ').filter(word => word.length > 0);
+              wordsArray.forEach(word => words.push({ text: word, tag: null }));
+          } else if (node.nodeType === Node.ELEMENT_NODE) {
+             node.childNodes.forEach(child => {
+                extractMetaTextNodes(child);
+             });
+          }
       }
+      
+      extractMetaTextNodes(tempDiv);
+    
+      metaElement.innerHTML = '';
+      let currentWordIndex = 0;
+      
+      const animateMetaWords = () => {
+          if (currentWordIndex >= words.length) {
+            return;
+          }
+
+          const word = words[currentWordIndex];
+        
+          const wrapper = document.createDocumentFragment();
+          const textNode = document.createTextNode(word.text + ' ');
+
+          const element = document.createElement('span');
+          element.appendChild(textNode);
+          element.style.opacity = '0';
+          element.style.display = 'inline';
+          wrapper.appendChild(element);
+        
+          metaElement.appendChild(wrapper);
+        
+          setTimeout(() => {
+            if (element && element.style) {
+              element.style.opacity = '1';
+            }
+            currentWordIndex++;
+            animateMetaWords();
+          }, 20 * 1.53);
+      }
+    
+      animateMetaWords();
+ }
 
       function animateResponse(selector, html, metaSelector) {
         const element = document.querySelector(selector);
