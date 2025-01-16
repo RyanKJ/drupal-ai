@@ -50,6 +50,7 @@
             }
           });
           
+          // Only add br tag if it's not at the end of the content
           if (['p', 'div', 'br', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(tag) && !isMeta) {
             const isLastElement = this.isLastElement(node);
             if (!isLastElement || tag === 'br') {
@@ -63,6 +64,7 @@
       this.currentWord = 0;
       this.currentContainer = null;
 
+      // Remove trailing br tags
       while (this.words.length > 0 && 
              this.words[this.words.length - 1].tag === 'br' && 
              this.words[this.words.length - 1].isLastBr) {
@@ -191,6 +193,7 @@
     }
   }
 
+  // Rest of the code remains the same...
   Drupal.behaviors.aiResponseAnimation = {
     attach: function (context, settings) {
       if (!Drupal.behaviors.aiResponseAnimation.activeAnimations) {
@@ -202,25 +205,18 @@
       }
 
       function clearAllContent() {
-        // First, clear all response containers
         ['#chatgpt-response', '#claude-response', '#gemini-response'].forEach(selector => {
           const element = document.querySelector(selector);
           if (element) element.innerHTML = '';
         });
 
-        // Clear all meta containers and their content immediately
         ['#chatgpt-meta', '#claude-meta', '#gemini-meta'].forEach(selector => {
           const element = document.querySelector(selector);
-          if (element) {
-            element.innerHTML = '';
-            element.style.opacity = '0'; // Ensure the container is invisible
-          }
+          if (element) element.innerHTML = '';
         });
 
-        // Clear the stored meta content
         Drupal.behaviors.aiResponseAnimation.metaContent.clear();
 
-        // Stop all active animations
         Drupal.behaviors.aiResponseAnimation.activeAnimations.forEach(animation => {
           animation.stop();
         });
@@ -230,9 +226,6 @@
       function animateMetaInfo(metaSelector, metaText) {
         const metaElement = document.querySelector(metaSelector);
         if (!metaElement) return;
-        
-        // Make sure the meta element is visible before starting animation
-        metaElement.style.opacity = '1';
         
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = metaText;
@@ -295,13 +288,6 @@
       function animateResponse(selector, html, metaSelector) {
         const element = document.querySelector(selector);
         if (!element) return;
-
-        // Clear and hide the corresponding meta element before starting new animation
-        const metaElement = document.querySelector(metaSelector);
-        if (metaElement) {
-          metaElement.innerHTML = '';
-          metaElement.style.opacity = '0';
-        }
 
         const existingAnimation = Drupal.behaviors.aiResponseAnimation.activeAnimations.get(selector);
         if (existingAnimation) {
