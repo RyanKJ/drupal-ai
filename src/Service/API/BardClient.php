@@ -175,7 +175,6 @@ class BardClient
                return ['error' => 'Failed to decode JSON from Gemini API.'];
            }
        } else {
-           \Drupal::logger('my_module')->error('Gemini API cURL Error: HTTP Code @code, Response: @response', ['@code' => $httpCode, '@response' => $response]);
             return ['error' => 'Gemini API request failed with HTTP code: ' . $httpCode];
        }
     }
