@@ -135,11 +135,7 @@ class BardClient
                     ]
                  ]
             ],
-              'generationConfig' => [
-                 'modelName' => $this->model,
-               ],
          ];
-
 
         error_log("Message Data (Pre-JSON): " . print_r($messageData, true));
         $jsonData = json_encode($messageData);
@@ -149,7 +145,6 @@ class BardClient
              error_log("JSON Encode Error: " . $error);
              return ['error' => 'JSON Encoding Error: ' . $error];
         }
-
 
         $curl = curl_init($apiUrl);
         curl_setopt($curl, CURLOPT_POST, true);
