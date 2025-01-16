@@ -95,8 +95,13 @@ class AnthropicClient {
         // Define allowed HTML tags
         $allowedTags = '<p><h1><h2><h3><h4><h5><h6><ul><ol><li><strong><em><br><div><span>';
         
-        // Strip unwanted tags and attributes
-        $sanitized = strip_tags($html, $allowedTags);
+        // Convert double line breaks to paragraph tags
+        $text = nl2br($html);
+        $text = preg_replace('/(\r\n|\r|\n){2,}/', '</p><p>', $text);
+        $text = '<p>' . $text . '</p>';
+        
+        // Strip unwanted tags and attributes while keeping allowed ones
+        $sanitized = strip_tags($text, $allowedTags);
         
         return $sanitized;
     }

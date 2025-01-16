@@ -197,7 +197,7 @@ class DrupalAIBlockForm extends FormBase {
       $response->addCommand(
         new HtmlCommand(
           '#chatgpt-response',
-          '<div class="chatgpt-message">' . $chatgpt_response . '</div>'
+          '<div class="chatgpt-message">' . nl2br($chatgpt_response) . '</div>'
         )
       );
       $response->addCommand(
@@ -217,7 +217,7 @@ class DrupalAIBlockForm extends FormBase {
       $response->addCommand(
         new HtmlCommand(
           '#claude-response',
-          '<div class="claude-message">' . $claude_response . '</div>'
+          '<div class="claude-message">' . nl2br($claude_response) . '</div>'
         )
       );
       $response->addCommand(
