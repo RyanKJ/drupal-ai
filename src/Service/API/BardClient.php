@@ -213,19 +213,3 @@ class BardClient
            }
         }
 }
-
-
-// Example usage:
-try {
-    $model = 'gemini-1.5-flash-8b';
-    
-    $client = new BardClient($model);
-    $response = $client->getResponse('Gemini, what is your take on the nature of consciousness?');
-    
-    echo '<pre>';
-    print_r($response);
-    echo '</pre>';
-    
-} catch (Exception $e) {
-    echo "Error: " . $e->getMessage();
-}
