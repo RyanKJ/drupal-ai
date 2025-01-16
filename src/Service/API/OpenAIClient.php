@@ -117,7 +117,7 @@ class OpenAIClient {
             'messages' => [
                 ['role' => 'user', 'content' => $prompt],
             ],
-            'max_tokens' => 2000,  // Adjust this and other parameters as needed.
+            'max_tokens' => 150,  // Adjust this and other parameters as needed.
             'temperature' => 0.7,
         ];
 
@@ -148,13 +148,26 @@ class OpenAIClient {
         curl_close($ch);
 
         // Decode the JSON response.
-         $response_data = json_decode($response, true);
+        return json_decode($response, true);
 
         // Check and return the response content.
         if (isset($response_data['choices'][0]['message']['content'])) {
-            return $this->sanitizeHtml($response_data['choices'][0]['message']['content']);
+            return $response_data['choices'][0]['message']['content'];
         } else {
             throw new \Exception('Unexpected response format: ' . print_r($response_data, true));
         }
+        
+        
+        
+        
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }
