@@ -74,13 +74,43 @@ class BardClient
         return $response_and_time;
     }
 
-    /**
+     /**
      * Gets the API response given a prompt.
+     *
+     * @param string $prompt
+     *   The user prompt for the Gemini API.
+     *
+     * @return string|array
+     *   Returns the API response text or an error array if the request fails.
      */
     private function getResponse($prompt) {
-        $response = $this->createMessage($prompt);
+        $data = $this->createMessage($prompt);
+        
+        if(isset($data['error'])){
+            return $data;
+         } else {
+            // Extract text from the 'candidates' array
+            if (isset($data['candidates']) && is_array($data['candidates']) && count($data['candidates']) > 0) {
+                $candidates = $data['candidates'];
+                
+                if(isset($candidates[0]['content']) && isset($candidates[0]['content']['parts']) && is_array($candidates[0]['content']['parts']) && count($candidates[0]['content']['parts']) > 0){
+                    
+                     $parts = $candidates[0]['content']['parts'];
+                     
+                     if (isset($parts[0]['text'])) {
+                            return $parts[0]['text']; // Return the first 'text' element
+                      } else {
+                          return "Error: no 'text' found in response parts";
+                      }
+                
+                } else {
+                   return "Error: Could not find parts or content in candidates";
+                }
 
-        return $response;
+             } else {
+                 return "Error: Could not find candidates in response";
+            }
+        }
     }
 
     /**
@@ -124,8 +154,8 @@ class BardClient
      *   Returns the API response data or null if the request fails.
      */
     public function createMessage(string $prompt) {
-         $apiUrl = $this->generateApiUrl();
-         error_log("API URL: " . $apiUrl);
+        $apiUrl = $this->generateApiUrl();
+        error_log("API URL: " . $apiUrl);
 
         // Start with the minimal request
          $messageData = [
@@ -190,7 +220,7 @@ try {
     $model = 'gemini-1.5-flash-8b';
     
     $client = new BardClient($model);
-    $response = $client->createMessage('Gemini, what is your take on the nature of consciousness?');
+    $response = $client->getResponse('Gemini, what is your take on the nature of consciousness?');
     
     echo '<pre>';
     print_r($response);
