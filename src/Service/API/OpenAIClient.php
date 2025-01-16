@@ -117,7 +117,7 @@ class OpenAIClient {
             'messages' => [
                 ['role' => 'user', 'content' => $prompt],
             ],
-            'max_tokens' => 150,  // Adjust this and other parameters as needed.
+            'max_tokens' => 2553,  // Adjust this and other parameters as needed.
             'temperature' => 0.7,
         ];
 
