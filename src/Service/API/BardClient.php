@@ -35,7 +35,7 @@ class BardClient
     private function getApiKey() {
         return trim(file_get_contents('/home/master/api_keys/gemini_api_key.txt'));
     }
-
+    
     /**
      * Generate full URL for Gemini query.
      */
@@ -83,7 +83,7 @@ class BardClient
      * @return string|array
      *   Returns the API response text or an error array if the request fails.
      */
-    public function getResponse($prompt) {
+    private function getResponse($prompt) {
         $data = $this->createMessage($prompt);
         
         if(isset($data['error'])){
@@ -142,6 +142,51 @@ class BardClient
         }
         return $sanitizedData;
     }
+    
+    /**
+     * Fetches a list of available models using the Gemini API
+     *
+     * @return array|null
+     *   Returns the API response data or null if the request fails.
+     */
+    public function listModels() {
+         $apiUrl = $this->baseUrl . '/models';
+         error_log("API URL: " . $apiUrl);
+    
+          $curl = curl_init($apiUrl);
+          curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+          curl_setopt($curl, CURLOPT_HTTPHEADER, [
+              'Content-Type: application/json',
+              'x-goog-api-key: ' . $this->apiKey,
+          ]);
+           curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        
+           $response = curl_exec($curl);
+
+           if ($response === false) {
+               $error = curl_error($curl);
+               curl_close($curl);
+               error_log("cURL Error: " . $error);
+               return ['error' => 'Gemini API request failed: ' . $error];
+           }
+
+           $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+           error_log("HTTP Code: " . $httpCode);
+           curl_close($curl);
+    
+         if ($httpCode >= 200 && $httpCode < 300) {
+                $data = json_decode($response, true);
+                if ($data) {
+                    return $this->sanitizeData($data);
+                } else {
+                    error_log("JSON Decode Error: Could not decode response " . $response);
+                    return ['error' => 'Failed to decode JSON from Gemini API.'];
+                }
+         } else {
+            error_log("Gemini API request failed with HTTP code: " . $httpCode . ", Response: " . $response);
+            return ['error' => 'Gemini API request failed with HTTP code: ' . $httpCode];
+        }
+    }
 
 
     /**
@@ -156,8 +201,7 @@ class BardClient
     public function createMessage(string $prompt) {
         $apiUrl = $this->generateApiUrl();
         error_log("API URL: " . $apiUrl);
-
-        // Start with the minimal request
+    
          $messageData = [
             'contents' => [
                 [ 'parts' => [
@@ -166,16 +210,16 @@ class BardClient
                  ]
             ],
          ];
-
+    
         error_log("Message Data (Pre-JSON): " . print_r($messageData, true));
         $jsonData = json_encode($messageData);
         error_log("JSON Data: " . $jsonData);
         if (json_last_error() !== JSON_ERROR_NONE) {
-              $error = json_last_error_msg();
-             error_log("JSON Encode Error: " . $error);
-             return ['error' => 'JSON Encoding Error: ' . $error];
+            $error = json_last_error_msg();
+            error_log("JSON Encode Error: " . $error);
+            return ['error' => 'JSON Encoding Error: ' . $error];
         }
-
+    
         $curl = curl_init($apiUrl);
         curl_setopt($curl, CURLOPT_POST, true);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $jsonData);
@@ -185,39 +229,50 @@ class BardClient
             'x-goog-api-key: ' . $this->apiKey,
         ]);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // This line is not ideal for production, it should be removed
-      
+        
         $response = curl_exec($curl);
-
+    
         if ($response === false) {
             $error = curl_error($curl);
             curl_close($curl);
             error_log("cURL Error: " . $error);
             return ['error' => 'Gemini API request failed: ' . $error];
-         }
-           
+        }
+        
         $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         error_log("HTTP Code: " . $httpCode);
         curl_close($curl);
         
         if ($httpCode >= 200 && $httpCode < 300) {
-             $data = json_decode($response, true);
-             if ($data) {
-                  return $this->sanitizeData($data);
-             } else {
-                    error_log("JSON Decode Error: Could not decode response " . $response);
-                    return ['error' => 'Failed to decode JSON from Gemini API.'];
-             }
-          } else {
-              error_log("Gemini API request failed with HTTP code: " . $httpCode . ", Response: " . $response);
-               return ['error' => 'Gemini API request failed with HTTP code: ' . $httpCode];
-           }
+            $data = json_decode($response, true);
+            if ($data) {
+                return $this->sanitizeData($data);
+            } else {
+                error_log("JSON Decode Error: Could not decode response " . $response);
+                return ['error' => 'Failed to decode JSON from Gemini API.'];
+            }
+        } else {
+            error_log("Gemini API request failed with HTTP code: " . $httpCode . ", Response: " . $response);
+            return ['error' => 'Gemini API request failed with HTTP code: ' . $httpCode];
         }
+    }
 }
+
 
 // Example usage:
 try {
-    $model = 'gemini-2.0-flash-exp';
+    $model = 'gemini-1.5-flash-8b';
+    $client = new BardClient($model);
     
+    // List Models
+    $models = $client->listModels();
+    echo "Available Models:\n";
+    echo '<pre>';
+    print_r($models);
+    echo '</pre>';
+    
+   // Attempt query
+    $model = 'gemini-2.0-flash-exp';
     $client = new BardClient($model);
     $response = $client->getResponse('Gemini, what is your favorite color?');
     
@@ -228,4 +283,3 @@ try {
 } catch (Exception $e) {
     echo "Error: " . $e->getMessage();
 }
-
