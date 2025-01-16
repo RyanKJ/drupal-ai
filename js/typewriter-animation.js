@@ -63,55 +63,59 @@
       }
 
       const word = this.words[this.currentWord];
-      
+
       // Handle block elements
       if (word.isBlockStart) {
         this.currentContainer = document.createElement(word.tag);
-        this.currentContainer.style.opacity = '0';
         this.element.appendChild(this.currentContainer);
-        setTimeout(() => {
-          this.currentContainer.style.opacity = '1';
-          this.currentWord++;
-          this.animateWords();
-        }, this.speed);
+
+        // Move to the next word and continue animation
+        this.currentWord++;
+        this.animateWords();
         return;
       }
 
       let element;
       let targetContainer = this.currentContainer || this.element;
-      
+
       if (word.tag === 'br') {
-        this.currentContainer = null;
-        element = document.createElement('br');
-        this.element.appendChild(element);
+          this.currentContainer = null;
+          element = document.createElement('br');
+          this.element.appendChild(element);
       } else {
         const wrapper = document.createDocumentFragment();
         const textNode = document.createTextNode(word.text + ' ');
-        
-        if (word.tag && !['p', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(word.tag)) {
-          element = document.createElement(word.tag);
-          element.appendChild(textNode);
-          element.style.opacity = '0';
-          wrapper.appendChild(element);
-        } else {
-          element = document.createElement('span');
-          element.appendChild(textNode);
-          element.style.opacity = '0';
-          element.style.display = 'inline';
-          wrapper.appendChild(element);
-        }
-        
-        targetContainer.appendChild(wrapper);
+
+          if (word.tag && !['p', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(word.tag)) {
+            element = document.createElement(word.tag);
+            element.appendChild(textNode);
+            element.style.opacity = '0';
+            wrapper.appendChild(element);
+          } else {
+            element = document.createElement('span');
+            element.appendChild(textNode);
+            element.style.opacity = '0';
+            element.style.display = 'inline';
+            wrapper.appendChild(element);
+          }
+
+          targetContainer.appendChild(wrapper);
+
+          if (this.currentContainer && this.currentContainer.style.opacity !== '1'){
+            this.currentContainer.style.opacity = '1';
+          }
       }
 
+
       setTimeout(() => {
-        if (element.style) {
-          element.style.opacity = '1';
-        }
-        this.currentWord++;
-        this.animateWords();
+          if (element && element.style) {
+              element.style.opacity = '1';
+          }
+          this.currentWord++;
+          this.animateWords();
       }, this.speed * 1.53);
     }
+
 
     stop() {
       this.isAnimating = false;
