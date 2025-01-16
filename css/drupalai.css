@@ -647,7 +647,7 @@ header.layout-header {
 .response-content br {
   display: block;
   content: "";
-  margin-top: 0.5em;
+  margin-top: 0.2em;
 }
 
 .chatgpt-message,
