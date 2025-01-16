@@ -83,7 +83,7 @@ class BardClient
      * @return string|array
      *   Returns the API response text or an error array if the request fails.
      */
-    private function getResponse($prompt) {
+    public function getResponse($prompt) {
         $data = $this->createMessage($prompt);
         
         if(isset($data['error'])){
