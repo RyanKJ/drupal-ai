@@ -653,7 +653,7 @@ header.layout-header {
 .chatgpt-message,
 .claude-message,
 .gemini-message {
-  line-height: 1.5;
+  line-height: 1.2;
   white-space: normal;
   word-wrap: break-word;
 }
