@@ -107,7 +107,7 @@ class BardClient {
           // Check if the value is an array
           if (is_array($value)) {
             // If it is an array, sanitize the values recursively
-            $sanitizedData[$key] = sanitizeData($value);
+            $sanitizedData[$key] = $this->sanitizeData($value);
           } else {
             // If the value is not an array, apply the sanitation
              //Sanitize value against xss
