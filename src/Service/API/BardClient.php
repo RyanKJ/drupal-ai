@@ -160,7 +160,7 @@ class BardClient
         if ($response === false) {
             $error = curl_error($curl);
             curl_close($curl);
-            \Drupal::logger('my_module')->error('Gemini API cURL Error: @message', ['@message' => $error]);
+           \Drupal::logger('my_module')->error('Gemini API cURL Error: @message', ['@message' => $error]);
             return ['error' => 'Gemini API request failed: ' . $error];
         }
 
