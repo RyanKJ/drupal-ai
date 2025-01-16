@@ -53,73 +53,76 @@
       this.animateWords();
     }
 
-   animateWords() {
-        if (this.currentWord >= this.words.length) {
-            this.isAnimating = false;
-            if (this.onComplete) {
-                this.onComplete();
-            }
-            return;
+    animateWords() {
+      if (this.currentWord >= this.words.length) {
+          this.isAnimating = false;
+          if (this.onComplete) {
+              this.onComplete();
+          }
+          return;
+      }
+
+      const word = this.words[this.currentWord];
+
+      // Handle block elements
+        if (word.isBlockStart) {
+          // Only create a new container if one doesn't exist
+        if (!this.currentContainer) {
+            this.currentContainer = document.createElement(word.tag);
+            this.element.appendChild(this.currentContainer);
         }
 
-        const word = this.words[this.currentWord];
-
-        // Handle block elements
-        if (word.isBlockStart) {
-            // Only create a new container if one doesn't exist
-          if (!this.currentContainer) {
-              this.currentContainer = document.createElement(word.tag);
-              this.element.appendChild(this.currentContainer);
-          }
-
-          // Move to the next word and continue animation
-          this.currentWord++;
-          this.animateWords();
-          return;
+        // Move to the next word and continue animation
+        this.currentWord++;
+        this.animateWords();
+        return;
       }
 
       let element;
       let targetContainer = this.currentContainer || this.element;
-    
 
       if (word.tag === 'br') {
           this.currentContainer = null;
           // Defer adding BR element until later
       } else {
-        const wrapper = document.createDocumentFragment();
-        const textNode = document.createTextNode(word.text + ' ');
-        
-        if (word.tag && !['p', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(word.tag)) {
-            element = document.createElement(word.tag);
-            element.appendChild(textNode);
-            element.style.opacity = '0';
-            wrapper.appendChild(element);
-        } else {
-            element = document.createElement('span');
-            element.appendChild(textNode);
-            element.style.opacity = '0';
-            element.style.display = 'inline';
-            wrapper.appendChild(element);
-        }
+          const wrapper = document.createDocumentFragment();
+          const textNode = document.createTextNode(word.text + ' ');
 
-        targetContainer.appendChild(wrapper);
+          if (word.tag && !['p', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(word.tag)) {
+              element = document.createElement(word.tag);
+              element.appendChild(textNode);
+              element.style.opacity = '0';
+              wrapper.appendChild(element);
+          } else {
+              element = document.createElement('span');
+              element.appendChild(textNode);
+              element.style.opacity = '0';
+              element.style.display = 'inline';
+              wrapper.appendChild(element);
+          }
 
-        if (this.currentContainer && this.currentContainer.style.opacity !== '1') {
-            this.currentContainer.style.opacity = '1';
-        }
-          
-        if (this.words[this.currentWord - 1] && this.words[this.currentWord - 1].tag === 'br'){
-          let brElement = document.createElement('br');
-          this.element.appendChild(brElement);
-        }
-    }
-        
+          targetContainer.appendChild(wrapper);
+
+          if (this.currentContainer && this.currentContainer.style.opacity !== '1') {
+              this.currentContainer.style.opacity = '1';
+          }
+      }
+      
       setTimeout(() => {
         if (element && element.style) {
             element.style.opacity = '1';
         }
-        this.currentWord++;
+        
+        if (this.words[this.currentWord] && this.words[this.currentWord].tag === 'br'){
+          let brElement = document.createElement('br');
+          this.element.appendChild(brElement);
+          this.currentWord++;
           this.animateWords();
+        } else {
+          this.currentWord++;
+          this.animateWords();
+        }
+          
       }, this.speed * 1.53);
     }
 
