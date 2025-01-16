@@ -8,19 +8,20 @@
       this.isAnimating = false;
       this.onComplete = null;
       
-      // Parse HTML into elements/words while preserving formatting
       const tempDiv = document.createElement('div');
       tempDiv.innerHTML = html;
       this.words = [];
       
       const extractTextNodes = (node) => {
         if (node.nodeType === Node.TEXT_NODE) {
-          // Split text nodes into words
           const words = node.textContent.split(' ').filter(word => word.length > 0);
           words.forEach(word => this.words.push({ text: word, tag: null }));
         } else if (node.nodeType === Node.ELEMENT_NODE) {
-          // For element nodes, wrap words in their original tags
           const tag = node.tagName.toLowerCase();
+          if (['p', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(tag)) {
+            this.words.push({ text: '', tag: tag, isBlockStart: true });
+          }
+          
           node.childNodes.forEach(child => {
             if (child.nodeType === Node.TEXT_NODE) {
               const words = child.textContent.split(' ').filter(word => word.length > 0);
@@ -30,8 +31,7 @@
             }
           });
           
-          // Add an extra space after block elements
-          if (['p', 'div', 'br', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li'].includes(tag)) {
+          if (['p', 'div', 'br', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(tag)) {
             this.words.push({ text: '', tag: 'br' });
           }
         }
@@ -39,6 +39,9 @@
       
       extractTextNodes(tempDiv);
       this.currentWord = 0;
+      
+      // Initialize container for block elements
+      this.currentContainer = null;
     }
 
     start(onCompleteCallback) {
@@ -46,6 +49,7 @@
       this.isAnimating = true;
       this.onComplete = onCompleteCallback;
       this.element.innerHTML = '';
+      this.currentContainer = null;
       this.animateWords();
     }
 
@@ -59,17 +63,46 @@
       }
 
       const word = this.words[this.currentWord];
+      
+      // Handle block elements
+      if (word.isBlockStart) {
+        this.currentContainer = document.createElement(word.tag);
+        this.currentContainer.style.opacity = '0';
+        this.element.appendChild(this.currentContainer);
+        setTimeout(() => {
+          this.currentContainer.style.opacity = '1';
+          this.currentWord++;
+          this.animateWords();
+        }, this.speed);
+        return;
+      }
+
       let element;
+      let targetContainer = this.currentContainer || this.element;
       
       if (word.tag === 'br') {
+        this.currentContainer = null;
         element = document.createElement('br');
+        this.element.appendChild(element);
       } else {
-        element = word.tag ? document.createElement(word.tag) : document.createElement('span');
-        element.textContent = word.text + ' ';
-        element.style.opacity = '0';
+        const wrapper = document.createDocumentFragment();
+        const textNode = document.createTextNode(word.text + ' ');
+        
+        if (word.tag && !['p', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(word.tag)) {
+          element = document.createElement(word.tag);
+          element.appendChild(textNode);
+          element.style.opacity = '0';
+          wrapper.appendChild(element);
+        } else {
+          element = document.createElement('span');
+          element.appendChild(textNode);
+          element.style.opacity = '0';
+          element.style.display = 'inline';
+          wrapper.appendChild(element);
+        }
+        
+        targetContainer.appendChild(wrapper);
       }
-      
-      this.element.appendChild(element);
 
       setTimeout(() => {
         if (element.style) {
@@ -83,20 +116,31 @@
     stop() {
       this.isAnimating = false;
       this.currentWord = this.words.length;
-      // Reconstruct original HTML
+      
       const tempDiv = document.createElement('div');
+      let currentBlock = null;
+      
       this.words.forEach(word => {
-        if (word.tag === 'br') {
+        if (word.isBlockStart) {
+          currentBlock = document.createElement(word.tag);
+          tempDiv.appendChild(currentBlock);
+        } else if (word.tag === 'br') {
+          currentBlock = null;
           tempDiv.appendChild(document.createElement('br'));
         } else {
-          const element = word.tag ? document.createElement(word.tag) : document.createTextNode(word.text + ' ');
-          if (word.tag) {
+          const container = currentBlock || tempDiv;
+          if (word.tag && !['p', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(word.tag)) {
+            const element = document.createElement(word.tag);
             element.textContent = word.text + ' ';
+            container.appendChild(element);
+          } else {
+            container.appendChild(document.createTextNode(word.text + ' '));
           }
-          tempDiv.appendChild(element);
         }
       });
+      
       this.element.innerHTML = tempDiv.innerHTML;
+      
       if (this.onComplete) {
         this.onComplete();
       }
@@ -114,22 +158,18 @@
       }
 
       function clearAllContent() {
-        // Clear main response divs
         ['#chatgpt-response', '#claude-response', '#gemini-response'].forEach(selector => {
           const element = document.querySelector(selector);
           if (element) element.innerHTML = '';
         });
 
-        // Clear meta divs
         ['#chatgpt-meta', '#claude-meta', '#gemini-meta'].forEach(selector => {
           const element = document.querySelector(selector);
           if (element) element.innerHTML = '';
         });
 
-        // Clear stored meta content
         Drupal.behaviors.aiResponseAnimation.metaContent.clear();
-
-        // Stop any active animations
+        
         Drupal.behaviors.aiResponseAnimation.activeAnimations.forEach(animation => {
           animation.stop();
         });
@@ -148,13 +188,11 @@
         const element = document.querySelector(selector);
         if (!element) return;
 
-        // Stop existing animation if any
         const existingAnimation = Drupal.behaviors.aiResponseAnimation.activeAnimations.get(selector);
         if (existingAnimation) {
           existingAnimation.stop();
         }
 
-        // Create and start new animation with callback for meta information
         const animation = new HTMLTypewriterAnimation(element, html, 30);
         Drupal.behaviors.aiResponseAnimation.activeAnimations.set(selector, animation);
         
@@ -166,7 +204,6 @@
         });
       }
 
-      // Listen for form submission
       const form = document.querySelector('form.drupal-ai-block-form');
       if (form) {
         form.addEventListener('submit', function(e) {
@@ -174,30 +211,25 @@
         });
       }
 
-      // Override the existing HtmlCommand
       if (typeof Drupal.AjaxCommands.prototype.original_insert === 'undefined') {
         Drupal.AjaxCommands.prototype.original_insert = Drupal.AjaxCommands.prototype.insert;
         
         Drupal.AjaxCommands.prototype.insert = function (ajax, response, status) {
-          // Map response selectors to their corresponding meta selectors
           const selectorPairs = {
             '#chatgpt-response': '#chatgpt-meta',
             '#claude-response': '#claude-meta',
             '#gemini-response': '#gemini-meta'
           };
 
-          // If this is the first response in a new set, clear previous content
           if (response.selector === '#chatgpt-response') {
             clearAllContent();
           }
 
-          // If this is a meta update, store it instead of inserting
           if (response.selector.endsWith('-meta')) {
             Drupal.behaviors.aiResponseAnimation.metaContent.set(response.selector, response.data);
-            return; // Don't proceed with original insert
+            return;
           }
 
-          // For main responses, proceed with animation
           this.original_insert(ajax, response, status);
 
           if (selectorPairs[response.selector]) {
