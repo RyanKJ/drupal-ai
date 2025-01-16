@@ -213,3 +213,19 @@ class BardClient
            }
         }
 }
+
+// Example usage:
+try {
+    $model = 'gemini-2.0-flash-exp';
+    
+    $client = new BardClient($model);
+    $response = $client->getResponse('Gemini, what is your favorite color?');
+    
+    echo '<pre>';
+    print_r($response);
+    echo '</pre>';
+    
+} catch (Exception $e) {
+    echo "Error: " . $e->getMessage();
+}
+
