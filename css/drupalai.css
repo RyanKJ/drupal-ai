@@ -613,3 +613,17 @@ header.layout-header {
   margin: 0;
   padding: 0;
 }
+
+.response-content p {
+  margin-bottom: 1em;
+}
+
+.response-content br {
+  display: block;
+  content: "";
+  margin-top: 1em;
+}
+
+.response-content span {
+  display: inline;
+}
