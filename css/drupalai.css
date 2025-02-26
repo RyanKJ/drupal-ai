@@ -752,3 +752,22 @@ header.layout-header {
 .response-content h6:last-child {
   margin-bottom: 0;  /* Remove bottom margin from last element */
 }
+
+/* High contrast focus indicators */
+:focus {
+  outline: 3px solid #4D90FE;
+  outline-offset: 2px;
+}
+
+/* Ensure text remains visible during loading */
+@media screen and (prefers-reduced-motion: reduce) {
+  .throbber {
+    animation: none !important;
+  }
+}
+
+/* Provide sufficient color contrast */
+.response-header {
+  color: #000000;
+  background-color: #f0f0f0;
+}
