@@ -38,40 +38,22 @@ class DrupalAIBlockForm extends FormBase {
     $form['#prefix'] = '<div id="ai-form-wrapper">';
     $form['#suffix'] = '</div>';
     
-    // Add instructions for screen readers
-    $form['instructions'] = [
-      '#type' => 'html_tag',
-      '#tag' => 'div',
-      '#value' => $this->t('This form allows you to ask a question and compare responses from different AI models.'),
-      '#attributes' => [
-        'class' => ['form-instructions'],
-        'id' => 'ai-form-instructions',
-      ],
-    ];
-    
+    //$chatgpt_model_options = ['chatgpt_2341234' => 'ChatGPT Model 1', 'chatgpt_987899' => 'ChatGPT Model 2'];
     $chatgpt_model_options = OpenAIClient::getModelOptions();
+    //$claude_model_options = ['claude_haiku_2341' => 'Claude Haiku', 'claude_sonnet_342' => 'Claude Sonnet'];
     $claude_model_options = AnthropicClient::getModelOptions();
+    //$gemini_model_options = ['gemini_11231' => 'Gemini 1', 'gemini_23421' => 'Gemini 2'];
     $gemini_model_options = BardClient::getModelOptions();
 
-    // Make query field more accessible
     $form['query'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Your question'),
       '#required' => FALSE,
-      '#description' => $this->t('Enter your question to get responses from ChatGPT, Claude, and Gemini.'),
-      '#attributes' => [
-        'aria-describedby' => 'ai-form-instructions',
-        'aria-required' => 'true',
-      ],
     ]; 
     
-    // Make submit button more accessible
     $form['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Submit Your Question'),
-      '#attributes' => [
-        'aria-controls' => 'ai-responses-region',
-      ],
       '#ajax' => [
         'callback' => '::ajaxSubmit',
         'wrapper' => 'ai-form-wrapper',
@@ -82,35 +64,19 @@ class DrupalAIBlockForm extends FormBase {
       ],
     ];
     
-    // Add status message region for screen readers
-    $form['status_message'] = [
-      '#type' => 'html_tag',
-      '#tag' => 'div',
-      '#attributes' => [
-        'class' => ['visually-hidden'],
-        'aria-live' => 'polite',
-        'id' => 'ai-status-message',
-      ],
-    ];
-    
-    // Create a container for all responses with proper ARIA landmarks
+    // Create a container for all responses
     $form['responses_wrapper'] = [
       '#type' => 'container',
       '#attributes' => [
         'class' => ['responses-container'],
-        'role' => 'region',
-        'aria-label' => $this->t('AI responses'),
-        'id' => 'ai-responses-region',
       ],
     ];
 
-    // ChatGPT response column with better semantic structure
+    // ChatGPT response column
     $form['responses_wrapper']['chatgpt'] = [
       '#type' => 'container',
       '#attributes' => [
         'class' => ['response-column'],
-        'role' => 'region',
-        'aria-labelledby' => 'chatgpt-heading',
       ],
     ];
     $form['responses_wrapper']['chatgpt']['header'] = [
@@ -121,51 +87,30 @@ class DrupalAIBlockForm extends FormBase {
     ];
     $form['responses_wrapper']['chatgpt']['header']['name'] = [
       '#type' => 'html_tag',
-      '#tag' => 'h2',
+      '#tag' => 'div',
       '#value' => $this->t('ChatGPT'),
-      '#attributes' => [
-        'id' => 'chatgpt-heading',
-      ],
-    ];
-    
-    // Improved select element with label
-    $form['responses_wrapper']['chatgpt']['header']['model_label'] = [
-      '#type' => 'html_tag',
-      '#tag' => 'label',
-      '#value' => $this->t('Select ChatGPT Version'),
-      '#attributes' => [
-        'for' => 'edit-chatgpt-model-selection',
-        'class' => ['visually-hidden'],
-      ],
     ];
     $form['responses_wrapper']['chatgpt']['header']['chatgpt_model_selection'] = [
       '#type' => 'select',
-      '#title' => $this->t('Select ChatGPT Version'),
+      '#title' => t('Select Version'),
       '#title_display' => 'invisible',
       '#options' => $chatgpt_model_options,
       '#default_value' => reset($chatgpt_model_options),
-      '#attributes' => [
-        'id' => 'edit-chatgpt-model-selection',
-        'aria-labelledby' => 'chatgpt-heading',
-      ],
     ];
-    
     $form['responses_wrapper']['chatgpt']['content'] = [
       '#type' => 'markup',
-      '#markup' => '<div id="chatgpt-response" class="response-content" tabindex="0" aria-live="polite"></div>',
+      '#markup' => '<div id="chatgpt-response" class="response-content"></div>',
     ];
     $form['responses_wrapper']['chatgpt']['meta'] = [
       '#type' => 'markup',
-      '#markup' => '<div id="chatgpt-meta" class="response-meta" aria-live="polite"></div>',
+      '#markup' => '<div id="chatgpt-meta" class="response-meta"></div>',
     ];
 
-    // Claude response column with similar accessibility improvements
+    // Claude response column
     $form['responses_wrapper']['claude'] = [
       '#type' => 'container',
       '#attributes' => [
         'class' => ['response-column'],
-        'role' => 'region',
-        'aria-labelledby' => 'claude-heading',
       ],
     ];
     $form['responses_wrapper']['claude']['header'] = [
@@ -176,50 +121,30 @@ class DrupalAIBlockForm extends FormBase {
     ];
     $form['responses_wrapper']['claude']['header']['name'] = [
       '#type' => 'html_tag',
-      '#tag' => 'h2',
+      '#tag' => 'div',
       '#value' => $this->t('Claude'),
-      '#attributes' => [
-        'id' => 'claude-heading',
-      ],
-    ];
-    
-    $form['responses_wrapper']['claude']['header']['model_label'] = [
-      '#type' => 'html_tag',
-      '#tag' => 'label',
-      '#value' => $this->t('Select Claude Version'),
-      '#attributes' => [
-        'for' => 'edit-claude-model-selection',
-        'class' => ['visually-hidden'],
-      ],
     ];
     $form['responses_wrapper']['claude']['header']['claude_model_selection'] = [
       '#type' => 'select',
-      '#title' => $this->t('Select Claude Version'),
+      '#title' => t('Select Version'),
       '#title_display' => 'invisible',
       '#options' => $claude_model_options,
       '#default_value' => reset($claude_model_options),
-      '#attributes' => [
-        'id' => 'edit-claude-model-selection',
-        'aria-labelledby' => 'claude-heading',
-      ],
     ];
-    
     $form['responses_wrapper']['claude']['content'] = [
       '#type' => 'markup',
-      '#markup' => '<div id="claude-response" class="response-content" tabindex="0" aria-live="polite"></div>',
+      '#markup' => '<div id="claude-response" class="response-content"></div>',
     ];
     $form['responses_wrapper']['claude']['meta'] = [
       '#type' => 'markup',
-      '#markup' => '<div id="claude-meta" class="response-meta" aria-live="polite"></div>',
+      '#markup' => '<div id="claude-meta" class="response-meta"></div>',
     ]; 
   
-    // Gemini response column with accessibility improvements
+    // Gemini response column
     $form['responses_wrapper']['gemini'] = [
       '#type' => 'container',
       '#attributes' => [
         'class' => ['response-column'],
-        'role' => 'region',
-        'aria-labelledby' => 'gemini-heading',
       ],
     ];
     $form['responses_wrapper']['gemini']['header'] = [
@@ -230,44 +155,27 @@ class DrupalAIBlockForm extends FormBase {
     ];
     $form['responses_wrapper']['gemini']['header']['name'] = [
       '#type' => 'html_tag',
-      '#tag' => 'h2',
+      '#tag' => 'div',
       '#value' => $this->t('Gemini'),
-      '#attributes' => [
-        'id' => 'gemini-heading',
-      ],
-    ];
-    
-    $form['responses_wrapper']['gemini']['header']['model_label'] = [
-      '#type' => 'html_tag',
-      '#tag' => 'label',
-      '#value' => $this->t('Select Gemini Version'),
-      '#attributes' => [
-        'for' => 'edit-gemini-model-selection',
-        'class' => ['visually-hidden'],
-      ],
     ];
     $form['responses_wrapper']['gemini']['header']['gemini_model_selection'] = [
       '#type' => 'select',
-      '#title' => $this->t('Select Gemini Version'),
+      '#title' => t('Select Version'),
       '#title_display' => 'invisible',
       '#options' => $gemini_model_options,
       '#default_value' => reset($gemini_model_options),
-      '#attributes' => [
-        'id' => 'edit-gemini-model-selection',
-        'aria-labelledby' => 'gemini-heading',
-      ],
     ];
-    
     $form['responses_wrapper']['gemini']['content'] = [
       '#type' => 'markup',
-      '#markup' => '<div id="gemini-response" class="response-content" tabindex="0" aria-live="polite"></div>',
+      '#markup' => '<div id="gemini-response" class="response-content"></div>',
     ];
     $form['responses_wrapper']['gemini']['meta'] = [
       '#type' => 'markup',
-      '#markup' => '<div id="gemini-meta" class="response-meta" aria-live="polite"></div>',
+      '#markup' => '<div id="gemini-meta" class="response-meta"></div>',
     ];    
 
     return $form;
+  
   }
   
   public function ajaxSubmit(array &$form, FormStateInterface $form_state) {
