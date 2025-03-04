@@ -52,6 +52,13 @@ class AnthropicClient {
         
         // Get response here
         $response = $this->getResponse($prompt);
+        
+        // Ensure successful response       
+        $response_type = gettype($response);
+        if ($response_type != "string") {
+            $response = "There was an error in handling Claude's response. Please contact the site administrator for resolution on this issue."
+        }
+        
         $response_and_time["response"] = $response;
         
         // End Time

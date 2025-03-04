@@ -285,7 +285,7 @@ class DrupalAIBlockForm extends FormBase {
         
       $chatgpt_response = $chatgpt_response_and_time["response"];
       $chatgpt_time = $chatgpt_response_and_time["time"];
-      
+         
       $response->addCommand(
         new HtmlCommand(
           '#chatgpt-response',
@@ -424,19 +424,6 @@ class DrupalAIBlockForm extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    // $phrases = $form_state->getValue('phrases');
-    // The value cannot be empty.
-    // if (is_null($phrases)) $form_state->setErrorByName('phrases', t('This field cannot be empty.'));
-    // The value must be numeric.
-    // if (!is_numeric($phrases)) {
-    //  $form_state->setErrorByName('phrases', t('Please use a number.'));
-    //}
-    //else {
-    //  // A numeric value must still be an integer.
-    //  if (floor($phrases) != $phrases) $form_state->setErrorByName('phrases', t('No decimals, please.'));
-    //  // A numeric value cannot be zero or negative.
-    //  if ($phrases < 1) $form_state->setErrorByName('phrases', t('Please use a number greater than zero.'));
-//    }
   }
 
   /**
