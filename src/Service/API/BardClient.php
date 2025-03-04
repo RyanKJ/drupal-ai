@@ -61,7 +61,7 @@ class BardClient
         // Ensure successful response       
         $response_type = gettype($response);
         if ($response_type != "string") {
-            $response = "There was an error in handling Gemini's response. Please contact the site administrator for resolution on this issue."
+            $response = "There was an error in handling Gemini's response. Please contact the site administrator for resolution on this issue.";
         }
         
         
