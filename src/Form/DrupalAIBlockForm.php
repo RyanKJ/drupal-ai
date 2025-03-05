@@ -152,11 +152,11 @@ class DrupalAIBlockForm extends FormBase {
     
     $form['responses_wrapper']['chatgpt']['content'] = [
       '#type' => 'markup',
-      '#markup' => '<div id="chatgpt-response" class="response-content" tabindex="0" aria-live="polite"></div>',
+      '#markup' => '<div id="chatgpt-response" class="response-content" tabindex="0" aria-live="off"></div>',
     ];
     $form['responses_wrapper']['chatgpt']['meta'] = [
       '#type' => 'markup',
-      '#markup' => '<div id="chatgpt-meta" class="response-meta" aria-live="polite"></div>',
+      '#markup' => '<div id="chatgpt-meta" class="response-meta" aria-live="off"></div>',
     ];
 
     // Claude response column with similar accessibility improvements
@@ -206,11 +206,11 @@ class DrupalAIBlockForm extends FormBase {
     
     $form['responses_wrapper']['claude']['content'] = [
       '#type' => 'markup',
-      '#markup' => '<div id="claude-response" class="response-content" tabindex="0" aria-live="polite"></div>',
+      '#markup' => '<div id="claude-response" class="response-content" tabindex="0" aria-live="off"></div>',
     ];
     $form['responses_wrapper']['claude']['meta'] = [
       '#type' => 'markup',
-      '#markup' => '<div id="claude-meta" class="response-meta" aria-live="polite"></div>',
+      '#markup' => '<div id="claude-meta" class="response-meta" aria-live="off"></div>',
     ]; 
   
     // Gemini response column with accessibility improvements
@@ -260,11 +260,11 @@ class DrupalAIBlockForm extends FormBase {
     
     $form['responses_wrapper']['gemini']['content'] = [
       '#type' => 'markup',
-      '#markup' => '<div id="gemini-response" class="response-content" tabindex="0" aria-live="polite"></div>',
+      '#markup' => '<div id="gemini-response" class="response-content" tabindex="0" aria-live="off"></div>',
     ];
     $form['responses_wrapper']['gemini']['meta'] = [
       '#type' => 'markup',
-      '#markup' => '<div id="gemini-meta" class="response-meta" aria-live="polite"></div>',
+      '#markup' => '<div id="gemini-meta" class="response-meta" aria-live="off"></div>',
     ];    
 
     return $form;
