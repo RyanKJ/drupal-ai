@@ -289,13 +289,13 @@ class DrupalAIBlockForm extends FormBase {
       $response->addCommand(
         new HtmlCommand(
           '#chatgpt-response',
-          '<div class="chatgpt-message">' . nl2br($chatgpt_response) . '</div>'
+          '<div class="chatgpt-message" aria-live="off">' . nl2br($chatgpt_response) . '</div>'
         )
       );
       $response->addCommand(
         new HtmlCommand(
           '#chatgpt-meta',
-          '<div class="response-meta">' . $chatgpt_time . '</div>'
+          '<div class="response-meta" aria-live="off">' . $chatgpt_time . '</div>'
         )
       );
       
@@ -309,13 +309,13 @@ class DrupalAIBlockForm extends FormBase {
       $response->addCommand(
         new HtmlCommand(
           '#claude-response',
-          '<div class="claude-message">' . nl2br($claude_response) . '</div>'
+          '<div class="claude-message" aria-live="off">' . nl2br($claude_response) . '</div>'
         )
       );
       $response->addCommand(
         new HtmlCommand(
           '#claude-meta',
-          '<div class="response-meta">' . $claude_time . '</div>'
+          '<div class="response-meta" aria-live="off">' . $claude_time . '</div>'
         )
       );
       
@@ -329,13 +329,13 @@ class DrupalAIBlockForm extends FormBase {
       $response->addCommand(  
         new HtmlCommand(
           '#gemini-response',
-          '<div class="gemini-message">' . nl2br($gemini_response) . '</div>'
+          '<div class="gemini-message" aria-live="off">' . nl2br($gemini_response) . '</div>'
         )
       );
       $response->addCommand(
         new HtmlCommand(
           '#gemini-meta',
-          '<div class="response-meta">' . $gemini_time . '</div>'
+          '<div class="response-meta" aria-live="off">' . $gemini_time . '</div>'
         )
       );
     }
