@@ -765,9 +765,3 @@ header.layout-header {
     animation: none !important;
   }
 }
-
-/* Provide sufficient color contrast */
-.response-header {
-  color: #000000;
-  background-color: #f0f0f0;
-}
