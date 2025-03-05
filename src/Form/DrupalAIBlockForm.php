@@ -58,7 +58,6 @@ class DrupalAIBlockForm extends FormBase {
       '#type' => 'textarea',
       '#title' => $this->t('Your question'),
       '#required' => FALSE,
-      '#description' => $this->t('Enter your question to get responses from ChatGPT, Claude, and Gemini.'),
       '#attributes' => [
         'aria-describedby' => 'ai-form-instructions',
         'aria-required' => 'true',
