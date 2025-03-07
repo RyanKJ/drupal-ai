@@ -94,10 +94,31 @@
       
       // Add the aria-text to the corresponding aria container if provided
       if (this.ariaText) {
-        const ariaId = this.element.id.replace('-response', '-aria');
+        const elementId = this.element.id;
+        const modelName = elementId.replace('-response', '');
+        const ariaId = `${modelName}-aria`;
         const ariaContainer = document.getElementById(ariaId);
+        
         if (ariaContainer) {
-          ariaContainer.textContent = this.ariaText;
+          // Clear previous content
+          ariaContainer.innerHTML = '';
+          
+          // Create a new element with a unique ID for this announcement
+          const announcement = document.createElement('div');
+          announcement.id = `${ariaId}-announcement-${Date.now()}`;
+          announcement.setAttribute('aria-live', 'polite');
+          
+          // Add model name prefix to the text
+          const modelLabel = modelName.charAt(0).toUpperCase() + modelName.slice(1);
+          announcement.textContent = `${modelLabel} responds: ${this.ariaText}`;
+          
+          ariaContainer.appendChild(announcement);
+          
+          // Set a focus management technique - update the tabindex
+          const responseElement = document.getElementById(elementId);
+          if (responseElement && !responseElement.hasAttribute('tabindex')) {
+            responseElement.setAttribute('tabindex', '-1');
+          }
         }
       }
       
@@ -214,26 +235,59 @@
       if (!Drupal.behaviors.aiResponseAnimation.metaContent) {
         Drupal.behaviors.aiResponseAnimation.metaContent = new Map();
       }
+      
+      // Track response order for screen reader announcements
+      if (!Drupal.behaviors.aiResponseAnimation.responseQueue) {
+        Drupal.behaviors.aiResponseAnimation.responseQueue = [];
+      }
 
       // Create aria containers for screen readers if they don't exist
       function ensureAriaContainers() {
+        const ariaContainerWrapper = document.getElementById('aria-container-wrapper');
+        
+        if (!ariaContainerWrapper) {
+          const wrapper = document.createElement('div');
+          wrapper.id = 'aria-container-wrapper';
+          wrapper.setAttribute('role', 'status');
+          wrapper.style.position = 'absolute';
+          wrapper.style.width = '1px';
+          wrapper.style.height = '1px';
+          wrapper.style.padding = '0';
+          wrapper.style.margin = '-1px';
+          wrapper.style.overflow = 'hidden';
+          wrapper.style.clip = 'rect(0, 0, 0, 0)';
+          wrapper.style.whiteSpace = 'nowrap';
+          wrapper.style.border = '0';
+          document.body.appendChild(wrapper);
+        }
+        
         ['chatgpt', 'claude', 'gemini'].forEach(model => {
           const ariaId = `${model}-aria`;
           if (!document.getElementById(ariaId)) {
             const container = document.createElement('div');
             container.id = ariaId;
             container.className = 'sr-only';
-            container.setAttribute('aria-live', 'polite');
-            container.style.position = 'absolute';
-            container.style.width = '1px';
-            container.style.height = '1px';
-            container.style.padding = '0';
-            container.style.margin = '-1px';
-            container.style.overflow = 'hidden';
-            container.style.clip = 'rect(0, 0, 0, 0)';
-            container.style.whiteSpace = 'nowrap';
-            container.style.border = '0';
-            document.body.appendChild(container);
+            // Don't set aria-live here, we'll set it on individual announcements
+            container.style.position = 'relative';
+            document.getElementById('aria-container-wrapper').appendChild(container);
+            
+            // Add corresponding visible headers for each section (visually hidden but accessible)
+            const responseElement = document.getElementById(`${model}-response`);
+            if (responseElement) {
+              // Check if heading already exists
+              if (!responseElement.previousElementSibling || 
+                  !responseElement.previousElementSibling.classList.contains('ai-response-heading')) {
+                const heading = document.createElement('h3');
+                heading.classList.add('ai-response-heading');
+                heading.style.fontSize = '1rem';
+                heading.style.marginTop = '1rem';
+                heading.style.marginBottom = '0.5rem';
+                heading.textContent = `${model.charAt(0).toUpperCase() + model.slice(1)} Response`;
+                
+                const parent = responseElement.parentNode;
+                parent.insertBefore(heading, responseElement);
+              }
+            }
           }
         });
       }
@@ -249,11 +303,15 @@
           if (element) element.innerHTML = '';
         });
 
+        // Clear aria containers
         ['chatgpt-aria', 'claude-aria', 'gemini-aria'].forEach(ariaId => {
           const element = document.getElementById(ariaId);
-          if (element) element.textContent = '';
+          if (element) element.innerHTML = '';
         });
 
+        // Reset the response queue
+        Drupal.behaviors.aiResponseAnimation.responseQueue = [];
+        
         Drupal.behaviors.aiResponseAnimation.metaContent.clear();
 
         Drupal.behaviors.aiResponseAnimation.activeAnimations.forEach(animation => {
@@ -324,9 +382,26 @@
         animateMetaWords();
       }
 
-      function animateResponse(selector, html, metaSelector, ariaText = null) {
+      function processResponseQueue() {
+        // If no responses or already processing, exit
+        if (Drupal.behaviors.aiResponseAnimation.responseQueue.length === 0 ||
+            Drupal.behaviors.aiResponseAnimation.processingQueue) {
+          return;
+        }
+        
+        Drupal.behaviors.aiResponseAnimation.processingQueue = true;
+        
+        // Get the next response in the queue
+        const nextResponse = Drupal.behaviors.aiResponseAnimation.responseQueue.shift();
+        const { selector, html, metaSelector, ariaText } = nextResponse;
+        
+        // Start animation
         const element = document.querySelector(selector);
-        if (!element) return;
+        if (!element) {
+          Drupal.behaviors.aiResponseAnimation.processingQueue = false;
+          processResponseQueue();
+          return;
+        }
 
         const existingAnimation = Drupal.behaviors.aiResponseAnimation.activeAnimations.get(selector);
         if (existingAnimation) {
@@ -341,7 +416,23 @@
           if (metaSelector && metaText) {
             animateMetaInfo(metaSelector, metaText);
           }
+          
+          // Animation completed, process next in queue
+          Drupal.behaviors.aiResponseAnimation.processingQueue = false;
+          processResponseQueue();
         });
+      }
+
+      function animateResponse(selector, html, metaSelector, ariaText = null) {
+        // Add response to queue
+        Drupal.behaviors.aiResponseAnimation.responseQueue.push({
+          selector, html, metaSelector, ariaText
+        });
+        
+        // Start processing if not already
+        if (!Drupal.behaviors.aiResponseAnimation.processingQueue) {
+          processResponseQueue();
+        }
       }
 
       // Ensure aria containers exist when the page loads
@@ -351,6 +442,20 @@
       if (form) {
         form.addEventListener('submit', function(e) {
           clearAllContent();
+          
+          // Set focus trap for screen readers
+          const focusTrap = document.createElement('div');
+          focusTrap.setAttribute('tabindex', '-1');
+          focusTrap.setAttribute('aria-label', 'Processing AI responses');
+          document.body.appendChild(focusTrap);
+          focusTrap.focus();
+          
+          // Remove focus trap after a short delay
+          setTimeout(() => {
+            if (focusTrap && focusTrap.parentNode) {
+              focusTrap.parentNode.removeChild(focusTrap);
+            }
+          }, 500);
         });
       }
 
@@ -364,6 +469,7 @@
             '#gemini-response': '#gemini-meta'
           };
 
+          // The first response that comes back from Ajax, reset all content
           if (response.selector === '#chatgpt-response') {
             clearAllContent();
           }
