@@ -2,15 +2,18 @@
   'use strict';
 
   class HTMLTypewriterAnimation {
-    constructor(element, html, speed = 30, ariaText = null) {
+    constructor(element, html, speed = 30) {
       this.element = element;
       this.speed = speed;
       this.isAnimating = false;
       this.onComplete = null;
-      this.ariaText = ariaText; // Store the aria-text for screen readers
+      this.fullText = '';  // Store the full text for accessibility
 
       const tempDiv = document.createElement('div');
       tempDiv.innerHTML = html;
+      // Extract the full text content for screen readers
+      this.fullText = tempDiv.textContent.trim();
+      
       this.words = [];
 
       const extractTextNodes = (node, isMeta = false) => {
@@ -92,16 +95,28 @@
       this.element.innerHTML = '';
       this.currentContainer = null;
       
-      // Add the aria-text to the corresponding aria container if provided
-      if (this.ariaText) {
-        const ariaId = this.element.id.replace('-response', '-aria');
-        const ariaContainer = document.getElementById(ariaId);
-        if (ariaContainer) {
-          ariaContainer.textContent = this.ariaText;
-        }
-      }
+      // Update the aria container with the full text
+      this.updateAriaContainer();
       
       this.animateWords();
+    }
+
+    updateAriaContainer() {
+      // Get the appropriate aria container ID based on the element ID
+      const elementId = this.element.id;
+      const model = elementId.replace('-response', '');
+      const ariaId = `${model}-aria`;
+      
+      const ariaContainer = document.getElementById(ariaId);
+      if (ariaContainer && this.fullText) {
+        // Add a unique timestamp to force screen readers to announce the change
+        // This helps avoid issues where identical text isn't re-announced
+        const timestamp = new Date().getTime();
+        ariaContainer.setAttribute('data-timestamp', timestamp.toString());
+        
+        // Add the full text to the aria container
+        ariaContainer.textContent = this.fullText;
+      }
     }
 
     animateWords() {
@@ -222,8 +237,12 @@
           if (!document.getElementById(ariaId)) {
             const container = document.createElement('div');
             container.id = ariaId;
-            container.className = 'sr-only';
-            container.setAttribute('aria-live', 'polite');
+            container.className = 'visually-hidden';
+            container.setAttribute('aria-live', 'assertive');
+            container.setAttribute('role', 'status');
+            container.setAttribute('aria-atomic', 'true');
+            
+            // Style for screen reader only
             container.style.position = 'absolute';
             container.style.width = '1px';
             container.style.height = '1px';
@@ -233,6 +252,7 @@
             container.style.clip = 'rect(0, 0, 0, 0)';
             container.style.whiteSpace = 'nowrap';
             container.style.border = '0';
+            
             document.body.appendChild(container);
           }
         });
@@ -249,9 +269,16 @@
           if (element) element.innerHTML = '';
         });
 
+        // Don't clear aria containers immediately - this can cause screen readers to miss content
+        // Instead, mark them with a "cleared" attribute that we'll check before updating
         ['chatgpt-aria', 'claude-aria', 'gemini-aria'].forEach(ariaId => {
           const element = document.getElementById(ariaId);
-          if (element) element.textContent = '';
+          if (element) {
+            element.setAttribute('data-cleared', 'true');
+            // We'll set content to a space character instead of empty to ensure screen readers 
+            // recognize the change
+            element.textContent = ' ';
+          }
         });
 
         Drupal.behaviors.aiResponseAnimation.metaContent.clear();
@@ -324,7 +351,7 @@
         animateMetaWords();
       }
 
-      function animateResponse(selector, html, metaSelector, ariaText = null) {
+      function animateResponse(selector, html) {
         const element = document.querySelector(selector);
         if (!element) return;
 
@@ -333,10 +360,11 @@
           existingAnimation.stop();
         }
 
-        const animation = new HTMLTypewriterAnimation(element, html, 30, ariaText);
+        const animation = new HTMLTypewriterAnimation(element, html, 30);
         Drupal.behaviors.aiResponseAnimation.activeAnimations.set(selector, animation);
 
         animation.start(() => {
+          const metaSelector = selector.replace('-response', '-meta');
           const metaText = Drupal.behaviors.aiResponseAnimation.metaContent.get(metaSelector);
           if (metaSelector && metaText) {
             animateMetaInfo(metaSelector, metaText);
@@ -346,6 +374,11 @@
 
       // Ensure aria containers exist when the page loads
       ensureAriaContainers();
+
+      // Add a small delay after page load to ensure ARIA containers are properly initialized
+      setTimeout(function() {
+        ensureAriaContainers();
+      }, 500);
 
       const form = document.querySelector('form.drupal-ai-block-form');
       if (form) {
@@ -376,30 +409,7 @@
           this.original_insert(ajax, response, status);
 
           if (selectorPairs[response.selector]) {
-            // Extract ariaText from the response data if it exists
-            let ariaText = null;
-            
-            // Check for aria-text attribute in the response
-            if (response.data) {
-              const tempDiv = document.createElement('div');
-              tempDiv.innerHTML = response.data;
-              
-              // Try to get aria-text from the first child element
-              const firstChild = tempDiv.querySelector('*');
-              if (firstChild && firstChild.hasAttribute('data-aria-text')) {
-                ariaText = firstChild.getAttribute('data-aria-text');
-              } else {
-                // If no aria-text attribute, use the plain text content
-                ariaText = tempDiv.textContent.trim();
-              }
-            }
-            
-            animateResponse(
-              response.selector,
-              response.data,
-              selectorPairs[response.selector],
-              ariaText
-            );
+            animateResponse(response.selector, response.data);
           }
         };
       }
