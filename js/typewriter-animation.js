@@ -2,11 +2,12 @@
   'use strict';
 
   class HTMLTypewriterAnimation {
-    constructor(element, html, speed = 30) {
+    constructor(element, html, speed = 30, ariaText = null) {
       this.element = element;
       this.speed = speed;
       this.isAnimating = false;
       this.onComplete = null;
+      this.ariaText = ariaText; // Store the aria-text for screen readers
 
       const tempDiv = document.createElement('div');
       tempDiv.innerHTML = html;
@@ -90,6 +91,16 @@
       this.onComplete = onCompleteCallback;
       this.element.innerHTML = '';
       this.currentContainer = null;
+      
+      // Add the aria-text to the corresponding aria container if provided
+      if (this.ariaText) {
+        const ariaId = this.element.id.replace('-response', '-aria');
+        const ariaContainer = document.getElementById(ariaId);
+        if (ariaContainer) {
+          ariaContainer.textContent = this.ariaText;
+        }
+      }
+      
       this.animateWords();
     }
 
@@ -193,7 +204,7 @@
     }
   }
 
-  // Rest of the code remains the same...
+  // Main Drupal behavior
   Drupal.behaviors.aiResponseAnimation = {
     attach: function (context, settings) {
       if (!Drupal.behaviors.aiResponseAnimation.activeAnimations) {
@@ -202,6 +213,29 @@
 
       if (!Drupal.behaviors.aiResponseAnimation.metaContent) {
         Drupal.behaviors.aiResponseAnimation.metaContent = new Map();
+      }
+
+      // Create aria containers for screen readers if they don't exist
+      function ensureAriaContainers() {
+        ['chatgpt', 'claude', 'gemini'].forEach(model => {
+          const ariaId = `${model}-aria`;
+          if (!document.getElementById(ariaId)) {
+            const container = document.createElement('div');
+            container.id = ariaId;
+            container.className = 'sr-only';
+            container.setAttribute('aria-live', 'polite');
+            container.style.position = 'absolute';
+            container.style.width = '1px';
+            container.style.height = '1px';
+            container.style.padding = '0';
+            container.style.margin = '-1px';
+            container.style.overflow = 'hidden';
+            container.style.clip = 'rect(0, 0, 0, 0)';
+            container.style.whiteSpace = 'nowrap';
+            container.style.border = '0';
+            document.body.appendChild(container);
+          }
+        });
       }
 
       function clearAllContent() {
@@ -213,6 +247,11 @@
         ['#chatgpt-meta', '#claude-meta', '#gemini-meta'].forEach(selector => {
           const element = document.querySelector(selector);
           if (element) element.innerHTML = '';
+        });
+
+        ['chatgpt-aria', 'claude-aria', 'gemini-aria'].forEach(ariaId => {
+          const element = document.getElementById(ariaId);
+          if (element) element.textContent = '';
         });
 
         Drupal.behaviors.aiResponseAnimation.metaContent.clear();
@@ -285,7 +324,7 @@
         animateMetaWords();
       }
 
-      function animateResponse(selector, html, metaSelector) {
+      function animateResponse(selector, html, metaSelector, ariaText = null) {
         const element = document.querySelector(selector);
         if (!element) return;
 
@@ -294,7 +333,7 @@
           existingAnimation.stop();
         }
 
-        const animation = new HTMLTypewriterAnimation(element, html, 30);
+        const animation = new HTMLTypewriterAnimation(element, html, 30, ariaText);
         Drupal.behaviors.aiResponseAnimation.activeAnimations.set(selector, animation);
 
         animation.start(() => {
@@ -304,6 +343,9 @@
           }
         });
       }
+
+      // Ensure aria containers exist when the page loads
+      ensureAriaContainers();
 
       const form = document.querySelector('form.drupal-ai-block-form');
       if (form) {
@@ -334,10 +376,29 @@
           this.original_insert(ajax, response, status);
 
           if (selectorPairs[response.selector]) {
+            // Extract ariaText from the response data if it exists
+            let ariaText = null;
+            
+            // Check for aria-text attribute in the response
+            if (response.data) {
+              const tempDiv = document.createElement('div');
+              tempDiv.innerHTML = response.data;
+              
+              // Try to get aria-text from the first child element
+              const firstChild = tempDiv.querySelector('*');
+              if (firstChild && firstChild.hasAttribute('data-aria-text')) {
+                ariaText = firstChild.getAttribute('data-aria-text');
+              } else {
+                // If no aria-text attribute, use the plain text content
+                ariaText = tempDiv.textContent.trim();
+              }
+            }
+            
             animateResponse(
               response.selector,
               response.data,
-              selectorPairs[response.selector]
+              selectorPairs[response.selector],
+              ariaText
             );
           }
         };

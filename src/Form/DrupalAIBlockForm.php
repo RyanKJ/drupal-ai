@@ -151,11 +151,11 @@ class DrupalAIBlockForm extends FormBase {
     
     $form['responses_wrapper']['chatgpt']['content'] = [
       '#type' => 'markup',
-      '#markup' => '<div id="chatgpt-response" class="response-content" tabindex="0" aria-live="polite"></div>',
+      '#markup' => '<div id="chatgpt-response" class="response-content" tabindex="0" aria-live="off"></div>',
     ];
     $form['responses_wrapper']['chatgpt']['meta'] = [
       '#type' => 'markup',
-      '#markup' => '<div id="chatgpt-meta" class="response-meta" aria-live="polite"></div>',
+      '#markup' => '<div id="chatgpt-meta" class="response-meta" aria-live="off"></div>',
     ];
 
     // Claude response column with similar accessibility improvements
