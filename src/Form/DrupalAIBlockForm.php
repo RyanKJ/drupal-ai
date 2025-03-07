@@ -151,7 +151,7 @@ class DrupalAIBlockForm extends FormBase {
     
     $form['responses_wrapper']['chatgpt']['content'] = [
       '#type' => 'markup',
-      '#markup' => '<div id="chatgpt-response" class="response-content" tabindex="0" aria-live="off"></div>',
+      '#markup' => '<div id="chatgpt-response" class="response-content" data-aria-text="" tabindex="0" aria-live="off"></div>',
     ];
     $form['responses_wrapper']['chatgpt']['meta'] = [
       '#type' => 'markup',
@@ -288,7 +288,7 @@ class DrupalAIBlockForm extends FormBase {
       $response->addCommand(
         new HtmlCommand(
           '#chatgpt-response',
-          '<div class="chatgpt-message" aria-live="off" data-aria-text="' . htmlspecialchars($claude_response) .'">' . nl2br($chatgpt_response) . '</div>'
+          '<div class="chatgpt-message" aria-live="off" data-aria-text="' . htmlspecialchars($chatgpt_response) .'">' . nl2br($chatgpt_response) . '</div>'
         )
       );
       $response->addCommand(
