@@ -217,6 +217,11 @@
         };
       }
 
+      // Add announcement tracking flag
+      if (Drupal.behaviors.aiResponseAnimation.hasAnnounced === undefined) {
+        Drupal.behaviors.aiResponseAnimation.hasAnnounced = false;
+      }
+
       // Create a single consolidated aria container for screen readers, but with aria-live set to "off" initially
       function ensureConsolidatedAriaContainer() {
         const ariaId = 'consolidated-aria';
@@ -284,11 +289,25 @@
 
       // Make a single announcement when all responses are ready
       function announceConsolidatedContent() {
+        // If we've already announced, don't do it again
+        if (Drupal.behaviors.aiResponseAnimation.hasAnnounced) {
+          return;
+        }
+        
         const ariaContainer = document.getElementById('consolidated-aria');
         if (!ariaContainer) return;
         
         // First ensure we've populated the latest content
         updateAriaContentSilently();
+        
+        // Set our flag to prevent further announcements for this response set
+        Drupal.behaviors.aiResponseAnimation.hasAnnounced = true;
+        
+        // Remove any existing announcement container to be safe
+        const existingAnnouncement = document.getElementById('aria-announcement');
+        if (existingAnnouncement) {
+          existingAnnouncement.remove();
+        }
         
         // Create a new container that will be announced
         const announceContainer = document.createElement('div');
@@ -345,7 +364,10 @@
             // When all responses are in, wait a moment for animations to complete
             // then make a single announcement
             setTimeout(() => {
-              announceConsolidatedContent();
+              // Only announce if we haven't already
+              if (!Drupal.behaviors.aiResponseAnimation.hasAnnounced) {
+                announceConsolidatedContent();
+              }
             }, 1000);
           }
         }, 1000);
@@ -357,7 +379,10 @@
           responses.monitoringActive = false;
           
           // Make an announcement with whatever we have after the timeout
-          announceConsolidatedContent();
+          // Only announce if we haven't already
+          if (!Drupal.behaviors.aiResponseAnimation.hasAnnounced) {
+            announceConsolidatedContent();
+          }
         }, 15000); // 15-second maximum wait
       }
 
@@ -379,6 +404,9 @@
         // Remove any existing announcement container
         const announceContainer = document.getElementById('aria-announcement');
         if (announceContainer) announceContainer.remove();
+
+        // Reset the announcement flag
+        Drupal.behaviors.aiResponseAnimation.hasAnnounced = false;
 
         // Clear stored responses
         Drupal.behaviors.aiResponseAnimation.responses = {
