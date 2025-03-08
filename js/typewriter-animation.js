@@ -244,7 +244,17 @@
       // Check if all expected responses have been received
       function areAllResponsesReceived() {
         const responses = Drupal.behaviors.aiResponseAnimation.responses;
-        return responses.chatgpt && responses.claude && responses.gemini;
+        // Check if we received at least one response
+        const hasAtLeastOneResponse = responses.chatgpt || responses.claude || responses.gemini;
+        
+        // If we've already received all answers before, consider the check passed
+        if (responses.isAllResponsesReceived) {
+          return true;
+        }
+        
+        // Otherwise, check if ChatGPT and either Claude or Gemini have responded
+        // (based on the assumption that ChatGPT always comes first, and either Claude or Gemini might be disabled)
+        return responses.chatgpt && (responses.claude || responses.gemini);
       }
 
       // Update the consolidated ARIA content with all available responses
@@ -253,21 +263,11 @@
         const now = Date.now();
         
         // Prevent rapid successive updates (debounce)
-        if (!forceUpdate && now - responses.lastUpdated < 500) {
+        if (!forceUpdate && now - responses.lastUpdated < 1000) {
           return;
         }
         
-        // Check if we should wait for more responses
-        if (!forceUpdate && !responses.isAllResponsesReceived && !areAllResponsesReceived()) {
-          // If not all responses are in yet, and this isn't a forced update, wait
-          return;
-        }
-        
-        // If all responses are received for the first time, mark it
-        if (!responses.isAllResponsesReceived && areAllResponsesReceived()) {
-          responses.isAllResponsesReceived = true;
-        }
-        
+        // Update timestamp regardless of whether we actually update the content
         responses.lastUpdated = now;
         
         // Get or create the aria container
@@ -276,47 +276,62 @@
         // Create a new element for the update to ensure screen readers detect the change
         const newAriaContent = document.createElement('div');
         
-        let contentText = "Successful query, here are the following responses.\n";
-        
-        if (responses.chatgpt) {
-          contentText += "ChatGPT response:\n" + responses.chatgpt + "\n\n";
+        // Only provide content if we have at least one response
+        if (responses.chatgpt || responses.claude || responses.gemini) {
+          let contentText = "Successful query, here are the following responses.\n";
+          
+          if (responses.chatgpt) {
+            contentText += "ChatGPT response:\n" + responses.chatgpt + "\n\n";
+          }
+          
+          if (responses.claude) {
+            contentText += "Claude response:\n" + responses.claude + "\n\n";
+          }
+          
+          if (responses.gemini) {
+            contentText += "Gemini response:\n" + responses.gemini + "\n\n";
+          }
+          
+          newAriaContent.textContent = contentText;
+          
+          // Clear existing content and add the new content
+          ariaContainer.innerHTML = '';
+          ariaContainer.appendChild(newAriaContent);
         }
-        
-        if (responses.claude) {
-          contentText += "Claude response:\n" + responses.claude + "\n\n";
-        }
-        
-        if (responses.gemini) {
-          contentText += "Gemini response:\n" + responses.gemini + "\n\n";
-        }
-        
-        newAriaContent.textContent = contentText;
-        
-        // Clear existing content and add the new content
-        ariaContainer.innerHTML = '';
-        ariaContainer.appendChild(newAriaContent);
       }
 
-      // Reliable way to update ARIA when all responses are in
-      function scheduleCompleteAriaUpdate() {
-        // Reset the flag that tracks if all responses were received
-        Drupal.behaviors.aiResponseAnimation.responses.isAllResponsesReceived = false;
+      // Monitor for responses and trigger ARIA updates
+      function monitorResponses() {
+        const responses = Drupal.behaviors.aiResponseAnimation.responses;
         
-        // Check every 500ms if all responses have been received
+        // Reset the flag that tracks if all responses were received
+        responses.isAllResponsesReceived = false;
+        
+        // Update immediately with what we have
+        updateConsolidatedAriaContent(true);
+        
+        // Check every 1 second if all responses have been received
         const checkInterval = setInterval(() => {
           if (areAllResponsesReceived()) {
+            // Mark as complete
+            responses.isAllResponsesReceived = true;
+            
             // Force a final update when all responses are in
             updateConsolidatedAriaContent(true);
             clearInterval(checkInterval);
+          } else {
+            // Provide incremental updates while waiting
+            updateConsolidatedAriaContent(false);
           }
-        }, 500);
+        }, 1000);
         
         // Safety timeout to prevent indefinite waiting
         setTimeout(() => {
           clearInterval(checkInterval);
+          responses.isAllResponsesReceived = true;
           // Force a final update even if not all responses came in
           updateConsolidatedAriaContent(true);
-        }, 10000); // 10-second maximum wait
+        }, 15000); // 15-second maximum wait
       }
 
       function clearAllContent() {
@@ -332,7 +347,7 @@
 
         // Clear the consolidated ARIA container
         const ariaContainer = document.getElementById('consolidated-aria');
-        if (ariaContainer) ariaContainer.textContent = '';
+        if (ariaContainer) ariaContainer.innerHTML = '';
 
         // Clear stored responses
         Drupal.behaviors.aiResponseAnimation.responses = {
@@ -425,19 +440,17 @@
         // Store the plain text response for ARIA
         if (selector === '#chatgpt-response') {
           Drupal.behaviors.aiResponseAnimation.responses.chatgpt = responseText;
-          // Start checking for all responses if this is the first one
-          if (!Drupal.behaviors.aiResponseAnimation.responses.claude && 
-              !Drupal.behaviors.aiResponseAnimation.responses.gemini) {
-            scheduleCompleteAriaUpdate();
-          }
+          // Start the monitoring process if this is the first response
+          monitorResponses();
         } else if (selector === '#claude-response') {
           Drupal.behaviors.aiResponseAnimation.responses.claude = responseText;
+          // Update the ARIA content with the new response
+          updateConsolidatedAriaContent();
         } else if (selector === '#gemini-response') {
           Drupal.behaviors.aiResponseAnimation.responses.gemini = responseText;
+          // Update the ARIA content with the new response
+          updateConsolidatedAriaContent();
         }
-        
-        // Update the consolidated ARIA content (will be debounced internally)
-        updateConsolidatedAriaContent();
 
         const animation = new HTMLTypewriterAnimation(element, html, 30);
         Drupal.behaviors.aiResponseAnimation.activeAnimations.set(selector, animation);
@@ -448,21 +461,8 @@
             animateMetaInfo(metaSelector, metaText);
           }
           
-          // Check if this was the last animation to complete
-          const isLastResponse = 
-            (selector === '#gemini-response' && 
-             Drupal.behaviors.aiResponseAnimation.responses.chatgpt && 
-             Drupal.behaviors.aiResponseAnimation.responses.claude) ||
-            (selector === '#claude-response' && 
-             !Drupal.behaviors.aiResponseAnimation.responses.gemini && 
-             Drupal.behaviors.aiResponseAnimation.responses.chatgpt);
-             
-          if (isLastResponse) {
-            // Force an update when the last animation completes
-            setTimeout(() => {
-              updateConsolidatedAriaContent(true);
-            }, 500);
-          }
+          // Force an update to the ARIA content when each animation completes
+          updateConsolidatedAriaContent(true);
         });
       }
 
