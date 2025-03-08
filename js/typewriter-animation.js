@@ -210,7 +210,9 @@
         Drupal.behaviors.aiResponseAnimation.responses = {
           chatgpt: null,
           claude: null,
-          gemini: null
+          gemini: null,
+          isAllResponsesReceived: false,
+          lastUpdated: 0
         };
       }
 
@@ -221,7 +223,10 @@
           const container = document.createElement('div');
           container.id = ariaId;
           container.className = 'sr-only';
-          container.setAttribute('aria-live', 'polite');
+          // Using 'assertive' to ensure screen readers announce the update
+          container.setAttribute('aria-live', 'assertive');
+          container.setAttribute('aria-atomic', 'true');
+          container.setAttribute('role', 'status');
           container.style.position = 'absolute';
           container.style.width = '1px';
           container.style.height = '1px';
@@ -233,33 +238,85 @@
           container.style.border = '0';
           document.body.appendChild(container);
         }
+        return document.getElementById(ariaId);
+      }
+
+      // Check if all expected responses have been received
+      function areAllResponsesReceived() {
+        const responses = Drupal.behaviors.aiResponseAnimation.responses;
+        return responses.chatgpt && responses.claude && responses.gemini;
       }
 
       // Update the consolidated ARIA content with all available responses
-      function updateConsolidatedAriaContent() {
-        const ariaContainer = document.getElementById('consolidated-aria');
-        if (!ariaContainer) return;
-        
+      function updateConsolidatedAriaContent(forceUpdate = false) {
         const responses = Drupal.behaviors.aiResponseAnimation.responses;
+        const now = Date.now();
         
-        // Only update if at least one response is available
-        if (!responses.chatgpt && !responses.claude && !responses.gemini) return;
+        // Prevent rapid successive updates (debounce)
+        if (!forceUpdate && now - responses.lastUpdated < 500) {
+          return;
+        }
         
-        let ariaContent = "Successful query, here are the following responses.\n";
+        // Check if we should wait for more responses
+        if (!forceUpdate && !responses.isAllResponsesReceived && !areAllResponsesReceived()) {
+          // If not all responses are in yet, and this isn't a forced update, wait
+          return;
+        }
+        
+        // If all responses are received for the first time, mark it
+        if (!responses.isAllResponsesReceived && areAllResponsesReceived()) {
+          responses.isAllResponsesReceived = true;
+        }
+        
+        responses.lastUpdated = now;
+        
+        // Get or create the aria container
+        const ariaContainer = ensureConsolidatedAriaContainer();
+        
+        // Create a new element for the update to ensure screen readers detect the change
+        const newAriaContent = document.createElement('div');
+        
+        let contentText = "Successful query, here are the following responses.\n";
         
         if (responses.chatgpt) {
-          ariaContent += "ChatGPT response:\n" + responses.chatgpt + "\n\n";
+          contentText += "ChatGPT response:\n" + responses.chatgpt + "\n\n";
         }
         
         if (responses.claude) {
-          ariaContent += "Claude response:\n" + responses.claude + "\n\n";
+          contentText += "Claude response:\n" + responses.claude + "\n\n";
         }
         
         if (responses.gemini) {
-          ariaContent += "Gemini response:\n" + responses.gemini + "\n\n";
+          contentText += "Gemini response:\n" + responses.gemini + "\n\n";
         }
         
-        ariaContainer.textContent = ariaContent;
+        newAriaContent.textContent = contentText;
+        
+        // Clear existing content and add the new content
+        ariaContainer.innerHTML = '';
+        ariaContainer.appendChild(newAriaContent);
+      }
+
+      // Reliable way to update ARIA when all responses are in
+      function scheduleCompleteAriaUpdate() {
+        // Reset the flag that tracks if all responses were received
+        Drupal.behaviors.aiResponseAnimation.responses.isAllResponsesReceived = false;
+        
+        // Check every 500ms if all responses have been received
+        const checkInterval = setInterval(() => {
+          if (areAllResponsesReceived()) {
+            // Force a final update when all responses are in
+            updateConsolidatedAriaContent(true);
+            clearInterval(checkInterval);
+          }
+        }, 500);
+        
+        // Safety timeout to prevent indefinite waiting
+        setTimeout(() => {
+          clearInterval(checkInterval);
+          // Force a final update even if not all responses came in
+          updateConsolidatedAriaContent(true);
+        }, 10000); // 10-second maximum wait
       }
 
       function clearAllContent() {
@@ -281,7 +338,9 @@
         Drupal.behaviors.aiResponseAnimation.responses = {
           chatgpt: null,
           claude: null,
-          gemini: null
+          gemini: null,
+          isAllResponsesReceived: false,
+          lastUpdated: 0
         };
 
         Drupal.behaviors.aiResponseAnimation.metaContent.clear();
@@ -366,13 +425,18 @@
         // Store the plain text response for ARIA
         if (selector === '#chatgpt-response') {
           Drupal.behaviors.aiResponseAnimation.responses.chatgpt = responseText;
+          // Start checking for all responses if this is the first one
+          if (!Drupal.behaviors.aiResponseAnimation.responses.claude && 
+              !Drupal.behaviors.aiResponseAnimation.responses.gemini) {
+            scheduleCompleteAriaUpdate();
+          }
         } else if (selector === '#claude-response') {
           Drupal.behaviors.aiResponseAnimation.responses.claude = responseText;
         } else if (selector === '#gemini-response') {
           Drupal.behaviors.aiResponseAnimation.responses.gemini = responseText;
         }
         
-        // Update the consolidated ARIA content
+        // Update the consolidated ARIA content (will be debounced internally)
         updateConsolidatedAriaContent();
 
         const animation = new HTMLTypewriterAnimation(element, html, 30);
@@ -382,6 +446,22 @@
           const metaText = Drupal.behaviors.aiResponseAnimation.metaContent.get(metaSelector);
           if (metaSelector && metaText) {
             animateMetaInfo(metaSelector, metaText);
+          }
+          
+          // Check if this was the last animation to complete
+          const isLastResponse = 
+            (selector === '#gemini-response' && 
+             Drupal.behaviors.aiResponseAnimation.responses.chatgpt && 
+             Drupal.behaviors.aiResponseAnimation.responses.claude) ||
+            (selector === '#claude-response' && 
+             !Drupal.behaviors.aiResponseAnimation.responses.gemini && 
+             Drupal.behaviors.aiResponseAnimation.responses.chatgpt);
+             
+          if (isLastResponse) {
+            // Force an update when the last animation completes
+            setTimeout(() => {
+              updateConsolidatedAriaContent(true);
+            }, 500);
           }
         });
       }

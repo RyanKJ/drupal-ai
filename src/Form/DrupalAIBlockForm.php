@@ -308,7 +308,7 @@ class DrupalAIBlockForm extends FormBase {
       $response->addCommand(
         new HtmlCommand(
           '#claude-response',
-          '<div class="claude-message" aria-live="off">' . nl2br($claude_response) . '</div>'
+           '<div class="claude-message" data-aria-text="' . htmlspecialchars($claude_response) . '">' . nl2br($claude_response) . '</div>'
         )
       );
       $response->addCommand(
@@ -328,7 +328,7 @@ class DrupalAIBlockForm extends FormBase {
       $response->addCommand(  
         new HtmlCommand(
           '#gemini-response',
-          '<div class="gemini-message" aria-live="off">' . nl2br($gemini_response) . '</div>'
+          '<div class="claude-message" data-aria-text="' . htmlspecialchars($gemini_response) . '">' . nl2br($gemini_response) . '</div>'
         )
       );
       $response->addCommand(
