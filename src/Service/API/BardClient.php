@@ -14,7 +14,7 @@ class BardClient
 {
     private $baseUrl = 'https://generativelanguage.googleapis.com/v1';
 
-    private static $model_options = ['gemini-pro' => 'Gemini 1.0 Pro',
+    private static $model_options = ['gemini-2.0-flash-lite' => 'Gemini 2.0 Flash-Lite',
                                      'gemini-1.5-flash-8b' => 'Gemini 1.5 Flash',
                                      'gemini-1.5-pro' => 'Gemini 1.5 Pro'];
     private $model;
