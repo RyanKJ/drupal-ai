@@ -164,18 +164,5 @@ class OpenAIClient {
         } else {
             throw new \Exception('Unexpected response format: ' . print_r($response_data, true));
         }
-        
-        
-        
-        
-    }
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    }    
 }
